@@ -19,7 +19,7 @@ def share_generation(secret, num_shares, threshold, num_words=12):
     """
 
     #Sanity checks between the given parameters.
-    assert(num_shares>=threshold, 'Threshold cannot be larger than the number of shares!')
+    assert(num_shares>=threshold, 'hreshold cannot be larger than the number of shares!')
     assert(2**(11*num_words)>=secret, 'More words are needed to encode this secret!')
 
     q=2**(11*num_words)
@@ -35,14 +35,15 @@ def share_generation(secret, num_shares, threshold, num_words=12):
     eval_point = GF11(list(range(1, num_shares + 1)))
     return poly(eval_point)
 
-"""Implementation of Lagrange interpolation, used to reconstruct the secret from the shares generated above"""
 def lagrange_interpolation(x=[], y=[]):
-        if len(x) == len(y):
-            result = GF11.Zeros(1)
-            for i in range(len(x)):
-                LagrangeCoefficient = GF11([1])
-                for j in range(len(x)):
-                    if i != j:
-                        LagrangeCoefficient = LagrangeCoefficient * (x[j] / (x[j] - x[i]))
-                result  = result + LagrangeCoefficient * y[i]  
-        return result
+    """Implementation of Lagrange interpolation, used to reconstruct the secret from the shares generated above."""
+
+    if len(x) == len(y):
+        result = GF11.Zeros(1)
+        for i in range(len(x)):
+            LagrangeCoefficient = GF11([1])
+            for j in range(len(x)):
+                if i != j:
+                    LagrangeCoefficient = LagrangeCoefficient * (x[j] / (x[j] - x[i]))
+            result  = result + LagrangeCoefficient * y[i]  
+    return result
