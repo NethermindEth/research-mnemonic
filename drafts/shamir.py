@@ -2,8 +2,9 @@ from random import randint
 import galois
 
 #parameters
-q = 2**132
+
 N = 12
+q = 2**(11*N)
 GF11 = galois.GF(q)
 
 #The Dealer determines the n (number of shares) and t (threshold value)
