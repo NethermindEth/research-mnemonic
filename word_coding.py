@@ -1,50 +1,49 @@
 from math import log2
 
-def encode_words (word_list, mnemonic_words_list, format_string):
-    number_raw = []
-    for mnemonic_word in mnemonic_words_list:
-        number_raw.append(format(word_list.index(mnemonic_word), format_string))
-    print (f'Original binary numbers: {number_raw}')
-    number = "".join(number_raw)
-    print (f'Obtained binary number from mnemonic: {number}')
-    return int(number, 2)
 
-def decode_words (word_list, mnemonic_number, format_string):
-    mnemonic_number_binary = format(mnemonic_number, format_string)
-    print (f'Mnemonic number in binary {mnemonic_number_binary}')   
-    slice_size = int(log2(len(word_list)))
-    slices = [str(mnemonic_number_binary)[i : i + slice_size] for i in
-              range(0, len(str(mnemonic_number_binary)), slice_size)]
-    print (f'Binary slices: {slices}')
-    mnemonic = [word_list[int(word_index, 2)] for word_index in
-                slices]
-    return mnemonic
+def text_to_list(text_path):
+    """(Auxiliary) Transforms a one-word-per-line text file into a Python list"""
+    word_list = []
+    with open(text_path, 'r') as filehandle:
+        for word in filehandle:
+            word_list.append(word.rstrip('\n'))
+    return word_list
+
+
+def get_binary_format_string(word_list):
+    """(Auxiliary) Gets the binary format that should be used to encode the words in word_list.
     
-# read word list from the file
-word_list = []
-with open('wordlist.txt', 'r') as filehandle:
-    for word in filehandle:
-        word_list.append(word.rstrip('\n'))
+    The word list to be used as a dictionary for encoding/decoding purposes should always have 2^N 
+    elements, since each mnemonic word will be encoded into an N-bit number. After checking for this
+    condition, this function returns the format string to be used to convert integers to this form.
+    """
 
-word_list_size = len(word_list)
-assert log2(len(word_list)).is_integer()
+    N = log2(len(word_list))
+    assert N.is_integer()
+    return '0' + str(int(N)) + 'b'
 
-binary_length_word_list = int(log2(len(word_list)))
-format_string = '0' + str(binary_length_word_list) + 'b'
-print (format_string)
 
-mnemonic_words_list = ['wedding',
-                       'web',
-                       'trust',
-                       'gadget',
-                       'forum',
-                       'calm',
-                       'cannon',
-                       'busy']
+def encode_words(word_list, seed_phrase):
+    """Turns a seed phrase into a number, using a given word list for the encoding."""
 
-print (f'Original nemonic: {mnemonic_words_list}')
+    #First, turn each seed word into a binary number.
+    binary_numbers = []
+    format_string = get_binary_format_string(word_list)
+    for word in seed_phrase:
+        binary_numbers.append(format(word_list.index(word), format_string))
 
-number = encode_words (word_list, mnemonic_words_list, format_string)
-print (f'Obtained mnemonic number {number}')
+    #Concatenate binary numbers and convert to decimal.
+    secret_number = "".join(binary_numbers)
+    return int(secret_number,2)
 
-print (f'Re-created mnemonic {decode_words (word_list, number, format_string)}')
+
+def decode_words(word_list, secret_number):
+    """Turns a secret number into a seed phrase, using a given word list for the decoding."""
+
+    format_string = get_binary_format_string(word_list)
+    secret_number_binary = format(secret_number, format_string)
+    slice_size = int(log2(len(word_list)))
+    slices = [str(secret_number_binary)[i : i + slice_size] for i in range(
+        0, len(str(secret_number_binary)), slice_size)]
+    seed_phrase = [word_list[int(word_index, 2)] for word_index in slices]
+    return seed_phrase

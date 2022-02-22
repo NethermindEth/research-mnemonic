@@ -11,15 +11,15 @@ def share_generation(secret, num_shares, threshold, num_words=12):
     Each share is given by (i, f(i)) for 1<=i<=num_shares, and returned as a list.
 
     Keyword arguments:
-    secret -- secret that will be encrypted.
-    num_shares -- number of shares that will be generated.
-    threshold -- minimum number of shares needed to reconstruct the secret.
-    num_words -- number of words that will be used in the mnemonic encoding the secret. 
-        (Default value chosen above follow a BIP-39 seed mnemonic implementation)
+    * secret -- secret that will be encrypted.
+    * num_shares -- number of shares that will be generated.
+    * threshold -- minimum number of shares needed to reconstruct the secret.
+    * num_words -- number of words that will be used in the mnemonic encoding the secret. 
+    (Default value chosen above follows a BIP-39 seed mnemonic implementation)
     """
 
     #Sanity checks between the given parameters.
-    assert num_shares>=threshold, 'threshold cannot be larger than the number of shares!'
+    assert num_shares>=threshold, 'Threshold cannot be larger than the number of shares!'
     assert 2**(11*num_words)>=secret, 'More words are needed to encode this secret!'
 
     q=2**(11*num_words)
@@ -35,8 +35,9 @@ def share_generation(secret, num_shares, threshold, num_words=12):
     eval_point = GF11(list(range(1, num_shares + 1)))
     return poly(eval_point)
 
+
 def lagrange_interpolation(x=[], y=[], q=2**(11*12)):
-    """Implementation of Lagrange interpolation, used to reconstruct the secret from the shares generated above."""
+    """Implementation of Lagrange interpolation, used to reconstruct the secret from the shares."""
 
     GF11 = galois.GF(q)
     if len(x) == len(y):
