@@ -20,9 +20,9 @@ for i in range (len(share_list)):
     print('(', i+1, ',', share_list[i], ')')
 
 #here we define an access set which includes the x coordinates of t shares.
-GF11 = galois.GF(q)
+GF = galois.GF(q)
 access = list(range(1,threshold+1))
-access_set = GF11(access)
+access_set = GF(access)
 access_share = []
 for i in access:
     access_share.append(share_list[i-1])

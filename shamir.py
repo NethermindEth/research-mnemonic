@@ -2,7 +2,7 @@ import galois
 from random import randint
 
 
-def share_generation(secret, num_shares, threshold, num_words=12):
+def share_generation(secret, num_shares, threshold, num_words=12, num_bytes=11):
     """Implements Shamir secret sharing.
 
     This Shamir secret sharing implementation chooses a random polynomial f(x) of degree t-1
@@ -20,30 +20,30 @@ def share_generation(secret, num_shares, threshold, num_words=12):
 
     #Sanity checks between the given parameters.
     assert num_shares>=threshold, 'Threshold cannot be larger than the number of shares!'
-    assert 2**(11*num_words)>=secret, 'More words are needed to encode this secret!'
+    q=2**(num_bytes*num_words)
+    assert q>=secret, 'More words are needed to encode this secret!'
 
-    q=2**(11*num_words)
-    GF11 = galois.GF(q)
+    GF = galois.GF(q)
     coeff =[]
     for _ in range(threshold): 
         coeff.append(randint(0,q))
         
     coeff[threshold-1] = secret
-    coefficient = GF11(coeff)
+    coefficient = GF(coeff)
 
-    poly = galois.Poly(coefficient, field = GF11)
-    eval_point = GF11(list(range(1, num_shares + 1)))
+    poly = galois.Poly(coefficient, field = GF)
+    eval_point = GF(list(range(1, num_shares + 1)))
     return poly(eval_point)
 
 
 def lagrange_interpolation(x=[], y=[], q=2**(11*12)):
     """Implementation of Lagrange interpolation, used to reconstruct the secret from the shares."""
 
-    GF11 = galois.GF(q)
+    GF = galois.GF(q)
     if len(x) == len(y):
-        result = GF11.Zeros(1)
+        result = GF.Zeros(1)
         for i in range(len(x)):
-            LagrangeCoefficient = GF11([1])
+            LagrangeCoefficient = GF([1])
             for j in range(len(x)):
                 if i != j:
                     LagrangeCoefficient = LagrangeCoefficient * (x[j] / (x[j] - x[i]))
