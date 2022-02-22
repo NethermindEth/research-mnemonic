@@ -19,8 +19,8 @@ def share_generation(secret, num_shares, threshold, num_words=12):
     """
 
     #Sanity checks between the given parameters.
-    assert(num_shares>=threshold, 'hreshold cannot be larger than the number of shares!')
-    assert(2**(11*num_words)>=secret, 'More words are needed to encode this secret!')
+    assert num_shares>=threshold, 'threshold cannot be larger than the number of shares!'
+    assert 2**(11*num_words)>=secret, 'More words are needed to encode this secret!'
 
     q=2**(11*num_words)
     GF11 = galois.GF(q)
@@ -35,9 +35,10 @@ def share_generation(secret, num_shares, threshold, num_words=12):
     eval_point = GF11(list(range(1, num_shares + 1)))
     return poly(eval_point)
 
-def lagrange_interpolation(x=[], y=[]):
+def lagrange_interpolation(x=[], y=[], q=2**(11*12)):
     """Implementation of Lagrange interpolation, used to reconstruct the secret from the shares generated above."""
 
+    GF11 = galois.GF(q)
     if len(x) == len(y):
         result = GF11.Zeros(1)
         for i in range(len(x)):

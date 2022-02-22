@@ -21,7 +21,7 @@ for i in range (len(share_list)):
 
 #here we define an access set which includes the x coordinates of t shares.
 GF11 = galois.GF(q)
-access = list(range(1,t+1))
+access = list(range(1,threshold+1))
 access_set = GF11(access)
 access_share = []
 for i in access:
