@@ -1,2 +1,8 @@
 __pycache__/shamir.cpython-39.pyc
 __pycache__/word_coding.cpython-39.pyc
+tests/__pycache__/__init__.cpython-39.pyc
+tests/__pycache__/test_hi.cpython-39-pytest-6.2.4.pyc
+tests/__pycache__/test_shamir.cpython-39-pytest-6.2.4.pyc
+tests/__pycache__/test_word_coding.cpython-39-pytest-6.2.4.pyc
+tests/__pycache__/test_wordcoding.cpython-39-pytest-6.2.4.pyc
+.vscode/settings.json
