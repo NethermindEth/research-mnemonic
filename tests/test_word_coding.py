@@ -6,6 +6,7 @@ from word_coding import *
 def test_word_coding():
     word_list = text_to_list('wordlist.txt')
 
+    #TODO: randomize this seed phrase.
     seed_phrase = [
         'wedding',
         'web',
