@@ -24,3 +24,6 @@ def test_word_coding():
     #print (f'Re-created mnemonic {reconstructed_seed}')
 
     assert reconstructed_seed==seed_phrase, 'Reconstructed secret does not match'
+
+
+    
