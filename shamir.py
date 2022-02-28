@@ -84,18 +84,15 @@ def share_generation(secret, num_shares, threshold, q, digest_length):
     
     return final_y
 
-def secret_reconstruction(x = [], y = [], q = int, digest_length = int):
+def secret_reconstruction(x=[], y=[], q=int, digest_length=int):
     """Reconstruct secret and digest, check whether they are consistent or not."""
     reconstructed_secret = int(lagrange_interpolation(x, y, 0, q))
     reconstructed_digest = int(lagrange_interpolation(x, y, q-1, q))
-
-    #TODO: 16 should not be hardcoded.
     digest_byte = reconstructed_digest.to_bytes(int(floor(log2(q)/8)), 'big')
     
     if digest_byte[:digest_length] != create_digest(digest_byte[digest_length:], str(reconstructed_secret).encode(), digest_length):
         raise DigestError("Invalid digest of the shared secret.")
     return reconstructed_secret
-
 
 class DigestError(Exception):
     pass
