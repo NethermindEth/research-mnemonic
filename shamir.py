@@ -5,10 +5,10 @@ import hmac
 import os
 
 
-def create_digest(randomness: bytes, shared_secret: bytes, digest_lenth):
+def create_digest(randomness: bytes, shared_secret: bytes, digest_length=4):
     """Digest function according to SLIP39. Digest length set to 4 as per SLIP39"""
 
-    return hmac.new(randomness, shared_secret, "sha256").digest()[:digest_lenth]
+    return hmac.new(randomness, shared_secret, "sha256").digest()[:digest_length]
     #TODO: discuss the digest_length and the hash function.
 
 
@@ -27,7 +27,7 @@ def lagrange_interpolation(x=[], y=[], at_point=int, q=int):
     return result
 
 
-def share_generation(secret, num_shares, threshold, q, digest_length):
+def share_generation(secret, num_shares, threshold, q, digest_length=4):
     """Implements Shamir secret sharing.
 
     This Shamir secret sharing implementation constructs a random polynomial f(x) of degree t-1
@@ -84,7 +84,7 @@ def share_generation(secret, num_shares, threshold, q, digest_length):
     
     return final_y
 
-def secret_reconstruction(x=[], y=[], q=int, digest_length=int):
+def secret_reconstruction(x=[], y=[], q=int, digest_length=4):
     """Reconstruct secret and digest, check whether they are consistent or not."""
     reconstructed_secret = int(lagrange_interpolation(x, y, 0, q))
     reconstructed_digest = int(lagrange_interpolation(x, y, q-1, q))
