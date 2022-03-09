@@ -28,7 +28,7 @@ def word_Coding(seed_phrase = []):
 
 
 
-def seed_phrase(x = 12):
+def seed_phrase(x = 3):
 	''' Gets number of mnemonics from list and outputs encoded number'''
 
 	seed_phrase = []
@@ -50,7 +50,7 @@ def output_secret_shares(shares):
 
 	#for each shares program outputs a file including id, shared secret(word encoded), degree and irr poly to construct unique GF.
 	for i in range (len(shares)):
-		reconstructed_shared_secrets = word_coding.decode_words(word_list, shares[i])
+		reconstructed_shared_secrets = word_coding.decode_words(word_list, format(shares[i], "b").zfill(132))
 		print ('id: ', i+1)
 		print ('shares: ',reconstructed_shared_secrets)
 		print ('degree: ', init_galois_degree())
@@ -101,6 +101,7 @@ print (word_list_arr)
 
 #creating secret from taking words from list that is displayed above
 shared_secret = seed_phrase()
+print('shared secret:',shared_secret)
 
 
 
@@ -112,6 +113,7 @@ print('\nShared Secret is: ',shared_secret, '\nNumber of Shares is: ',args.ns, '
 
 #share generation from shamir.py
 shares = share_generation(shared_secret, n, t, q)
+print ('shares: ',shares)
 
 
 

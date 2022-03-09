@@ -21,13 +21,24 @@ degrees_list = []
 irr_poly = []
 
 
+def convert_bit_array_to_int_array(bitarray = []):
+	'''(Auxiliary) convert to str type bit arrays to int arrays to use "secret_reconstruction" function in shamir.py '''
+
+
+	int_array = []
+	for i in range(len(bitarray)):
+		int_array.append(int(bitarray[i],2))
+	return int_array
+
+
+
 def word_Decoding(secret_number):
 	'''(Auxiliary) utilize word_decoding. Gets secretnumber and output words''' 
 
 
 	word_list = word_coding.text_to_list('wordlist.txt')
 	#print(f'Original mnemonic: {seed_phrase}')
-	word_phrase = word_coding.decode_words(word_list, secret_number)
+	word_phrase = word_coding.decode_words(word_list, format(secret_number, "b").zfill(132))
 	return word_phrase
 
 
@@ -58,11 +69,11 @@ def search_share_files():
 
 		#parse the words(shared mnemonics) in second order
 		mnemonics_list = ast.literal_eval(data_in_f[1].split(':')[1].rstrip())
-		print (mnemonics_list[0])
-		print (mnemonics_list[1])
-		print (mnemonics_list[2])
-		print (mnemonics_list[3])
-		print (word_Coding(mnemonics_list))
+		#print (mnemonics_list[0])
+		#print (mnemonics_list[1])
+		#print (mnemonics_list[2])
+		#print (mnemonics_list[3])
+		print ('mnemonics list',mnemonics_list)
 		y_shares.append(word_Coding(mnemonics_list))
 
 		#parse the degree in third order (default 11x12 = 132) 
@@ -75,8 +86,10 @@ def search_share_files():
 
 
 	#display the lists. These can be commented.
-	print(x_id)
-	print(y_shares)
+	print('x_id: ',x_id)
+	#print('y_shares',y_shares)
+	print('y_shares', convert_bit_array_to_int_array(y_shares))
+	print('tpyeofyshares ',type(y_shares[0]))
 	print(degrees_list)
 	print(irr_poly)
 
@@ -108,10 +121,10 @@ def reconstruction_wrapper():
 		q = 2 ** degrees_list[0]
 		GF = galois.GF(q, irreducible_poly = irr_poly[0])
 		#print(GF.irreducible_poly.integer)
-		reconstructed_number = secret_reconstruction(x_id, y_shares, q)
+		reconstructed_number = secret_reconstruction(x_id, convert_bit_array_to_int_array(y_shares), q)
 		print ('reconstructed_number', reconstructed_number)
-		reconstructed_words = word_Decoding(reconstructed_number)
-		print ('reconstructed_words',reconstructed_words)
+		word_list = word_coding.text_to_list('wordlist.txt')
+		print ('reconstructed_words',word_coding.decode_words(word_list,reconstructed_number))
 
 
 

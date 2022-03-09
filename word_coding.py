@@ -32,18 +32,29 @@ def encode_words(word_list, seed_phrase):
     for word in seed_phrase:
         binary_numbers.append(format(word_list.index(word), format_string))
 
-    #Concatenate binary numbers and convert to decimal.
+    #Concatenate binary numbers and convert to hexadecimal.
     secret_number = "".join(binary_numbers)
-    return int(secret_number,2)
+    return secret_number
 
 
 def decode_words(word_list, secret_number):
     """Turns a secret number into a seed phrase, using a given word list for the decoding."""
 
-    format_string = get_binary_format_string(word_list)
-    secret_number_binary = format(secret_number, format_string)
     slice_size = int(log2(len(word_list)))
-    slices = [str(secret_number_binary)[i : i + slice_size] for i in range(
-        0, len(str(secret_number_binary)), slice_size)]
+    slices = [str(secret_number)[i : i + slice_size] for i in range(
+        0, len(str(secret_number)), slice_size)]
     seed_phrase = [word_list[int(word_index, 2)] for word_index in slices]
     return seed_phrase
+
+
+
+# ==== test part ==== 
+#word_list = text_to_list('wordlist.txt')
+#seed_phrase = ['zoo','zoo','zoo']
+#seed_phrase = ['young', 'donate', 'same', 'hole', 'share', 'comic', 'swear', 'oblige', 'motor', 'slight', 'ball', 'add']
+#number = encode_words(word_list,seed_phrase)
+#print('number: ',number)
+#print(int(number,2))
+#reseed = decode_words(word_list,number)
+#print(reseed)
+

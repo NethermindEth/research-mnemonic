@@ -1,4 +1,4 @@
-from math import log2
+from math import floor, log2
 from random import randint
 import galois
 import hmac
@@ -17,10 +17,10 @@ def init_galois_degree():
     return galois_degree
 
 
-def create_digest(randomness: bytes, shared_secret: bytes):
+def create_digest(randomness: bytes, shared_secret: bytes, digest_length=4):
     """Digest function according to SLIP39. Digest length set to 4 as per SLIP39"""
 
-    return hmac.new(randomness, shared_secret, "sha256").digest()[:4]
+    return hmac.new(randomness, shared_secret, "sha256").digest()[:digest_length]
     #TODO: discuss the digest_length and the hash function.
 
 
@@ -39,7 +39,7 @@ def lagrange_interpolation(x=[], y=[], at_point=int, q=int):
     return result
 
 
-def share_generation(secret, num_shares, threshold, q):
+def share_generation(secret, num_shares, threshold, q, digest_length=4):
     """Implements Shamir secret sharing.
 
     This Shamir secret sharing implementation constructs a random polynomial f(x) of degree t-1
@@ -59,7 +59,7 @@ def share_generation(secret, num_shares, threshold, q):
 
     #Sanity checks between the given parameters.
     assert num_shares>=threshold, 'Threshold cannot be larger than the number of shares!'
-    assert q>=secret, 'More words are needed to encode this secret!'
+    assert q>=int(secret), 'More words are needed to encode this secret!'
 
     GF = galois.GF(q)
 
@@ -71,19 +71,19 @@ def share_generation(secret, num_shares, threshold, q):
 
     #Choose a randomness for digest
     #randomness_length = floor(num_bytes * num_words/8) - digest_length
-    randomness_length = int(log2(q))//8 -4
+    randomness_length = int(floor(log2(q)/8)-digest_length)
     randomness = os.urandom(randomness_length)
 
     #Compute digest with concatenation of randomness and secret as input. 
     #TODO: Consider generalizing the byte length.
-    digest = create_digest(randomness, str(secret).encode())
+    digest = create_digest(randomness, str(secret).encode(), digest_length)
 
     #Compute the digest share which is concatenation of digest and randomness in bytes
     digest_share_byte = digest + randomness
     digest_share_int = int.from_bytes(digest_share_byte, "big")
 
     #Adding the x and y coordinates of the secret and its digest to the correponding list. 
-    initial_int_index = [q-2, q-1]
+    initial_int_index = [q-1, 0]
     initial_int_shares = [digest_share_int, secret]
 
     #Sampling t-2 random shares in order to compute a random polynomial with degree t-1 on which secret and its digest exist.
@@ -95,27 +95,22 @@ def share_generation(secret, num_shares, threshold, q):
     final_x = initial_int_index[2:]
     final_y = initial_int_shares[2:]
 
-    #Above we have chosen random t-2 shares from [1,q-1]. Now we compute n-t+2 more evaluations, and add them to the final list. 
+    #Above we have chosen random t-2 shares from [1,q-1]. Now we compute n-t+2 more evaluations, and add them to the final_y list. 
     for i in range (threshold - 1, num_shares + 1):
         final_x.append(i)
         final_y.append(int(lagrange_interpolation(initial_int_index, initial_int_shares, i, q)))
     
     return final_y
 
-def secret_reconstruction(x=[], y=[], q=int):
+def secret_reconstruction(x=[], y=[], q=int, digest_length=4):
     """Reconstruct secret and digest, check whether they are consistent or not."""
-    reconstructed_secret = int(lagrange_interpolation(x, y, q-1, q))
-    reconstructed_digest = int(lagrange_interpolation(x, y, q-2, q))
-    #delete later
-    print('recons: ',reconstructed_secret)
-
-    #TODO: 16 should not be hardcoded.
-    digest_byte = reconstructed_digest.to_bytes(16, 'big')
+    reconstructed_secret = int(lagrange_interpolation(x, y, 0, q))
+    reconstructed_digest = int(lagrange_interpolation(x, y, q-1, q))
+    digest_byte = reconstructed_digest.to_bytes(int(floor(log2(q)/8)), 'big')
     
-    if digest_byte[:4] != create_digest(digest_byte[4:], str(reconstructed_secret).encode()):
+    if digest_byte[:digest_length] != create_digest(digest_byte[digest_length:], str(reconstructed_secret).encode(), digest_length):
         raise DigestError("Invalid digest of the shared secret.")
     return reconstructed_secret
-
 
 class DigestError(Exception):
     pass
