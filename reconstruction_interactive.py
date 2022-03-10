@@ -1,6 +1,6 @@
-from shamir import * 
+from modules.shamir import * 
 import galois
-import word_coding
+import modules.word_coding as word_coding
 import glob
 import ast 
 
@@ -31,7 +31,6 @@ def convert_bit_array_to_int_array(bitarray = []):
 	return int_array
 
 
-
 def word_Decoding(secret_number):
 	'''(Auxiliary) utilize word_decoding. Gets secretnumber and output words''' 
 
@@ -40,7 +39,6 @@ def word_Decoding(secret_number):
 	#print(f'Original mnemonic: {seed_phrase}')
 	word_phrase = word_coding.decode_words(word_list, format(secret_number, "b").zfill(132))
 	return word_phrase
-
 
 
 def word_Coding(seed_phrase = []):
@@ -94,8 +92,6 @@ def search_share_files():
 	print(irr_poly)
 
 
-
-
 def check_func(x, check_name):
 	'''(Auxiliary) Gets a list and arbitrary check_name and validate if there is different element in list. It is used for degree and irr_poly checking phase'''
 
@@ -107,7 +103,6 @@ def check_func(x, check_name):
 			return False
 	#print (check_name, ' is checked! ')
 	return True
-
 
 
 def reconstruction_wrapper():
@@ -127,22 +122,8 @@ def reconstruction_wrapper():
 		print ('reconstructed_words',word_Decoding(reconstructed_number))
 
 
-
-
-
 # call for function that is searching files in same directory
 search_share_files()
 
 # call for function that is re-constructioning.
 reconstruction_wrapper()
-
-
-
-
-
-
-
-
-
-
-			

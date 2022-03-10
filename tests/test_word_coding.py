@@ -1,7 +1,5 @@
 from random import randint, sample
-from word_coding import *
-
-###TODO: if necessary, change print statements into logging statements.
+from modules.word_coding import *
 
 
 def test_word_coding():

@@ -1,8 +1,5 @@
 from random import randint, sample
-
-from scipy import rand
-from shamir import *
-import galois
+from modules.shamir import *
 
 
 def test_shamir():
@@ -16,7 +13,7 @@ def test_shamir():
     for _ in range(10):
         #Run Shamir's secret sharing and store the shares
         shares = share_generation(shared_secret, num_shares, threshold, q)
-        pick_indices = sample(list(range(1,num_shares)), threshold)
+        pick_indices = sample(list(range(1,num_shares+1)), threshold)
         shares_picked = [shares[index-1] for index in pick_indices]
         reconstructed_secret = secret_reconstruction(pick_indices, shares_picked, q)
 

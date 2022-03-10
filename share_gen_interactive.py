@@ -1,11 +1,8 @@
-from shamir import * 
-import galois
+from modules.shamir import * 
 import sys
 import argparse
-import word_coding
+import modules.word_coding as word_coding
 import glob
-
-
 
 
 def print_wordlist():
@@ -17,7 +14,6 @@ def print_wordlist():
 	return li
 
 
-
 def word_Coding(seed_phrase = []):
 	'''(Auxiliary) utilize word_coding. Gets seed list and output number''' 
 
@@ -26,7 +22,6 @@ def word_Coding(seed_phrase = []):
 	#print(f'Original mnemonic: {seed_phrase}')
 	number = word_coding.encode_words(word_list, seed_phrase)
 	return number
-
 
 
 def seed_phrase(x, word_list_arr):
@@ -41,7 +36,6 @@ def seed_phrase(x, word_list_arr):
 		seed_phrase.append(seed_word)
 		print ('Your Secret List:' , seed_phrase)
 	return word_Coding(seed_phrase)
-
 
 
 def output_secret_shares(shares):
@@ -64,7 +58,6 @@ def output_secret_shares(shares):
 		f.write ('degree:' + str(init_galois_degree())+ "\n")
 		f.write ('irr_poly:' + str(init_galois_irr_poly())+ "\n")
 		f.close()
-
 
 
 def taking_creating_mnemonics():
@@ -98,9 +91,6 @@ def taking_creating_mnemonics():
 		return shared_secret
 
 
-
-
-
 # parser is used in taking the number of shares(-ns) and threshold numbers(-nt) from terminal 
 parser = argparse.ArgumentParser()
 parser.add_argument('-ns', type=int, help='number of secret', required=True)
@@ -114,7 +104,6 @@ if (args.ns < args.nt):
 
 n = args.ns 
 t = args.nt
-
 
 
 #constructing Galois fields
@@ -131,20 +120,10 @@ secret_to_share = taking_creating_mnemonics()
 print('\nShared Secret is: ',int(secret_to_share,2), '\nNumber of Shares is: ',args.ns, '\nNumber of Thresholds is:', args.nt ,'\n')
 
 
-
 #share generation from shamir.py
 shares = share_generation(int(secret_to_share,2), n, t, q)
 print ('shares: ',shares)
 
 
-
 #calls for outputing secret sharing function
 output_secret_shares(shares)
-
-
-
-
-
-
-
-
