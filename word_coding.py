@@ -45,16 +45,3 @@ def decode_words(word_list, secret_number):
         0, len(str(secret_number)), slice_size)]
     seed_phrase = [word_list[int(word_index, 2)] for word_index in slices]
     return seed_phrase
-
-
-
-# ==== test part ==== 
-#word_list = text_to_list('wordlist.txt')
-#seed_phrase = ['zoo','zoo','zoo']
-#seed_phrase = ['young', 'donate', 'same', 'hole', 'share', 'comic', 'swear', 'oblige', 'motor', 'slight', 'ball', 'add']
-#number = encode_words(word_list,seed_phrase)
-#print('number: ',number)
-#print(int(number,2))
-#reseed = decode_words(word_list,number)
-#print(reseed)
-

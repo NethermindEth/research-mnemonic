@@ -1,3 +1,4 @@
+from random import randint, sample
 from word_coding import *
 
 ###TODO: if necessary, change print statements into logging statements.
@@ -6,24 +7,11 @@ from word_coding import *
 def test_word_coding():
     word_list = text_to_list('wordlist.txt')
 
-    seed_phrase = [
-        'wedding',
-        'web',
-        'trust',
-        'gadget',
-        'forum',
-        'calm',
-        'cannon',
-        'busy'
-        ]
+    for _ in range(10):
+        seed_phrase_length = randint(1,20)
+        seed_phrase = sample(word_list, seed_phrase_length)
 
-    #print(f'Original mnemonic: {seed_phrase}')
-    number = encode_words(word_list, seed_phrase)
-    #print (f'Obtained secret number {number}')
-    reconstructed_seed = decode_words(word_list, number)
-    #print (f'Re-created mnemonic {reconstructed_seed}')
+        number = encode_words(word_list, seed_phrase)
+        reconstructed_seed = decode_words(word_list, number)
 
-    assert reconstructed_seed==seed_phrase, 'Reconstructed secret does not match'
-
-
-    
+        assert reconstructed_seed==seed_phrase, 'Reconstructed secret does not match'
