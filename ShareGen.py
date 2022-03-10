@@ -3,6 +3,7 @@ import galois
 import sys
 import argparse
 import word_coding
+import glob
 
 
 
@@ -28,7 +29,7 @@ def word_Coding(seed_phrase = []):
 
 
 
-def seed_phrase(x = 3):
+def seed_phrase(x, word_list_arr):
 	''' Gets number of mnemonics from list and outputs encoded number'''
 
 	seed_phrase = []
@@ -66,6 +67,39 @@ def output_secret_shares(shares):
 
 
 
+def taking_creating_mnemonics():
+	''' contstruct a secret by the file includes mnemonics or choosing words from file by one by'''
+
+	choose = input('\nPlease, choose the input method: [take/create]: ')
+	while ((choose != "take") and (choose != "create")):
+		choose = input('\nWrong Input, choose the input method [take/create]: ')
+
+	if (choose == "take"):
+		mnemonic_file = input('\nEnter the file name:  ')
+		while not(glob.glob(mnemonic_file)):
+			mnemonic_file = input('\nThere is no file that name, \nTry again ')
+		f = open(mnemonic_file, "r")
+		mnemonic_list = str(f.readlines())[2:-2].split(' ')
+		print('shared secret:',word_Coding(mnemonic_list))
+		return word_Coding(mnemonic_list)
+
+	elif (choose == "create"):
+		# display wordlist.txt to user can c
+		word_list_arr = print_wordlist()
+		print (word_list_arr)
+
+		#printing secret, number of shares and number of threshold
+		number_of_words = int(input('\nChoose a number of words [at most 12]\n'))
+		while ((number_of_words < 3) or (number_of_words > 12)):
+			number_of_words = int(input('\nNumber of words could be 3-12\n'))
+
+		shared_secret = seed_phrase(number_of_words,word_list_arr)
+		print('shared secret:',shared_secret)
+		return shared_secret
+
+
+
+
 
 # parser is used in taking the number of shares(-ns) and threshold numbers(-nt) from terminal 
 parser = argparse.ArgumentParser()
@@ -83,36 +117,23 @@ t = args.nt
 
 
 
-
 #constructing Galois fields
 nb = 11
 nw = 12
 q = 2**(nb*nw)
 
 
-
-
-# display wordlist.txt to user can c
-word_list_arr = print_wordlist()
-print (word_list_arr)
-
-
-
-
-#creating secret from taking words from list that is displayed above
-shared_secret = seed_phrase()
-print('shared secret:',shared_secret)
-
-
+#construction of secret to share, it can be done by file or chosing words (in str binary mode)
+secret_to_share = taking_creating_mnemonics()
 
 
 #printing secret, number of shares and number of threshold
-print('\nShared Secret is: ',shared_secret, '\nNumber of Shares is: ',args.ns, '\nNumber of Thresholds is:', args.nt ,'\n')
+print('\nShared Secret is: ',int(secret_to_share,2), '\nNumber of Shares is: ',args.ns, '\nNumber of Thresholds is:', args.nt ,'\n')
 
 
 
 #share generation from shamir.py
-shares = share_generation(shared_secret, n, t, q)
+shares = share_generation(int(secret_to_share,2), n, t, q)
 print ('shares: ',shares)
 
 

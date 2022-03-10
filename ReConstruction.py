@@ -8,7 +8,7 @@ import ast
 #initializations lists 
 
 
-# initializations for ids
+# initializations for ids 
 x_id = []
 
 # initializations for y_shares
@@ -124,7 +124,7 @@ def reconstruction_wrapper():
 		reconstructed_number = secret_reconstruction(x_id, convert_bit_array_to_int_array(y_shares), q)
 		print ('reconstructed_number', reconstructed_number)
 		word_list = word_coding.text_to_list('wordlist.txt')
-		print ('reconstructed_words',word_coding.decode_words(word_list,reconstructed_number))
+		print ('reconstructed_words',word_Decoding(reconstructed_number))
 
 
 
