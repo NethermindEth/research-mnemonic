@@ -11,12 +11,6 @@ def init_galois_irr_poly():
     return galois_irreducible_polynomial
 
 
-def init_galois_degree():
-    """init function extracts the global galois field's irr poly"""
-
-    return galois_degree
-
-
 def create_digest(randomness: bytes, shared_secret: bytes, digest_length=4):
     """Digest function according to SLIP39. Digest length set to 4 as per SLIP39"""
 
@@ -66,11 +60,8 @@ def share_generation(secret, num_shares, threshold, q, digest_length=4):
     #To extract irreducible polynomials of created GF
     global galois_irreducible_polynomial
     galois_irreducible_polynomial = GF.irreducible_poly.integer
-    global galois_degree
-    galois_degree = GF.degree
 
     #Choose a randomness for digest
-    #randomness_length = floor(num_bytes * num_words/8) - digest_length
     randomness_length = int(floor(log2(q)/8)-digest_length)
     randomness = os.urandom(randomness_length)
 

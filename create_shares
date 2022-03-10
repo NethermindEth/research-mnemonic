@@ -1,4 +1,4 @@
-from math import log2
+import json
 from modules import shamir, word_coding
 import argparse
 
@@ -8,7 +8,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-ns', type=int, help='number of shares to generate', required=True)
 parser.add_argument('-nt', type=int, help='threshold: number of shares to reconstruct the secret', required=True)
 args = parser.parse_args()
-assert args.ns > args.nt, 'Number of shares(ns) cannot be lower than threshold(nt)!'
+assert args.ns >= args.nt, 'Number of shares(ns) cannot be lower than threshold(nt)!'
 n = args.ns 
 t = args.nt
 
@@ -31,18 +31,25 @@ binary_secret = word_coding.encode_words(word_list, secret)
 decimal_secret = int(binary_secret,2)
 shares = shamir.share_generation(decimal_secret, n, t, q)
 
-#for each shares program outputs a file including id, shared secret(word encoded), degree and irr poly to construct unique GF.
+#For each share, program outputs a file including id, shared secret(word encoded), degree and irr poly to construct unique GF.
 for i in range (len(shares)):
-    reconstructed_shared_secrets = word_coding.decode_words(word_list, format(shares[i], "b").zfill(132))
+    reconstructed_shared_secrets = word_coding.decode_words(word_list, format(shares[i], "b"))
     print ('id: ', i+1)
-    print ('shares: ',reconstructed_shared_secrets)
-    print ('degree: ', shamir.init_galois_degree())
+    print ('share: ',reconstructed_shared_secrets)
     print ('irr_poly: ', shamir.init_galois_irr_poly())
-    print ('encoded_words:', shares[i],'\n\n\n')
-    file_name = "share_" + str(i+1)
-    f = open(file_name, "w")
-    f.write ('id:' + str(i+1) + "\n")
-    f.write ('words:' + str(reconstructed_shared_secrets)+ "\n")
-    f.write ('degree:' + str(shamir.init_galois_degree())+ "\n")
-    f.write ('irr_poly:' + str(shamir.init_galois_irr_poly())+ "\n")
-    f.close()
+    print ('encoded_words:', shares[i],'\n\n')
+
+    file_name = "shares/share_" + str(i+1) + ".json"
+    with open(file_name, 'w') as file:
+        json.dump(
+            {
+            'id': i+1,
+            'total_shares' : n,
+            'threshold' : t,
+            'share' : reconstructed_shared_secrets,
+            'irr_poly' : shamir.init_galois_irr_poly(),
+            'dictionary' : ' '.join(word_list)
+            },
+            file, 
+            indent=4
+            )
