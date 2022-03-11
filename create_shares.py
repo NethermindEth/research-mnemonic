@@ -1,6 +1,6 @@
-import json
 from modules import shamir, word_coding
 import argparse
+import json
 
 
 #Parser is used in taking the number of shares(-ns) and threshold numbers(-nt) from terminal. 

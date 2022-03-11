@@ -35,5 +35,5 @@ assert threshold <= len(y_shares), 'Not enough shares for secret reconstruction'
 reconstructed_secret = shamir.secret_reconstruction(x_id, y_shares, q)
 seed_phrase = word_coding.decode_words(word_list, format(reconstructed_secret, "b").zfill(dict_bits*num_words))
 print(seed_phrase)
-with open('reconstructed_secret.txt', 'w') as file:
+with open('secret_reconstructed.txt', 'w') as file:
 	file.write(" ".join(seed_phrase))
