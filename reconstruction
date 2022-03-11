@@ -19,7 +19,8 @@ for json_filename in glob.glob('shares/share*[0-9].json'): #TODO: does this work
 		threshold = json_share['threshold']
 		word_list = json_share['dictionary'].split(' ')
 		dict_bits = word_coding.get_dictionary_bits(word_list)
-		q = 2**(dict_bits*len(json_share['share']))
+		num_words = len(json_share['share'])
+		q = 2**(dict_bits*num_words)
 		expected_data = [json_share['total_shares'], threshold, json_share['irr_poly'], json_share['dictionary']]
 	else:
 		assert expected_data == [json_share['total_shares'], json_share['threshold'], json_share['irr_poly'], json_share['dictionary']], 'Shares have incompatible data'
@@ -32,7 +33,7 @@ for json_filename in glob.glob('shares/share*[0-9].json'): #TODO: does this work
 #Call the reconstruction routine and save to file
 assert threshold <= len(y_shares), 'Not enough shares for secret reconstruction' 
 reconstructed_secret = shamir.secret_reconstruction(x_id, y_shares, q)
-seed_phrase = word_coding.decode_words(word_list, reconstructed_secret)
+seed_phrase = word_coding.decode_words(word_list, format(reconstructed_secret, "b").zfill(dict_bits*num_words))
 print(seed_phrase)
-with('reconstructed_secret.txt', 'w') as file:
+with open('reconstructed_secret.txt', 'w') as file:
 	file.write(" ".join(seed_phrase))

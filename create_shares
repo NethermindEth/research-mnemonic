@@ -33,7 +33,7 @@ shares = shamir.share_generation(decimal_secret, n, t, q)
 
 #For each share, program outputs a file including id, shared secret(word encoded), degree and irr poly to construct unique GF.
 for i in range (len(shares)):
-    reconstructed_shared_secrets = word_coding.decode_words(word_list, format(shares[i], "b"))
+    reconstructed_shared_secrets = word_coding.decode_words(word_list, format(shares[i], "b").zfill(nb*nw))
     print ('id: ', i+1)
     print ('share: ',reconstructed_shared_secrets)
     print ('irr_poly: ', shamir.init_galois_irr_poly())
