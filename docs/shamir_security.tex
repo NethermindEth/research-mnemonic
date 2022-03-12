@@ -136,11 +136,7 @@
 		s - \sum\limits_{j = 1}^{t-1} y_{j}\ell_{j}(0) = y_{t}\ell_{t}(0)
 	\end{equation}
 	
-<<<<<<< HEAD
-	We know from the \cref{def:shamir} that the secret and the shares are non-zero \michals{12.03.22}{That's not correct, we only have that the shares are not values at 0.}. Since the $x$ coordinates are all distinct, the Lagrange basis polynomials are also non-zero. There exist one unknown in both sides of (\ref{eq:thelast}), i.e. $s$ and $D$. Since $s,D \in \FF_q^{*}$, for each possible value of $s \in \FF_q$ there exist a unique value $y_{t} \in \FF_q$. But Since $y_{t} = D$, $\adv$ can perform a brute-force attack on the secret $s$ and using (\ref{eq:thelast}) she eliminates the candidate secret giving invalid digest. More precisely $\adv$ can proceed as follows.
-=======
-	We know from the Definition \ref{def:shamir} that the secret and the shares are non-zero. Since the $x$ coordinates are all distinct, the Lagrange basis polynomials are also non-zero. There exist one unknown in both sides of (\ref{eq:thelast}), i.e. $s$ and $y_{t}$. Since $s, y_{t} \in \FF_q^{*}$, for each possible value of $s \in \FF_q$ there exist a unique value $y_{t} \in \FF_q$. But Since $y_{t} = D$, $\adv$ can perform a brute-force attack on the secret $s$ and using (\ref{eq:thelast}) she eliminates the candidate secret giving invalid digest. More precisely $\adv$ can proceed as follows.
->>>>>>> 3969630ea24392b560b806c1b8786930bcc7e2a3
+	We know from the Definition \ref{def:shamir} that the secret and the shares are non-zero. \michals{12.03.22}{That's not correct, we only have that the shares are not values at 0.}. Since the $x$ coordinates are all distinct, the Lagrange basis polynomials are also non-zero. There exist one unknown in both sides of (\ref{eq:thelast}), i.e. $s$ and $y_{t}$. Since $s, y_{t} \in \FF_q^{*}$, for each possible value of $s \in \FF_q$ there exist a unique value $y_{t} \in \FF_q$. But Since $y_{t} = D$, $\adv$ can perform a brute-force attack on the secret $s$ and using (\ref{eq:thelast}) she eliminates the candidate secret giving invalid digest. More precisely $\adv$ can proceed as follows.
 		\begin{itemize}
 			\item Picks an $s'$ from $\FF_q$,
 			\item set $D' = \frac{s' - \sum\limits_{j = 1}^{t-1} y_{j}\ell_{j}(0)}{\ell_{t}(0)}$,
@@ -148,12 +144,8 @@
 			\item If they are equal, then $s' = s$ with probability $1/2^{m - d}$. 
 			\item Otherwise eliminate the candidate secret $s'$ and try with a fresh $s' \in \FF_q$. 
 		\end{itemize}
-<<<<<<< HEAD
- Since above attack works for $2^{32}$ different values of $s' \in \FF_q$, the brute-force space decreases from $\sO(2^{m})$ to $\sO(2^{m-32})$. \michals{13.03}{There is no such a thing as "bruteforce space" for SSS -- this scheme is perfectly secure, i.e it remains secure even against unbounded adversaries}
+ Since above attack works for $2^{d}$ different values of $s' \in \FF_q$, the brute-force space decreases from $\sO(2^{m})$ to $\sO(2^{m - d})$. \michals{13.03}{There is no such a thing as "bruteforce space" for SSS -- this scheme is perfectly secure, i.e it remains secure even against unbounded adversaries}
  \michals{13.03.22}{please use macros from cryptocode}
-=======
- Since above attack works for $2^{d}$ different values of $s' \in \FF_q$, the brute-force space decreases from $\sO(2^{m})$ to $\sO(2^{m - d})$. 
->>>>>>> 3969630ea24392b560b806c1b8786930bcc7e2a3
 	
 	to be continued...
 	
