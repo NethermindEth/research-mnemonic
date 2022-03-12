@@ -91,29 +91,29 @@
 			\begin{enumerate}
 				\item Let $s \in \FF_q$ be the secret to be shared and $D \in \FF_q$ be it's digest such that 
 				\begin{equation*}
-				D = \textrm{HMAC-SHA256}(R,s)[:4] || R
+				D = \textrm{HMAC-SHA256}(R,s)[:d] || R
 				\end{equation*} 
-				where $R$ is the randomness with length $m-32$ in bits for $m = \log_{2}{q}$. In other words the digest share $D$ is conposed of two parts; first 32-bit part is the first 32 bits of the output of the hash function and the remaining part is a randomness with $m-32$ bit length. Assume that we encode our secret as $s = f(0)$ and the digest $D = f(-1)$.
+				where $R$ is the randomness with length $m - d$ in bits for $m = \log_{2}{q}$ and some $d \in \ZZ$. In other words the digest share $D$ is composed of two parts; first $d$-bit part is the first $d$ bits of the output of the hash function and the remaining part is a randomness with $m - d$ bit length. Assume that we encode our secret as $s = f(0)$ and the digest $D = f(-1)$.
 				\item Since we already have two points $(0, s)$ and $(-1, D)$, we sample random $t-2$ more points, i.e. $y_{1}, y_{2}, \ldots y_{t-2} \in_{R} \FF_q$.
-				\item Using the above shares we perform Lagrange interpolation and construct the unique degree $t-1$ polynomial $f (x)$ with respect to our points.  
-				\item By evaluating $f (x)$ at the points $x_{t-1}, \ldots x_{n}$ we generate $n - t + 2$ more shares.
+				\item Using the above shares we perform Lagrange interpolation and construct the unique degree $t - 1$ polynomial $f (x)$ with respect to our points.  
+				\item By evaluating $f (x)$ at the points $x_{t - 1}, \ldots x_{n}$ we generate $n - t + 2$ more shares.
 				\item We output our shares as $(x_{i},y_{i})$ for $i = 1, \ldots n$.
 			\end{enumerate}
 		\item \textbf{Reconstruction Phase:}  
 			\begin{enumerate}
-				\item Recover the secret polynomial by applying Lagrange interpolation with $(x_{j},y_{j})$ for $j = i_{1}, \ldots, i_{t}$.
+				\item Recover the secret polynomial by applying Lagrange interpolation with $(x_{j}, y_{j})$ for $j = i_{1}, \ldots, i_{t}$.
 				\item Compute the secret $s = f(0)$
 				\item Compute the digest $D = f(-1)$
-				\item If $\textrm{HMAC-SHA256}(D[4:],s)[:4] = D[:4]$, then return $s$. Otherwise abort. 
+				\item If $\textrm{HMAC-SHA256}(D[d:],s)[:d] = D[:d]$, then return $s$. Otherwise abort. 
 			\end{enumerate}
 	\end{enumerate}
 	
 	\section{Security Analysis}
-	Let $\adv$ be a PPT adversary holding $t-1$ shares among $n$. WLOG we can assume that $\adv$ has $(x_{i}, y_{i})$ for $i = 1, \ldots, t-1$. Lagrange interpolation formula tells us that constructing a degree $t-1$ polynomial requires at least $t$ points. So $\adv$ has a missing point and let assume that this missing point be $(x_{t},y_{t}) = (-1, D)$.
+	Let $\adv$ be a PPT adversary holding $t-1$ shares among $n$. WLOG we can assume that $\adv$ has $(x_{i}, y_{i})$ for $i = 1, \ldots, t-1$. Lagrange interpolation formula tells us that constructing a degree $t - 1$ polynomial requires at least $t$ points. So $\adv$ has a missing point and let assume that this missing point be $(x_{t}, y_{t}) = (-1, D)$.
 	
 	The Lagrange interpolation formula is
 		\begin{equation}\label{eq:Lag_int}
-		f(x) = \sum\limits_{j = 1}^{t} y_{j}\ell_{j}(x)
+		f(x) = \sum\limits_{j = 1}^{t} y_{j} \ell_{j}(x)
 		\end{equation}
 	, where $\ell_{j}(x)$ is the  Lagrange basis polynomial WRT the $j$-th point, i.e.
 		\begin{equation}\label{eq:Lag_Basis}
@@ -133,15 +133,15 @@
 		s - \sum\limits_{j = 1}^{t-1} y_{j}\ell_{j}(0) = y_{t}\ell_{t}(0)
 	\end{equation}
 	
-	We know from the Definition \ref{def:shamir} that the secret and the shares are non-zero. Since the $x$ coordinates are all distinct, the Lagrange basis polynomials are also non-zero. There exist one unknown in both sides of (\ref{eq:thelast}), i.e. $s$ and $D$. Since $s,D \in \FF_q^{*}$, for each possible value of $s \in \FF_q$ there exist a unique value $y_{t} \in \FF_q$. But Since $y_{t} = D$, $\adv$ can perform a brute-force attack on the secret $s$ and using (\ref{eq:thelast}) she eliminates the candidate secret giving invalid digest. More precisely $\adv$ can proceed as follows.
+	We know from the Definition \ref{def:shamir} that the secret and the shares are non-zero. Since the $x$ coordinates are all distinct, the Lagrange basis polynomials are also non-zero. There exist one unknown in both sides of (\ref{eq:thelast}), i.e. $s$ and $y_{t}$. Since $s, y_{t} \in \FF_q^{*}$, for each possible value of $s \in \FF_q$ there exist a unique value $y_{t} \in \FF_q$. But Since $y_{t} = D$, $\adv$ can perform a brute-force attack on the secret $s$ and using (\ref{eq:thelast}) she eliminates the candidate secret giving invalid digest. More precisely $\adv$ can proceed as follows.
 		\begin{itemize}
 			\item Picks an $s'$ from $\FF_q$,
 			\item set $D' = \frac{s' - \sum\limits_{j = 1}^{t-1} y_{j}\ell_{j}(0)}{\ell_{t}(0)}$,
-			\item Checks wether the first 4 byte of $D'$ is equal to $\textrm{HMAC-SHA256}(R, s')[:4]$, where $R$ is the remaining part of $D'$.
-			\item If they are equal, then $s' = s$ with probability $1/2^{m-32}$. 
+			\item Checks wether the first $d$ bits of $D'$ is equal to $\textrm{HMAC-SHA256}(R, s')[:d]$, where $R$ is the remaining part of $D'$.
+			\item If they are equal, then $s' = s$ with probability $1/2^{m - d}$. 
 			\item Otherwise eliminate the candidate secret $s'$ and try with a fresh $s' \in \FF_q$. 
 		\end{itemize}
- Since above attack works for $2^{32}$ different values of $s' \in \FF_q$, the brute-force space decreases from $\sO(2^{m})$ to $\sO(2^{m-32})$. 
+ Since above attack works for $2^{d}$ different values of $s' \in \FF_q$, the brute-force space decreases from $\sO(2^{m})$ to $\sO(2^{m - d})$. 
 	
 	to be continued...
 	
@@ -154,6 +154,6 @@
  \else
    \bibliographystyle{alpha-short}
  \fi
-\bibliography{cryptobib/abbrev3,cryptobib/crypto,add}
+\bibliography{cryptobib/abbrev3,cryptobib/crypto}
 
 \end{document} 
