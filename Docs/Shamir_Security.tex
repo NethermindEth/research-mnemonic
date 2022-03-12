@@ -1,0 +1,159 @@
+%
+% Parameters
+%
+
+\ifdefined\fullversion
+\else
+\def\fullversion{1}    % 0 = conference version; 1 = full version
+\fi
+
+\ifdefined\cameraversion
+\else
+\def\cameraversion{0}    % 0 = long version; 1 = proceedings version
+\fi
+
+\def\showoverflow{1}   % 1 = show overflows
+\def\allow{1}      % 0 = remove todo command
+\def\anonymous{1}      % 1 = anonymous
+
+%
+% Document class 
+%
+
+\documentclass[envcountsame,runningheads,notitlepage]{llncs}
+
+
+\ifnum\fullversion=1
+\usepackage[a4paper, margin=1.5in]{geometry}
+\setlength{\marginparwidth}{2.5cm}
+\fi
+
+
+
+%
+% Custom header
+%
+
+\input{tex_files/ZZ_header}
+
+\title{Insert Title}
+\titlerunning{Insert Running Title}
+\date{}
+
+\ifnum\anonymous=0
+\author{
+  Coauthor Name\inst{1} \and
+  Coauthor Name\inst{2}
+}% Add author name here
+
+\institute{Coauthor University\\
+  \href{mailto:mail@mail.com}{mail@mail.com} \and
+  Coauthor University\\
+  \href{mailto:mail@mail.com}{mail@mail.com}
+}  % Add institute here
+
+\else
+\author{} 
+\institute{}
+\fi
+
+\begin{document}
+	\title{Security Analysis of Modified Shamir's Secret Sharing Scheme}
+	
+	\author{Research Team}
+	\maketitle
+	
+	\section{Problem Definition}
+	In Mnemonics project we use a modified version of Shamir's Secret Sharing Scheme (SSS) \cite{shamirSSS} which can be stated as below. 
+	
+	\begin{definition}\label{def:shamir}
+		 Let $\FF_q$ be a finite field with $q$ elements and $t,n \in \ZZ$. A $(t, n)$-thresholds secret sharing scheme shares a non-zero secret $s \in \FF_q$ among $n$ users such that any $t$ or more shares can reconstruct the secret but $t-1$ or less cannot. Shamir's secret sharing scheme is an ideal and perfect A $(t, n)$-thresholds scheme and can be defined in two phases as follows:
+		 
+		\begin{enumerate}
+			\item \textbf{Share Generation Phase:} 
+				\begin{enumerate}
+					\item A dealer chooses a secret polynomial $f (x)$ with degree $t - 1$.
+						\begin{equation*}
+						f (x) = a_{t-1}x^{t-1} + \ldots + a_1x + a_0 \in \FF_q [x]
+						\end{equation*}
+					where $a_0 = s$, and $a_i \in_{R} \FF_q$ for $i = 1, \ldots, t-1$. 
+					\item The dealer sends the tuple $(x_{i}, f (x_{i}))$ as the share to $i$-th user, where $x_{i} \in \FF_q$ are all non-zero and distinct for $i = 1, \ldots, n$. 
+				\end{enumerate}
+		
+			\item \textbf{Reconstruction Phase:} 
+			If any $t$ or more users jointly perform a Lagrange interpolation with their shares, they obtain the secret polynomial $f (x)$, and $f(0)$ yields the secret $s$.
+		\end{enumerate}
+	\end{definition}
+
+	In addition to the above definition, we also encode the digest of the secret as $f(-1)$ as stated in ``\textit{SLIP-0039 : Shamir's Secret-Sharing for Mnemonic Codes}''. Our modified scheme is as follows:
+	\begin{enumerate}
+		\item \textbf{Share Generation Phase:}  
+			\begin{enumerate}
+				\item Let $s \in \FF_q$ be the secret to be shared and $D \in \FF_q$ be it's digest such that 
+				\begin{equation*}
+				D = \textrm{HMAC-SHA256}(R,s)[:4] || R
+				\end{equation*} 
+				where $R$ is the randomness with length $m-32$ in bits for $m = \log_{2}{q}$. In other words the digest share $D$ is conposed of two parts; first 32-bit part is the first 32 bits of the output of the hash function and the remaining part is a randomness with $m-32$ bit length. Assume that we encode our secret as $s = f(0)$ and the digest $D = f(-1)$.
+				\item Since we already have two points $(0, s)$ and $(-1, D)$, we sample random $t-2$ more points, i.e. $y_{1}, y_{2}, \ldots y_{t-2} \in_{R} \FF_q$.
+				\item Using the above shares we perform Lagrange interpolation and construct the unique degree $t-1$ polynomial $f (x)$ with respect to our points.  
+				\item By evaluating $f (x)$ at the points $x_{t-1}, \ldots x_{n}$ we generate $n - t + 2$ more shares.
+				\item We output our shares as $(x_{i},y_{i})$ for $i = 1, \ldots n$.
+			\end{enumerate}
+		\item \textbf{Reconstruction Phase:}  
+			\begin{enumerate}
+				\item Recover the secret polynomial by applying Lagrange interpolation with $(x_{j},y_{j})$ for $j = i_{1}, \ldots, i_{t}$.
+				\item Compute the secret $s = f(0)$
+				\item Compute the digest $D = f(-1)$
+				\item If $\textrm{HMAC-SHA256}(D[4:],s)[:4] = D[:4]$, then return $s$. Otherwise abort. 
+			\end{enumerate}
+	\end{enumerate}
+	
+	\section{Security Analysis}
+	Let $\adv$ be a PPT adversary holding $t-1$ shares among $n$. WLOG we can assume that $\adv$ has $(x_{i}, y_{i})$ for $i = 1, \ldots, t-1$. Lagrange interpolation formula tells us that constructing a degree $t-1$ polynomial requires at least $t$ points. So $\adv$ has a missing point and let assume that this missing point be $(x_{t},y_{t}) = (-1, D)$.
+	
+	The Lagrange interpolation formula is
+		\begin{equation}\label{eq:Lag_int}
+		f(x) = \sum\limits_{j = 1}^{t} y_{j}\ell_{j}(x)
+		\end{equation}
+	, where $\ell_{j}(x)$ is the  Lagrange basis polynomial WRT the $j$-th point, i.e.
+		\begin{equation}\label{eq:Lag_Basis}
+		\ell_{j}(x) = \prod\limits_{\substack{k = 1 \\ k \neq j}}^{t} \frac{x - x_{k}}{x_{j} - x_{k}}
+		\end{equation}
+	
+	Since $\adv$ knows the $x$ coordinates of $t$ points she holds, she can compute the Lagrange basis polynomials according to (\ref{eq:Lag_Basis}). 
+	
+	Now, using (\ref{eq:Lag_int}) she writes
+	
+	\begin{align*}
+		s &= f(0)\\
+		  &= \sum\limits_{j = 1}^{t-1} y_{j}\ell_{j}(0) + y_{t}\ell_{t}(0)
+	\end{align*}
+	and 
+	\begin{equation}\label{eq:thelast}
+		s - \sum\limits_{j = 1}^{t-1} y_{j}\ell_{j}(0) = y_{t}\ell_{t}(0)
+	\end{equation}
+	
+	We know from the Definition \ref{def:shamir} that the secret and the shares are non-zero. Since the $x$ coordinates are all distinct, the Lagrange basis polynomials are also non-zero. There exist one unknown in both sides of (\ref{eq:thelast}), i.e. $s$ and $D$. Since $s,D \in \FF_q^{*}$, for each possible value of $s \in \FF_q$ there exist a unique value $y_{t} \in \FF_q$. But Since $y_{t} = D$, $\adv$ can perform a brute-force attack on the secret $s$ and using (\ref{eq:thelast}) she eliminates the candidate secret giving invalid digest. More precisely $\adv$ can proceed as follows.
+		\begin{itemize}
+			\item Picks an $s'$ from $\FF_q$,
+			\item set $D' = \frac{s' - \sum\limits_{j = 1}^{t-1} y_{j}\ell_{j}(0)}{\ell_{t}(0)}$,
+			\item Checks wether the first 4 byte of $D'$ is equal to $\textrm{HMAC-SHA256}(R, s')[:4]$, where $R$ is the remaining part of $D'$.
+			\item If they are equal, then $s' = s$ with probability $1/2^{m-32}$. 
+			\item Otherwise eliminate the candidate secret $s'$ and try with a fresh $s' \in \FF_q$. 
+		\end{itemize}
+ Since above attack works for $2^{32}$ different values of $s' \in \FF_q$, the brute-force space decreases from $\sO(2^{m})$ to $\sO(2^{m-32})$. 
+	
+	to be continued...
+	
+%\section{Introduction}
+%\label{sec:introduction}
+%\input{tex_files/01_introduction}
+
+\ifnum\fullversion=1
+  \bibliographystyle{splncs03}
+ \else
+   \bibliographystyle{alpha-short}
+ \fi
+\bibliography{cryptobib/abbrev3,cryptobib/crypto,add}
+
+\end{document} 
