@@ -11,16 +11,16 @@ def text_to_list(text_path):
 
 
 def get_dictionary_bits(word_list):
-    """(Auxiliary) Gets the number of bits N a given wordlist dictionary represents.
+    """(Auxiliary) Gets the number of bits a given wordlist dictionary represents.
     
     The word list to be used as a dictionary for encoding/decoding purposes should always have 2^N 
     elements, since each mnemonic word will be encoded into an N-bit number. After checking for this
-    condition, the number N is returned as an integer.
+    condition, the number N=number_of_bits is returned as an integer.
     """
 
-    N = log2(len(word_list))
-    assert N.is_integer(), 'Number of words in dictionary should be a power of 2.'
-    return int(N)
+    number_of_bits = log2(len(word_list))
+    assert number_of_bits.is_integer(), 'Number of words in dictionary should be a power of 2.'
+    return int(number_of_bits)
 
 
 def encode_words(word_list, seed_phrase):

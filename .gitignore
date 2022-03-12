@@ -6,3 +6,7 @@ tests/__pycache__/test_shamir.cpython-39-pytest-6.2.4.pyc
 tests/__pycache__/test_word_coding.cpython-39-pytest-6.2.4.pyc
 tests/__pycache__/test_wordcoding.cpython-39-pytest-6.2.4.pyc
 .vscode/settings.json
+modules/__pycache__/shamir.cpython-39.pyc
+modules/__pycache__/word_coding.cpython-39.pyc
+modules/__pycache__/shamir.cpython-39.pyc
+modules/__pycache__/word_coding.cpython-39.pyc

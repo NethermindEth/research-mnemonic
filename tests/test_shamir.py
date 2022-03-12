@@ -3,14 +3,15 @@ from modules.shamir import *
 
 
 def test_shamir():
-    #Parameters for testing
-    q=2**(11*12)
-    shared_secret = randint(1,q-1)
-    num_shares = randint(5,15)
-    threshold = randint(3, num_shares)
-
     #Let us test 10 times.
     for _ in range(10):
+        #Parameters for testing
+        num_words = randint(3,30)
+        q=2**(11*num_words)
+        shared_secret = randint(1,q-1)
+        num_shares = randint(5,15)
+        threshold = randint(3, num_shares)
+
         #Run Shamir's secret sharing and store the shares
         shares = share_generation(shared_secret, num_shares, threshold, q)
         pick_indices = sample(list(range(1,num_shares+1)), threshold)

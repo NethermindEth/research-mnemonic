@@ -1,14 +1,10 @@
+from get_irreducible_poly import get_irreducible_poly
 from math import floor, log2
 from random import randint
 import galois
 import hmac
 import os
 
-
-def init_galois_irr_poly():
-    """init function extracts the global galois field's irr poly"""
-
-    return galois_irreducible_polynomial
 
 
 def create_digest(randomness: bytes, shared_secret: bytes, digest_length=4):
@@ -21,7 +17,10 @@ def create_digest(randomness: bytes, shared_secret: bytes, digest_length=4):
 def lagrange_interpolation(x=[], y=[], at_point=int, q=int):
     """Implementation of Lagrange interpolation at a certain integer point."""
 
-    GF = galois.GF(q)
+    degree = int(log2(q))
+    poly = get_irreducible_polynomial(degree)
+    GF = galois.GF(q, irreducible_poly = poly)
+
     if len(x) == len(y):
         result = GF.Zeros(1)
         for i in range(len(x)):  
@@ -54,12 +53,6 @@ def share_generation(secret, num_shares, threshold, q, digest_length=4):
     #Sanity checks between the given parameters.
     assert num_shares>=threshold, 'Threshold cannot be larger than the number of shares!'
     assert q>=int(secret), 'More words are needed to encode this secret!'
-
-    GF = galois.GF(q)
-
-    #To extract irreducible polynomials of created GF
-    global galois_irreducible_polynomial
-    galois_irreducible_polynomial = GF.irreducible_poly.integer
 
     #Choose a randomness for digest
     randomness_length = int(floor(log2(q)/8)-digest_length)

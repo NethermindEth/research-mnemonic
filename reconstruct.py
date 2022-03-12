@@ -1,6 +1,6 @@
-import json
 from modules import shamir, word_coding
 import glob
+import json
 
 
 #Initialize lists:

@@ -3,24 +3,31 @@ import argparse
 import json
 
 
-#Parser is used in taking the number of shares(-ns) and threshold numbers(-nt) from terminal. 
+#Parser is used in taking the number of shares(-n) and threshold (-t) from terminal.
+#Can also provide secret phrase directly into the terminal, as a space-separated phrase.
 parser = argparse.ArgumentParser()
-parser.add_argument('-ns', type=int, help='number of shares to generate', required=True)
-parser.add_argument('-nt', type=int, help='threshold: number of shares to reconstruct the secret', required=True)
+parser.add_argument('-n', type=int, help='number of shares to generate', required=True)
+parser.add_argument('-t', type=int, help='threshold: number of shares to reconstruct the secret', required=True)
+parser.add_argument('-w', type=str, help='words to be shared as secret', required=False)
 args = parser.parse_args()
-assert args.ns >= args.nt, 'Number of shares(ns) cannot be lower than threshold(nt)!'
-n = args.ns 
-t = args.nt
+assert args.n >= args.t, 'Number of shares(-n) cannot be lower than threshold(-t)!'
+n = args.n 
+t = args.t
+secret = args.w
 
-#Read dictionary, which should have 2^N words for some integer N.
+#Read dictionary, which should have 2^(nb) words for some integer nb.
 word_list = word_coding.text_to_list('wordlist.txt')
 nb = word_coding.get_dictionary_bits(word_list)
 
-#Read secret from text file 'secret.txt'. It is assumed that the text file will contain a single row
-#of words, separated by a space. Also, all the words in the secret should be in the dictionary.
-with open('secret.txt', 'r') as file:
-    secret = file.read().strip().split(' ')
-assert set(secret).issubset(set(word_list)), "Not all the words in the secret are contained in the dictionary"
+#If no secret was provided in the terminal, read secret from text file 'secret.txt'. It is assumed 
+# that the text file will contain a single row of words, separated by a space.
+if secret == None:
+    with open('secret.txt', 'r') as file:
+        secret = file.read()
+
+#All words in the secret should be in the dictionary.
+secret = secret.strip().split(' ')
+assert set(secret).issubset(set(word_list)), "Not every word in the secret is contained in the dictionary"
 
 #Constructing Galois fields, using the number of words of the secret.
 nw = len(secret)
