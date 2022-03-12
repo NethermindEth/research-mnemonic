@@ -1,0 +1,3 @@
+[submodule "docs/cryptobib"]
+	path = docs/cryptobib
+	url = https://github.com/cryptobib/export
