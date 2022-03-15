@@ -1,6 +1,6 @@
+from modules.get_irreducible_poly import get_irreducible_poly
 from random import randint, sample
 from modules.shamir import *
-from modules.get_irreducible_poly import get_irreducible_poly
 
 
 def test_shamir():
@@ -9,7 +9,7 @@ def test_shamir():
         #Parameters for testing
         num_words = randint(3,30)
         q=2**(11*num_words)
-        irreducible_poly = get_irreducible_poly[11*num_words]
+        irreducible_poly = get_irreducible_poly(11*num_words)
         shared_secret = randint(1,q-1)
         num_shares = randint(5,15)
         threshold = randint(3, num_shares)

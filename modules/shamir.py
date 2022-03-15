@@ -1,4 +1,4 @@
-from get_irreducible_poly import get_irreducible_poly
+from modules.get_irreducible_poly import get_irreducible_poly
 from math import floor, log2
 from random import randint
 import galois
