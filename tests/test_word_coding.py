@@ -6,7 +6,7 @@ def test_word_coding():
     word_list = text_to_list('wordlist.txt')
 
     for _ in range(10):
-        seed_phrase_length = randint(1,20)
+        seed_phrase_length = randint(3,30)
         seed_phrase = sample(word_list, seed_phrase_length)
 
         number = encode_words(word_list, seed_phrase)

@@ -1,4 +1,4 @@
-def get_irreducible_poly(degree):
+def get_primitive_poly(degree):
     return polynomials[str(degree)]
 
 polynomials = {

@@ -1,4 +1,3 @@
-from modules.get_irreducible_poly import get_irreducible_poly
 from math import floor, log2
 from random import randint
 import galois
@@ -16,7 +15,7 @@ def create_digest(randomness:bytes, shared_secret:bytes, digest_length=4):
 def lagrange_interpolation(x:list, y:list, at_point:int, q:int, irreducible_poly):
     """Implementation of Lagrange interpolation at a certain integer point."""
 
-    GF = galois.GF(q, irreducible_poly = irreducible_poly)
+    GF = galois.GF(q, irreducible_poly=irreducible_poly, primitive_element='x', verify=False)
 
     if len(x) == len(y):
         result = GF.Zeros(1)

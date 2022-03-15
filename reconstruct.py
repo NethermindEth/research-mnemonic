@@ -14,17 +14,17 @@ for json_filename in glob.glob('shares/share*[0-9].json'): #TODO: does this work
 	with open(json_filename, "r") as json_file:
 		json_share = json.load(json_file)
 
-	#Dictionary and irreducible polynomial should be consistent amongst shares.
+	#Dictionary and primitive polynomial should be consistent amongst shares.
 	if(first_iteration):
 		threshold = json_share['threshold']
 		word_list = json_share['dictionary'].split(' ')
 		dict_bits = word_coding.get_dictionary_bits(word_list)
 		num_words = len(json_share['share'])
 		q = 2**(dict_bits*num_words)
-		irreducible_poly = json_share['irreducible_poly']
-		expected_data = [json_share['total_shares'], threshold, irreducible_poly, json_share['dictionary']]
+		primitive_poly = json_share['primitive_poly']
+		expected_data = [json_share['total_shares'], threshold, primitive_poly, json_share['dictionary']]
 	else:
-		assert expected_data == [json_share['total_shares'], json_share['threshold'], irreducible_poly, json_share['dictionary']], 'Shares have incompatible data'
+		assert expected_data == [json_share['total_shares'], json_share['threshold'], primitive_poly, json_share['dictionary']], 'Shares have incompatible data'
 	first_iteration = False
 
 	x_id.append(json_share['id'])
@@ -33,7 +33,7 @@ for json_filename in glob.glob('shares/share*[0-9].json'): #TODO: does this work
 
 #Call the reconstruction routine and save to file
 assert threshold <= len(y_shares), 'Not enough shares for secret reconstruction' 
-reconstructed_secret = shamir.secret_reconstruction(x_id, y_shares, q, irreducible_poly)
+reconstructed_secret = shamir.secret_reconstruction(x_id, y_shares, q, primitive_poly)
 seed_phrase = word_coding.decode_words(word_list, format(reconstructed_secret, "b").zfill(dict_bits*num_words))
 print(seed_phrase)
 with open('secret_reconstructed.txt', 'w') as file:
