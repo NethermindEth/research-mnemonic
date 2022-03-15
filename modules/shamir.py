@@ -6,20 +6,17 @@ import hmac
 import os
 
 
-
-def create_digest(randomness: bytes, shared_secret: bytes, digest_length=4):
+def create_digest(randomness:bytes, shared_secret:bytes, digest_length=4):
     """Digest function according to SLIP39. Digest length set to 4 as per SLIP39"""
 
     return hmac.new(randomness, shared_secret, "sha256").digest()[:digest_length]
     #TODO: discuss the digest_length and the hash function.
 
 
-def lagrange_interpolation(x=[], y=[], at_point=int, q=int):
+def lagrange_interpolation(x:list, y:list, at_point:int, q:int, irreducible_poly):
     """Implementation of Lagrange interpolation at a certain integer point."""
 
-    degree = int(log2(q))
-    poly = get_irreducible_polynomial(degree)
-    GF = galois.GF(q, irreducible_poly = poly)
+    GF = galois.GF(q, irreducible_poly = irreducible_poly)
 
     if len(x) == len(y):
         result = GF.Zeros(1)
@@ -32,7 +29,7 @@ def lagrange_interpolation(x=[], y=[], at_point=int, q=int):
     return result
 
 
-def share_generation(secret, num_shares, threshold, q, digest_length=4):
+def share_generation(secret:list, num_shares:int, threshold:int, q:int, irreducible_poly, digest_length=4):
     """Implements Shamir secret sharing.
 
     This Shamir secret sharing implementation constructs a random polynomial f(x) of degree t-1
@@ -82,14 +79,14 @@ def share_generation(secret, num_shares, threshold, q, digest_length=4):
     #Above we have chosen random t-2 shares from [1,q-1]. Now we compute n-t+2 more evaluations, and add them to the final_y list. 
     for i in range (threshold - 1, num_shares + 1):
         final_x.append(i)
-        final_y.append(int(lagrange_interpolation(initial_int_index, initial_int_shares, i, q)))
+        final_y.append(int(lagrange_interpolation(initial_int_index, initial_int_shares, i, q, irreducible_poly)))
     
     return final_y
 
-def secret_reconstruction(x=[], y=[], q=int, digest_length=4):
+def secret_reconstruction(x:list, y:list, q:int, irreducible_poly, digest_length=4):
     """Reconstruct secret and digest, check whether they are consistent or not."""
-    reconstructed_secret = int(lagrange_interpolation(x, y, 0, q))
-    reconstructed_digest = int(lagrange_interpolation(x, y, q-1, q))
+    reconstructed_secret = int(lagrange_interpolation(x, y, 0, q, irreducible_poly))
+    reconstructed_digest = int(lagrange_interpolation(x, y, q-1, q, irreducible_poly))
     digest_byte = reconstructed_digest.to_bytes(int(floor(log2(q)/8)), 'big')
     
     assert digest_byte[:digest_length] == create_digest(digest_byte[digest_length:], str(reconstructed_secret).encode(), digest_length), "Invalid digest of the shared secret."

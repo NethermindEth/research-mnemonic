@@ -1,3 +1,4 @@
+from modules.get_irreducible_poly import get_irreducible_poly
 from modules import shamir, word_coding
 import argparse
 import json
@@ -30,20 +31,22 @@ secret = secret.strip().split(' ')
 assert set(secret).issubset(set(word_list)), "Not every word in the secret is contained in the dictionary"
 
 #Constructing Galois fields, using the number of words of the secret.
+#Get the irreducible polynomial from the provided JSON.
 nw = len(secret)
 q = 2**(nb*nw)
+irreducible_poly = get_irreducible_poly(nb*nw)
 
 #Convert secret to numerical form, so that shares can be generated.
 binary_secret = word_coding.encode_words(word_list, secret)
 decimal_secret = int(binary_secret,2)
-shares = shamir.share_generation(decimal_secret, n, t, q)
+shares = shamir.share_generation(decimal_secret, n, t, q, irreducible_poly)
 
 #For each share, program outputs a file including id, shared secret(word encoded), degree and irr poly to construct unique GF.
 for i in range (len(shares)):
     reconstructed_shared_secrets = word_coding.decode_words(word_list, format(shares[i], "b").zfill(nb*nw))
     print ('id: ', i+1)
     print ('share: ',reconstructed_shared_secrets)
-    print ('irr_poly: ', shamir.init_galois_irr_poly())
+    print ('irreducible_poly: ', irreducible_poly)
     print ('encoded_words:', shares[i],'\n\n')
 
     file_name = "shares/share_" + str(i+1) + ".json"
@@ -54,7 +57,7 @@ for i in range (len(shares)):
             'total_shares' : n,
             'threshold' : t,
             'share' : reconstructed_shared_secrets,
-            'irr_poly' : shamir.init_galois_irr_poly(),
+            'irreducible_poly' : irreducible_poly,
             'dictionary' : ' '.join(word_list)
             },
             file, 
