@@ -5,6 +5,9 @@ import hmac
 import os
 
 
+def get_polynomial_degree(polynomial:str):
+    return galois.Poly.String(polynomial).degree
+
 def create_digest(randomness:bytes, shared_secret:bytes, digest_length=4):
     """Digest function according to SLIP39. Digest length set to 4 as per SLIP39"""
 
@@ -12,31 +15,36 @@ def create_digest(randomness:bytes, shared_secret:bytes, digest_length=4):
     #TODO: discuss the digest_length and the hash function.
 
 
-def lagrange_interpolation(x:list, y:list, at_point:int, q:int, irreducible_poly):
+def lagrange_interpolation(x:list, y:list, at_points:list, q:int, primitive_poly:str):
     """Implementation of Lagrange interpolation at a certain integer point."""
 
-    GF = galois.GF(q, irreducible_poly=irreducible_poly, primitive_element='x', verify=False)
+    # Construct the Galois field to do the reconstruction arithmetic.
+    # To this end, a *primitive* polynomial on GF(2) of degree d such that q = 2^d will be needed.
+    # Since this polynomial is primitive, we can assert x is a primitive element.
+    # "Verify" is set to False, otherwise galois.GF attempts to verify the primitiveness of the
+    # polynomial, which effectively freezes the script.
+    GF = galois.GF(q, irreducible_poly=primitive_poly, primitive_element='x', verify=False)
+    assert 2**get_polynomial_degree(primitive_poly) == q, 'Primitive polynomial does not have the correct degree. q=2^degree should hold'
+    assert len(x) == len(y), "Number of x values (" + str(len(x)) + ") and number of y values (" + str(len(y)) + ") do not coincide."
+    
+    results = GF.Zeros(1)
+    for i in range(len(x)):  
+        numerators = GF([1])
+        denominator = GF([1])
+        for j in range(len(x)):
+            if i != j:
+                numerators = numerators * (GF([at_points]) - GF([x[j]]))
+                denominator = denominator * (GF([x[i]]) - GF([x[j]]))
+        lagrange_coefficients = numerators/denominator
+        results  = results + lagrange_coefficients * GF([y[i]])
+    return [int(field_element) for field_element in results[0]]
 
-    if len(x) == len(y):
-        result = GF.Zeros(1)
-        for i in range(len(x)):  
-            LagrangeCoefficient = GF([1])
-            for j in range(len(x)):
-                if i != j:
-                    LagrangeCoefficient = LagrangeCoefficient * ((GF([at_point]) - GF([x[j]])) / (GF([x[i]]) - GF([x[j]])))
-            result  = result + LagrangeCoefficient * GF([y[i]])  
-    return result
 
-
-def share_generation(secret:list, num_shares:int, threshold:int, q:int, irreducible_poly, digest_length=4):
+def share_generation(secret:list, num_shares:int, threshold:int, q:int, primitive_poly:str, digest_length=4):
     """Implements Shamir secret sharing.
 
     This Shamir secret sharing implementation constructs a random polynomial f(x) of degree t-1
     such that evaluation of f(x) at q-1 and q-2 yields the secret to be shared and its digest, respectively.
-
-    WARNING!
-    The randomness values used in this algorithm must be sampled by a cryptographically secure PRNG.
-    The random sampling functions that we use here may be vulnerable to any statistical attacks. 
 
     Keyword arguments:
     * secret -- secret that will be encrypted.
@@ -76,16 +84,16 @@ def share_generation(secret:list, num_shares:int, threshold:int, q:int, irreduci
     final_y = initial_int_shares[2:]
 
     #Above we have chosen random t-2 shares from [1,q-1]. Now we compute n-t+2 more evaluations, and add them to the final_y list. 
-    for i in range (threshold - 1, num_shares + 1):
-        final_x.append(i)
-        final_y.append(int(lagrange_interpolation(initial_int_index, initial_int_shares, i, q, irreducible_poly)))
+    remaining_int_indices = [*range(threshold - 1, num_shares + 1)]
+    final_x += remaining_int_indices
+    final_y += lagrange_interpolation(initial_int_index, initial_int_shares, remaining_int_indices, q, primitive_poly)
     
     return final_y
 
-def secret_reconstruction(x:list, y:list, q:int, irreducible_poly, digest_length=4):
+def secret_reconstruction(x:list, y:list, q:int, primitive_poly:str, digest_length=4):
     """Reconstruct secret and digest, check whether they are consistent or not."""
-    reconstructed_secret = int(lagrange_interpolation(x, y, 0, q, irreducible_poly))
-    reconstructed_digest = int(lagrange_interpolation(x, y, q-1, q, irreducible_poly))
+
+    reconstructed_secret, reconstructed_digest = lagrange_interpolation(x, y, [0, q-1], q, primitive_poly)
     digest_byte = reconstructed_digest.to_bytes(int(floor(log2(q)/8)), 'big')
     
     assert digest_byte[:digest_length] == create_digest(digest_byte[digest_length:], str(reconstructed_secret).encode(), digest_length), "Invalid digest of the shared secret."

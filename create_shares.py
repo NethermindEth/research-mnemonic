@@ -14,10 +14,10 @@ for f in files:
 #Parser is used in taking the number of shares(-n) and threshold (-t) from terminal.
 #Can also provide secret phrase directly into the terminal, as a space-separated phrase.
 parser = argparse.ArgumentParser()
-parser.add_argument('-n', type=int, help='number of shares to generate', required=True)
-parser.add_argument('--threshold', '-t', type=int, help='number of shares to reconstruct the secret', required=True)
-parser.add_argument('--secret', '-s', type=str, help='words to be shared as secret, as a space-separated string or as a path to a .txt file')
-parser.add_argument('--verbose', '-v', action='store_true', help='include public reconstruction data in the JSON shares?')
+parser.add_argument('-n', metavar="", type=int, help='number of shares to generate', required=True)
+parser.add_argument('-t', '--threshold', metavar="", type=int, help='number of shares needed to reconstruct the secret', required=True)
+parser.add_argument('-s', '--secret', metavar="", type=str, help='secret to share. Input a string with the secret words separated by spaces, OR a path to a .txt file')
+parser.add_argument('-v', '--verbose', action='store_true', help='use to include public reconstruction data in the JSON shares')
 
 args = parser.parse_args()
 n = args.n
@@ -33,24 +33,25 @@ nb = word_coding.get_dictionary_bits(word_list)
 # Obtain the secret. Begin considering the possibility that it will be loaded from a .txt file.
 if secret != None:
     regex = r"^[A-Za-z]:(\\|\/).*\.[tT][xX][tT]"
-    file_path = re.match(regex, secret.strip())[0]
+    file_path_found = re.search(regex, secret.strip())
+    file_path = file_path_found.group(0) if file_path_found else None
 else:
     #If no secret was provided, we will be loading secret.txt by default.
     file_path = 'secret.txt'
 
-# If a file path was found, load it.
+# If a file path was assigned above, load it.
 if file_path != None:
     # It is assumed that the text file will contain a single row of words, separated by a space.
     with open(file_path, 'r') as file:
         secret = file.read()
 
-#If no file path was found above, then -s is already the secret phrase! 
+#If no file path was assigned above, then -s is the secret phrase! 
 secret = secret.strip().split(' ')
-
-#All words in the secret should be in the dictionary.
+#Secret should have between 3 and 60 words, and all words in the secret should be in the dictionary.
+assert len(secret) in range(3,61), "Secret has " + str(len(secret)) + " words, but it must have between 3 and 60 words"
 assert set(secret).issubset(set(word_list)), "Not every word in the secret is contained in the dictionary"
 
-#Constructing Galois fields, using the number of words of the secret.
+#Compute Galois-field parameters, using the number of words of the secret.
 #Get the primitive polynomial from the provided JSON.
 nw = len(secret)
 assert nw <= 60, "Secret can only have up to 60 words."
