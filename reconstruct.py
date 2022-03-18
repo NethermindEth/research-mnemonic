@@ -55,7 +55,7 @@ for json_filename in list_of_share_filenames: #TODO: does this work for numbers 
 		try:
 			assert get_reconstruction_data(json_share) == (total_shares, threshold, primitive_poly, word_list), 'Shares have incompatible reconstruction data.'
 		except KeyError:
-			raise ShareNotVerboseError('-v flag was added, but not all the shares are verbose')
+			raise RuntimeError('-v flag was added, but not all the shares are verbose')
 			
 	assert len(json_share['share']) == num_words, 'A share has a number of words inconsistent with the given polynomial and dictionary'
 
