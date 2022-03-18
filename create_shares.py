@@ -33,10 +33,7 @@ nb = word_coding.get_dictionary_bits(word_list)
 # Obtain the secret. Begin considering the possibility that it will be loaded from a .txt file.
 if secret != None:
     regex = r"^[A-Za-z]:(\\|\/).*\.[tT][xX][tT]"
-    print(secret)
     file_path = re.match(regex, secret.strip())[0]
-    print("file path")
-    print(file_path)
 else:
     #If no secret was provided, we will be loading secret.txt by default.
     file_path = 'secret.txt'
@@ -49,7 +46,6 @@ if file_path != None:
 
 #If no file path was found above, then -s is already the secret phrase! 
 secret = secret.strip().split(' ')
-print(secret)
 
 #All words in the secret should be in the dictionary.
 assert set(secret).issubset(set(word_list)), "Not every word in the secret is contained in the dictionary"
