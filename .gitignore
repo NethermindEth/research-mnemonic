@@ -10,3 +10,14 @@ modules/__pycache__/shamir.cpython-39.pyc
 modules/__pycache__/word_coding.cpython-39.pyc
 modules/__pycache__/shamir.cpython-39.pyc
 modules/__pycache__/word_coding.cpython-39.pyc
+shares/share_1.json
+shares/share_2.json
+shares/share_3.json
+shares/share_4.json
+shares/share_5.json
+shares/share_6.json
+shares/share_7.json
+shares/share_8.json
+shares/share_9.json
+secret.txt
+secret_reconstructed.txt
