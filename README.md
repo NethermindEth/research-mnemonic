@@ -109,7 +109,7 @@ One can share his secret by running below command in the terminal.
   Python create_shares.py -n #shares -t #threshold -s path/secret.txt
  ```
 
-If the secret file is not defined then the secret is requested to be typed on the terminal. The **reconstruct.py** takes json files automatically from the same location and outputs the secret *s* if the number of the shares is enough.
+If the secret file is not defined then the secret is requested to be typed on the terminal. The **reconstruct.py** takes *json* files automatically from the same location and outputs the secret *s* if the number of the shares is enough.
 
 ## Design rationale
 
