@@ -92,13 +92,13 @@ Our shares are stored in *json* files which are created in the same location wit
   {
     "id": i,
     "share": [
-        "word<sub>1</sub>",
-        "word<sub>2</sub>",
-        "word<sub>3</sub>",
+        "word_1",
+        "word_2",
+        "word_3",
         .
         .
         .
-        "word<sub>nw</sub>"
+        "word_nw"
     ]
 }
  ```
