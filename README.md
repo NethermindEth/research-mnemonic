@@ -106,7 +106,7 @@ Our shares are stored in json files which are created in the same location with 
 One can share his secret by running below command in the terminal.
 
 ```Python
-  Python3 -n #shares -t #threshold -s path/secret.txt
+  Python -n #shares -t #threshold -s path/secret.txt
  ```
 
 If the secret file is not defined than it is typed on the terminal. The **reconstruct.py** takes json files automatically from the same location and outputs the secret s if the number of the shares is enough.
