@@ -43,9 +43,9 @@ Let F be a finite field with q elements. A (t, n)-threshold secret sharing schem
 
 + If any t or more users jointly perform a Lagrange interpolation with their shares, they obtain the secret polynomial f(x), and f(0) yields the secret s.
 
-In addition to the above definition, we also encode the digest of the secret as f(q-1) as stated in SLIP-0039: Shamir's Secret-Sharing for Mnemonic Codes. Let s the secret to be shared and D be it's digest such that, D = HMAC-SHA256(R || s)[:d] || R, where R is the randomness with length m-d in bits, for m = log<sub>2</sub> q and some integer d. 
-
 ![shamir](images/shamir.jpg)
+
+In addition to the above definition, we also encode the digest of the secret as f(q-1) as stated in SLIP-0039: Shamir's Secret-Sharing for Mnemonic Codes. Let s the secret to be shared and D be it's digest such that, D = HMAC-SHA256(R || s)[:d] || R, where R is the randomness with length m-d in bits, for m = log<sub>2</sub> q and some integer d. 
 
 In other words the digest share D is composed of two parts; first d-bit part is the first d bits of the output of the hash function and the remaining part is a randomness with m-d bit length. Assume that we encode our secret as s = f(0) and the digest D = f(q-1).
 
@@ -60,7 +60,7 @@ Lagrange interpolation formula tells us that constructing a degree t-1 polynomia
 
 ![lagrange](images/lagrange.jpg)
  
-where l<sub>l</sub>(x) is the Lagrange basis polynomial with respect to the j-th point, i.e.
+where l<sub>j</sub>(x) is the Lagrange basis polynomial with respect to the j-th point, i.e.
 
 ![lagrange_basis](images/lagrange_basis.jpg)
 
