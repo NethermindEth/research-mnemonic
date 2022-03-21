@@ -51,7 +51,7 @@ In other words the digest share D is composed of two parts; first d-bit part is 
 
 ![digest](images/digest.jpg)
  
-Our scheme takes a secret mnemonic as string, converts it to binary string and performs padding if needed. Then it is converted to integer. Then after generating the integer shares, all the shares are converted into string and parsed as distinct n mnemonics. Below we describe only the share generation and secret reconstruction phases. 
+Our scheme takes a secret mnemonic as string, converts it to binary string and performs padding if needed. Then it is converted to integer. After generating the integer shares, all the shares are converted into string and parsed as distinct n mnemonics. Below we describe only the share generation and secret reconstruction phases. 
 
 ## Generating shares and reconstruction of the secret
 
@@ -118,7 +118,8 @@ If the secret file is not defined than it is typed on the terminal. The **recons
 + On the other hand it decreases the entropy from 2<sup>m</sup> to 2<sup>m-d</sup> (for further information please see security analysis). 
 
 ### Number of words and Galois field
-Number of words nw and the number of bits nb which is the size of the dictionary from which the words are picked determines the size of our Galois field. We have the primitive polynomials of degree up to 660. Therefore, for a dictionary of size 2048, e.i. nb = 11, our scheme supports up to 60 word secrets. 
++ Number of words nw and the number of bits nb which is the size of the dictionary from which the words are picked determines the size of our Galois field. 
++ We have the primitive polynomials of degree up to 660. Therefore, for a dictionary of size 2048, e.i. nb = 11, our scheme supports up to 60 word secrets. 
 
 ### Security
   + Although Shamir’s secret sharing scheme (SSS) is information theoretically secure, there is a known active adversary attack against it. Assume an adversary who interacts with t-1 shareholders and perform share reconstruction with a faulty share. If she can do this again with another t-1 shareholders (1 different shareholder suffices), she can construct the secret without knowing nothing about the secret. In order to avoid such an attack we plan to take some security measures which force the active adversaries to behave passively. We are going to use a composition of authentication schemes and a ZK proofs for the reconstruction process.
