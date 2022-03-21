@@ -6,7 +6,7 @@
   * [Shamir's secret sharing scheme (SSS)](#shamir-secret-sharing-scheme)
   * [Generating shares and reconstruction of the secret](#generating-shares-and-reconstruction-of-the-secret)
   * [Format of a share](#format-of-a-share)
-  * [Basic Usage](#basic-usage)
+  * [Basic usage](#basic-usage)
   * [Design rationale](#design-rationale)
   * [References](#references)
 
@@ -106,7 +106,7 @@ Our shares are stored in *json* files which are created in the same location wit
 One can share his secret by running below command in the terminal.
 
 ```Python
-  Python -n #shares -t #threshold -s path/secret.txt
+  Python create_shares.py -n #shares -t #threshold -s path/secret.txt
  ```
 
 If the secret file is not defined then the secret is requested to be typed on the terminal. The **reconstruct.py** takes json files automatically from the same location and outputs the secret *s* if the number of the shares is enough.
