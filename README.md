@@ -60,7 +60,7 @@ Lagrange interpolation formula tells us that constructing a degree t-1 polynomia
 
 ![lagrange](images/lagrange.jpg)
  
-where l<sub>j</sub>(x) is the Lagrange basis polynomial with respect to the j-th point, i.e.
+where *l*<sub>j</sub>(x) is the Lagrange basis polynomial with respect to the j-th point, i.e.
 
 ![lagrange_basis](images/lagrange_basis.jpg)
 
