@@ -11,7 +11,7 @@
   * [References](#references)
 
 ## Description
-In this project we implement a modified version of Shamir’s secret sharing scheme (SSS) in order to share a secret phrase, called mnemonics, in a secure way. 
+In this project we implement a modified version of Shamir’s secret sharing scheme (SSS) in order to share a secret phrase, called mnemonics, in a secure way. In the following we give the notation that we use, then we give the definition of Shamir's secret sharing scheme and our modified scheme. We  describe how we generate shares and reconstruct the secret. Then we give a basic usage information and the format of a share file. Finally, we give a few comments on design rationale.
 
 ## Notation
 
