@@ -21,7 +21,7 @@ In this project we implement a modified version of Shamir’s secret sharing sch
 | *t*	| Threshold |
 | *s*	| Secret |
 | *D*	| Digest of the secret |
-| *nb*	| Number of bits, e.i.*nb = log<sub>2</sub> len(dictionary)*|
+| *nb*	| Number of bits, e.i. *nb = log<sub>2</sub> len(dictionary)*|
 | *nw*	| Number of words in the mnemonic, e.i. *nw = len(secret)* |
 | *m*	| Size of *q* in bits, e.i. *m = nb * nw* |
 | *q*	| Order of the Galois field, e.i. *q = 2<sub>m</sub>* |
