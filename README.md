@@ -5,8 +5,8 @@
   * [Notation](#notation)
   * [Shamir's secret sharing scheme (SSS)](#shamir-secret-sharing-scheme)
   * [Generating shares and reconstruction of the secret](#generating-shares-and-reconstruction-of-the-secret)
-  * [Format of a share](#format-of-a-share)
   * [Basic usage](#basic-usage)
+  * [Format of a share](#format-of-a-share)
   * [Design rationale](#design-rationale)
   * [References](#references)
 
@@ -84,36 +84,56 @@ where *l<sub>j</sub>(x)* is the Lagrange basis polynomial with respect to the *j
 + Compute the digest *D' = f(-1)*
 + If HMAC-SHA256(*D'*[*d:*] || *s'*)[*:d*] = *D'*[*:d*], then return *s'*. Otherwise abort.
 
-## Format of a share
 
-Our shares are stored in *json* files which are created in the same location with **create_shares.py**.  The shares include the following information:
-
- ```Python
-  {
-    "id": i,
-    "share": [
-        "word_1",
-        "word_2",
-        "word_3",
-        .
-        .
-        .
-        "word_nw"
-    ]
-}
- ```
 ## Basic usage
 + One can share his secret by running below command in the terminal.
 
 	```Python
-	  Python create_shares.py -n [shares] -t [threshold] -s [path/secret.txt]
+	  Python create_shares.py -n [shares] -t [threshold] -s [path/secret.txt] -v [optional]
 	 ```
 + If the secret file is not defined then the secret is requested to be typed on the terminal. 
 
-+ If -v flag is used then the share (*json*) files include additional public reconstruction data, e.i. irreducible polynomial and the dictionary. 
-
 + The **reconstruct.py** takes *json* files automatically from the same location and outputs the secret *s* if the number of the shares is enough.
 
+## Format of a share
+
++ Our shares are stored in *json* files which are created in the same location with **create_shares.py**.  The shares include the following information:
+
+	 ```Python
+	  {
+	    "id": i,
+	    "share": [
+		"word_1",
+		"word_2",
+		"word_3",
+		.
+		.
+		.
+		"word_nw"
+	    ],
+	    "irr_polynomial": f(x), #optional
+	    "word_list": [] #optional
+	}
+	 ```
+ 
+ + If -v flag is used then the share (*json*) files include additional public reconstruction data, e.i. irreducible polynomial and the dictionary. 
+ 
+	  ```Python
+	  {
+	    "id": i,
+	    "share": [
+		"word_1",
+		"word_2",
+		"word_3",
+		.
+		.
+		.
+		"word_nw"
+	    ],
+	    "irr_polynomial": f(x),
+	    "word_list": []
+	}
+	 ```
 ## Design rationale
 
 ### Role of the digest
