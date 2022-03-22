@@ -89,7 +89,7 @@ where *l<sub>j</sub>(x)* is the Lagrange basis polynomial with respect to the *j
 + One can share his secret by running below command in the terminal.
 
 	```Python
-	  Python create_shares.py -n [shares] -t [threshold] -s [path/secret.txt] -v [optional]
+	  Python create_shares.py -n [number of shares] -t [threshold value] -s [path/secret.txt] -v [optional]
 	 ```
 + If the secret file is not defined then the secret is requested to be typed on the terminal. 
 
