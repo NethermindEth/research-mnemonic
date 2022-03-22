@@ -148,9 +148,9 @@ where *l<sub>j</sub>(x)* is the Lagrange basis polynomial with respect to the *j
   + Finally we have another issue for the security. Assume that an attacker has *k* shares such that *t < k < n*, and assume that *e* shares among *k* are faulty shares. In this case Lagrange interpolation does not work because of the faulty shares. But if *e < t < k/3* then the *Berlekamp-Welch* algorithm works and the adversary can reconstruct the secret without knowing the true shares.
 
 ### References
-  1. Shamir, A.: How to share a secret. Communications of the Association for Computing Machinery 22(11), 612_613 (Nov 1979)
+  1. [Shamir, A.: How to share a secret. Communications of the Association for Computing Machinery 22(11), 612_613 (Nov 1979)](https://web.mit.edu/6.857/OldStuff/Fall03/ref/Shamir-HowToShareASecret.pdf)
 	
-  2. BIP-39: Mnemonic code for generating deterministic keys
+  2. [BIP-39: Mnemonic code for generating deterministic keys](https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki)
 	
-  3. SLIP-0039: Shamir's Secret-Sharing for Mnemonic Codes
+  3. [SLIP-0039: Shamir's Secret-Sharing for Mnemonic Codes](https://github.com/satoshilabs/slips/blob/master/slip-0039.md)
 
