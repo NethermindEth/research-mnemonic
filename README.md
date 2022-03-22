@@ -114,7 +114,7 @@ where *l<sub>j</sub>(x)* is the Lagrange basis polynomial with respect to the *j
 	}
 	 ```
  
- + If -v flag is used then the share (*json*) files include additional public reconstruction data, e.i. irreducible polynomial and the dictionary. 
+ + If -v flag is used with **create_shares.py** then the share (*json*) files include additional public reconstruction data, e.i. irreducible polynomial and the dictionary. 
  
 	  ```Python
 	  {
