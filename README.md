@@ -24,7 +24,7 @@ In this project we implement a modified version of Shamir’s secret sharing sch
 | *nb*	| Number of bits, e.i. *nb = log<sub>2</sub> len(dictionary)*|
 | *nw*	| Number of words in the mnemonic, e.i. *nw = len(secret)* |
 | *m*	| Size of *q* in bits, e.i. *m = nb * nw* |
-| *q*	| Order of the Galois field, e.i. *q = 2<sub>m</sub>* |
+| *q*	| Order of the Galois field, e.i. *q = 2<sup>m</sup>* |
 |  F	| Galois field, e.i. F = GF(*q*)|
 | *d*	| Number of bits taken from the hash of the secret, the first part of the digest *D*. |
 | *R*	| Number of bits of the randomness which is the remaining part of the digest *D*. |
