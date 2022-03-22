@@ -23,9 +23,9 @@ In this project we implement a modified version of Shamir’s secret sharing sch
 | *D*	| Digest of the secret |
 | *nb*	| Number of bits, *nb = log<sub>2</sub> len(dictionary)*|
 | *nw*	| Number of words in the mnemonic |
-| *q*	| Order of the Galois field, *q = nb * nw* |
+| *m*	| Size of *q* in bits, *m = nb * nw* |
+| *q*	| Order of the Galois field, *q = 2<sub>m</sub>* |
 |  F	| Galois field, F = GF(*q*)|
-| *m*	| Size of *q* in bits, *m = log<sub>2</sub> q* |
 | *d*	| Number of bits taken from the hash of the secret, the first part of the digest *D*. |
 | *R*	| Number of bits of the randomness which is the remaining part of the digest *D*. |
 
@@ -103,13 +103,16 @@ Our shares are stored in *json* files which are created in the same location wit
 }
  ```
 ## Basic usage
-One can share his secret by running below command in the terminal.
++ One can share his secret by running below command in the terminal.
 
-```Python
-  Python create_shares.py -n [shares] -t [threshold] -s path/secret.txt
- ```
+	```Python
+	  Python create_shares.py -n [shares] -t [threshold] -s [path/secret.txt]
+	 ```
++ If the secret file is not defined then the secret is requested to be typed on the terminal. 
 
-If the secret file is not defined then the secret is requested to be typed on the terminal. The **reconstruct.py** takes *json* files automatically from the same location and outputs the secret *s* if the number of the shares is enough.
++ If -v flag is used then the share (*json*) files include additional public reconstruction data, e.i. irreducible polynomial and the dictionary. 
+
++ The **reconstruct.py** takes *json* files automatically from the same location and outputs the secret *s* if the number of the shares is enough.
 
 ## Design rationale
 
