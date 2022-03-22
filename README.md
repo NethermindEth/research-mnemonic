@@ -110,9 +110,7 @@ where *l<sub>j</sub>(x)* is the Lagrange basis polynomial with respect to the *j
 		.
 		.
 		"word_nw"
-	    ],
-	    "irr_polynomial": f(x), #optional
-	    "word_list": [] #optional
+	    ]
 	}
 	 ```
  
