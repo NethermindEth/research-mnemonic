@@ -1,3 +1,5 @@
+"""Test word_coding.py, by encoding and decoding random seedphrases"""
+
 from random import randint, sample
 from modules.word_coding import *
 

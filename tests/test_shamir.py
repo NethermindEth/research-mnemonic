@@ -1,3 +1,5 @@
+"""Test shamir.py, by creating numerical shares out of a random number and reconstructing it"""
+
 from modules.get_primitive_poly import get_primitive_poly
 from random import randint, sample
 from modules.shamir import *

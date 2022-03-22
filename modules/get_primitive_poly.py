@@ -1,4 +1,13 @@
 def get_primitive_poly(degree):
+    """Returns, in string form, a primitive polynomial over GF(2) of degree between 9 and 660.
+    
+    These primitive polynomials have been obtained from the following paper:
+
+    Rajski, J., & Tyszer, J. (2003). Primitive polynomials over GF(2) of degree up to 660 with 
+    uniformly distributed coefficients. Journal of Electronic Testing, 19(6), 645-657.
+    """
+
+    assert 9<=degree and degree<=660, 'Only primitive polynomials of degrees between 9 and 660 are available, but degree ' + str(degree) + ' was requested.'
     return polynomials[str(degree)]
 
 polynomials = {
