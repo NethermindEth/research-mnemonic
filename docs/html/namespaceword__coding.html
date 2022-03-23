@@ -16,6 +16,13 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -133,7 +140,12 @@ def&#160;</td><td class="memItemRight" valign="bottom"><b>decode_words</b> (word
 <pre class="fragment">The word list to be used as a dictionary for encoding/decoding purposes should always have 2^N 
 elements, since each mnemonic word will be encoded into an N-bit number. After checking for this
 condition, the number N=number_of_bits is returned as an integer.
-</pre> 
+</pre> <div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="namespaceword__coding_a61ad28767efb3623c54625c9e00276f7_icgraph.png" border="0" usemap="#anamespaceword__coding_a61ad28767efb3623c54625c9e00276f7_icgraph" alt=""/></div>
+</div>
+
 </div>
 </div>
 </div><!-- contents -->

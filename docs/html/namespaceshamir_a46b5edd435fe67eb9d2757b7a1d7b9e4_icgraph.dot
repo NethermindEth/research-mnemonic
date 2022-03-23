@@ -1,0 +1,15 @@
+digraph "lagrange_interpolation"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="RL";
+  Node1 [label="lagrange_interpolation",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Performs Lagrange interpolation on a Galois field GF(2^d), where d is the degree of primitive_poly."];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="secret_reconstruction",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceshamir.html#a563499ba0bed3c0210657a0dbbebbd85",tooltip="Reconstruct secret from the shares, and check for consistency with the encoded digest."];
+  Node2 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="reconstruct.get_reconstruction_data",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacereconstruct.html#aa98d05d3294020e4694a6bb2a232b741",tooltip="Gets the public reconstruction data from a JSON file, in the format needed by shamir...."];
+  Node3 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="share_generation",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceshamir.html#a18056e460b7d27d1506095c673513ba1",tooltip="Turns an element of a Galois Field (in integer representation) into many, via Shamir secret sharing."];
+}
