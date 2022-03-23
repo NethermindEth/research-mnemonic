@@ -99,10 +99,10 @@ where *l<sub>j</sub>(x)* is the Lagrange basis polynomial with respect to the *j
 
 + Our shares are stored in *json* files which are created in the same location with **create_shares.py**.  The shares include the following information:
 
-	 ```Python
-	  {
-	    "id": i,
-	    "share": [
+	```Python
+	{
+	"id": i,
+	"share": [
 		"word_1",
 		"word_2",
 		"word_3",
@@ -110,16 +110,16 @@ where *l<sub>j</sub>(x)* is the Lagrange basis polynomial with respect to the *j
 		.
 		.
 		"word_nw"
-	    ]
+		]
 	}
-	 ```
+	```
  
  + If -v flag is used with **create_shares.py** then the share (*json*) files include additional public reconstruction data, e.i. irreducible polynomial and the dictionary. 
  
-	  ```Python
-	  {
-	    "id": i,
-	    "share": [
+	```Python
+	{
+	"id": i,
+	"share": [
 		"word_1",
 		"word_2",
 		"word_3"
@@ -127,13 +127,13 @@ where *l<sub>j</sub>(x)* is the Lagrange basis polynomial with respect to the *j
 		.
 		.
 		"word_nw"
-	    ],
-	    "total_shares": n,
-	    "threshold": t,
-	    "primitive_poly": <polynomial in string form>,
-	    "dictionary": <word list>
-	 } 
-	 ```
+		],
+	"total_shares": n,
+	"threshold": t,
+	"primitive_poly": <polynomial in string form>,
+	"dictionary": <word list>
+	} 
+	```
 	 
 ## Design rationale
 
