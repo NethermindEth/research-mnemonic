@@ -147,7 +147,7 @@ where *l<sub>j</sub>(x)* is the Lagrange basis polynomial with respect to the *j
 
 ### Security
   + Although Shamir’s secret sharing scheme (SSS) is information theoretically secure, there is a known active adversary attack against it. Assume an adversary who interacts with *t-1* shareholders and perform share reconstruction with a faulty share. If she can do this again with another *t-1* shareholders (1 different shareholder suffices), she can construct the secret without knowing anything about the secret. In order to avoid such an attack we plan to take some security measures which force the active adversaries to behave passively. We are going to use a composition of authentication schemes and a ZK proofs for the reconstruction process.
-  + Another security issue for our modified scheme is the decreasing entropy because of the digest check that is used in the reconstruction phase. But ensuring that *m-d > 128* can defeat this low entropy weakness. 
+  + Another security issue for our modified scheme is the decreasing entropy because of the digest check that is used in the reconstruction phase. But ensuring *m-d > 128* can defeat this low entropy weakness. 
   + Finally we have another issue for the security. Assume that an attacker has *k* shares such that *t < k < n*, and assume that *e* shares among *k* are faulty shares. In this case Lagrange interpolation does not work because of the faulty shares. But if *e < t < k/3* then the [*Berlekamp-Welch*](https://en.wikipedia.org/wiki/Berlekamp%E2%80%93Welch_algorithm) algorithm works and the adversary can reconstruct the secret without knowing the true shares.
 
 ### References
