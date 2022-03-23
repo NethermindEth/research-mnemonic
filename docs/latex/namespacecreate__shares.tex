@@ -1,0 +1,192 @@
+\doxysection{create\+\_\+shares Namespace Reference}
+\label{namespacecreate__shares}\index{create\_shares@{create\_shares}}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{namespacecreate__shares_a3ebe035af5692b70004ec5b0a7b711c7}} 
+{\bfseries files} = glob.\+glob(\textquotesingle{}shares/$\ast$\textquotesingle{})
+\item 
+\mbox{\label{namespacecreate__shares_a9c59f734b1d5e51754b1cd4d2d1b8d37}} 
+{\bfseries parser} = argparse.\+Argument\+Parser()
+\item 
+\mbox{\label{namespacecreate__shares_acbe7af6ba8aa323f81178c341443fad8}} 
+{\bfseries metavar}
+\item 
+\mbox{\label{namespacecreate__shares_a8415dc934d91de0b3d935599e74fc967}} 
+{\bfseries type}
+\item 
+\mbox{\label{namespacecreate__shares_aa6e4b8ef8710f6697242a2bff01643b1}} 
+{\bfseries int}
+\item 
+\mbox{\label{namespacecreate__shares_a1263458de799c8404fc6f9fb99ef4d1d}} 
+{\bfseries help}
+\item 
+\mbox{\label{namespacecreate__shares_ad7d39d0f2aa4a2d5cdc08c14023d05c9}} 
+{\bfseries required}
+\item 
+\mbox{\label{namespacecreate__shares_a5c81dedcb89ebd342f757e509154d58a}} 
+{\bfseries str}
+\item 
+\mbox{\label{namespacecreate__shares_ac868cbdc9c7909a891b40cc8716351e7}} 
+{\bfseries action}
+\item 
+\mbox{\label{namespacecreate__shares_a6a7038e9507d3b0b705a3a464268bfcb}} 
+{\bfseries args} = parser.\+parse\+\_\+args()
+\item 
+\mbox{\label{namespacecreate__shares_ad395ab4c13de811d5faccad5b9b933fa}} 
+{\bfseries n} = args.\+n
+\item 
+\mbox{\label{namespacecreate__shares_a16ad9cc379d545d49d93c76809274662}} 
+{\bfseries t} = args.\+threshold
+\item 
+\mbox{\label{namespacecreate__shares_abb2579fd15958c0e4e6fb87ff4e5ae1a}} 
+{\bfseries secret} = args.\+secret
+\item 
+\mbox{\label{namespacecreate__shares_ab4dc18ef252d79b4676922869b9f382b}} 
+{\bfseries verbose} = args.\+verbose
+\item 
+\mbox{\label{namespacecreate__shares_a262c42e413801307ba6687145d8fc2c1}} 
+{\bfseries word\+\_\+list} = \textbf{ word\+\_\+coding.\+text\+\_\+to\+\_\+list}(\textquotesingle{}wordlist.\+txt\textquotesingle{})
+\item 
+\mbox{\label{namespacecreate__shares_a6bf359c17f7e63074d820e28f574eaf1}} 
+{\bfseries nb} = \textbf{ word\+\_\+coding.\+get\+\_\+dictionary\+\_\+bits}(word\+\_\+list)
+\item 
+\mbox{\label{namespacecreate__shares_a9bf83177c69425fd6704396f3335e281}} 
+string {\bfseries regex} = r\char`\"{}$^\wedge$[A-\/Za-\/z]\+:(\textbackslash{}\textbackslash{}$\vert$\textbackslash{}/).$\ast$\textbackslash{}.[tT][xX][tT]\char`\"{}
+\item 
+\mbox{\label{namespacecreate__shares_a8e29f247a249707c93b22ea5d37ffa5e}} 
+{\bfseries file\+\_\+path\+\_\+found} = re.\+search(regex, secret.\+strip())
+\item 
+\mbox{\label{namespacecreate__shares_ad7dc93ec52e68b2a3cae3bbf87a71160}} 
+{\bfseries file\+\_\+path} = file\+\_\+path\+\_\+found.\+group(0) if file\+\_\+path\+\_\+found else None
+\item 
+\mbox{\label{namespacecreate__shares_af05df2540a80ecb0457e7b28d14af29b}} 
+{\bfseries nw} = len(secret)
+\item 
+\mbox{\label{namespacecreate__shares_af53a4eebcdfaefc99ca13d426bdd630f}} 
+{\bfseries binary\+\_\+secret} = \textbf{ word\+\_\+coding.\+encode\+\_\+words}(word\+\_\+list, secret)
+\item 
+\mbox{\label{namespacecreate__shares_a66ed97ed35bdbcee8ed475b1cb79dd93}} 
+{\bfseries decimal\+\_\+secret} = int(binary\+\_\+secret,2)
+\item 
+\mbox{\label{namespacecreate__shares_a2b287f7941dec1d9d2901d4c931da432}} 
+{\bfseries primitive\+\_\+poly} = get\+\_\+primitive\+\_\+poly(nb$\ast$nw)
+\item 
+\mbox{\label{namespacecreate__shares_a407dd18d29d628c88031b9b168431f61}} 
+{\bfseries shares} = \textbf{ shamir.\+share\+\_\+generation}(decimal\+\_\+secret, n, t, primitive\+\_\+poly)
+\item 
+dictionary \textbf{ reconstruction\+\_\+data}
+\item 
+\mbox{\label{namespacecreate__shares_a6ae5c55a06c797a15ebe4dd9bbf7a963}} 
+{\bfseries file}
+\item 
+\mbox{\label{namespacecreate__shares_ac809947e98f67e3cadb786b95005d55f}} 
+{\bfseries indent}
+\item 
+\mbox{\label{namespacecreate__shares_a2af52c32198a862247c9303789e75651}} 
+{\bfseries reconstructed\+\_\+shared\+\_\+secrets} = \textbf{ word\+\_\+coding.\+decode\+\_\+words}(word\+\_\+list, format(shares[i], \char`\"{}b\char`\"{}).zfill(nb$\ast$nw))
+\item 
+\mbox{\label{namespacecreate__shares_a0d12b16d287c27ccd557775dda15c012}} 
+string {\bfseries file\+\_\+name} = \char`\"{}shares/share\+\_\+\char`\"{} + str(i+1) + \char`\"{}.json\char`\"{}
+\item 
+dictionary \textbf{ share\+\_\+data}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}Take a secret phrase and apply Shamir Secret Sharing to encode it into n secret phrases.
+
+Using Shamir Secret Sharing, a secret phrase with "nw" words can be encoded into n secret phrases,
+each with "nw" words as well. Before encoding, a threshold parameter t (with t<=n) is defined, so 
+that only t shares are required for the reconstruction of the original secret. (To reconstruct the
+secret, use the script reconstruct.py provided in this package.)
+
+
+Requisites
+----------
+1) Before running this script, a dictionary of words to encode secret phrases, with the name
+"wordlist.txt", must be provided in the same folder as the script. This dictionary must:
+    * Have 2^nb words, where nb is an integer (so that each word represents an nb-bit number)
+    * Be a .txt file where each line has a single word.
+
+This package comes pre-loaded with BIP-39's 2048-word dictionary.
+
+2) The secret phrase to be shared should:
+    * Have between 3 and 60 words.
+    * Have only words that are contained in the dictionary "wordlist.txt".
+    * Be written in a single line, with each word separated by only a space.
+
+By default, the secret that will be encoded is read from a .txt file called "secret.txt", to be
+located in the same folder as this script. (The secret may also be provided right in the command line
+at execution--see below).
+
+
+Execution and inputs
+--------------------
+This script should be called from the command line, with the following mandatory inputs (flags):
+
+-n: (integer) Number of shares that will be generated from the secret phrase.
+-t, --threshold: (integer) Minimum number of shares that will be required at reconstruction.
+
+The following flags are optional:
+
+-s, --secret: (string) Allows for either of the following options:
+    * Specify the secret phrase directly on the command line.
+    * Specify a custom file path to a .txt file with the secret.
+    (In either case, the secret must abide by the same format considerations stated above)
+-v, --verbose: If this flag is used, the generated shares are verbose (see "outputs" below.)
+
+
+Outputs
+-------
+During execution, the /shares folder is emptied, and its contents are replaced with the following 
+JSON files:
+
+* reconstruction_data.json: Contains the following entries:
+    - total_shares: Number of shares n generated during encoding
+    - threshold: Threshold t representing the minimum number of shares needed for reconstruction.
+    - primitive_poly: Primitive polynomial used to generate the Galois field used for encryption;
+      necessary for decryption. For more details, please read modules/shamir.py
+    - dictionary: A copy of the contents of the dictionary wordlist.txt
+
+* share_i.json (for 1<=i<=n): Contains the following entries:
+    - id: ID number i, with 1<=i<=n, identifying the share.
+    - share: list of words, one of the n secret phrases that the original secret was encoded into.
+    Remark: if the --verbose flag was used at runtime, each of the JSON shares will also contain the
+    reconstruction data.
+
+The shares are also printed on the command line.
+\end{DoxyVerb}
+ 
+
+\doxysubsection{Variable Documentation}
+\mbox{\label{namespacecreate__shares_aaa027ff1cf82c4ca06375c0c889a2457}} 
+\index{create\_shares@{create\_shares}!reconstruction\_data@{reconstruction\_data}}
+\index{reconstruction\_data@{reconstruction\_data}!create\_shares@{create\_shares}}
+\doxysubsubsection{reconstruction\_data}
+{\footnotesize\ttfamily create\+\_\+shares.\+reconstruction\+\_\+data}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 =  \{}
+\DoxyCodeLine{2     \textcolor{stringliteral}{'total\_shares'} : n,}
+\DoxyCodeLine{3     \textcolor{stringliteral}{'threshold'} : t,}
+\DoxyCodeLine{4     \textcolor{stringliteral}{'primitive\_poly'} : primitive\_poly,}
+\DoxyCodeLine{5     \textcolor{stringliteral}{'dictionary'} : \textcolor{stringliteral}{' '}.join(word\_list)}
+\DoxyCodeLine{6     \}}
+
+\end{DoxyCode}
+\mbox{\label{namespacecreate__shares_a421641825bd3562dccd11477d12bd3ce}} 
+\index{create\_shares@{create\_shares}!share\_data@{share\_data}}
+\index{share\_data@{share\_data}!create\_shares@{create\_shares}}
+\doxysubsubsection{share\_data}
+{\footnotesize\ttfamily create\+\_\+shares.\+share\+\_\+data}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 =  \{}
+\DoxyCodeLine{2             \textcolor{stringliteral}{'id'}: i+1,}
+\DoxyCodeLine{3             \textcolor{stringliteral}{'share'} : reconstructed\_shared\_secrets,}
+\DoxyCodeLine{4             \}}
+
+\end{DoxyCode}

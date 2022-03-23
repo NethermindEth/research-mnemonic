@@ -1,4 +1,4 @@
-"""Module """
+"""Module for encoding/decoding a secret phrase into a binary number, using a dictionary."""
 from math import log2
 
 
