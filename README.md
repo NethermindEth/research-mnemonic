@@ -142,7 +142,7 @@ where *l<sub>j</sub>(x)* is the Lagrange basis polynomial with respect to the *j
 + On the other hand it decreases the entropy from *2<sup>m</sup>* to *2<sup>m-d</sup>* (for further information please see security analysis). 
 
 ### Number of words and Galois field
-+ Number of words *nw* and the number of bits *nb* which is the size of the dictionary from which the words are picked determine the size of our Galois field. 
++ Number of words *nw* and the number of bits *nb* determine the size of our Galois field. 
 + We have the primitive polynomials of degree up to 660. Therefore, for a dictionary of size 2048, e.i. *nb = 11*, our scheme supports up to 60 word secrets. 
 
 ### Security
