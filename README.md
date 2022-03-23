@@ -122,16 +122,19 @@ where *l<sub>j</sub>(x)* is the Lagrange basis polynomial with respect to the *j
 	    "share": [
 		"word_1",
 		"word_2",
-		"word_3",
+		"word_3"
 		.
 		.
 		.
 		"word_nw"
 	    ],
-	    "irr_polynomial": f(x),
-	    "word_list": []
-	}
+	    "total_shares": n,
+	    "threshold": t,
+	    "primitive_poly": <polynomial in string form>,
+	    "dictionary": <word list>
+	 } 
 	 ```
+	 
 ## Design rationale
 
 ### Role of the digest
