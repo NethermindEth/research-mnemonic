@@ -43,6 +43,8 @@ Let F be a finite field with q elements. A *(t, n)-threshold secret sharing sche
 
 + If any *t* or more users jointly perform a Lagrange interpolation with their shares, they obtain the secret polynomial *f(x)*, and *f(0)* yields the secret *s*.
 
+## Generating shares and reconstruction of the secret
+
 In addition to the above definition, we also encode the digest of the secret as *f(q-1)* as stated in SLIP-0039: Shamir's Secret-Sharing for Mnemonic Codes. Let *s* be the secret to be shared and *D* be it's digest such that, *D =* HMAC-SHA256(*R || s*)[*:d*] || *R*, where *R* is the randomness with length *m-d* in bits, for *m = log<sub>2</sub> q* and some integer *d*. 
 
 ![shamir](images/shamir.jpg)
@@ -51,9 +53,7 @@ In other words the digest share *D* is composed of two parts; first *d*-bit part
 
 ![digest](images/digest.jpg)
  
-Our scheme takes a secret mnemonic as string, converts it to binary string and performs padding if needed. Then it is converted to integer. After generating the integer shares, all the shares are converted into string and parsed as distinct n mnemonics. Below we describe only the share generation and secret reconstruction phases. 
-
-## Generating shares and reconstruction of the secret
+Our scheme takes a secret mnemonic as string, converts it to binary string and performs padding if needed. Then it is converted to integer. After generating the integer shares, all the shares are converted into string and parsed as distinct n mnemonics. Below we describe Lagrange polynomial interpolation, share generation and secret reconstruction. 
 
 ### Polynomial interpolation
 Lagrange interpolation formula tells us that constructing a degree *t-1* polynomial requires at least *t* points. Assume that we have *t* distinct points *(x<sub>1</sub>,y<sub>1</sub>), (x<sub>2</sub>, y<sub>2</sub>), … , (x<sub>t</sub>, y<sub>t</sub>)*. Then we can construct the unique degree *t-1* polynomial as follows: 
