@@ -43,6 +43,8 @@ Let F be a finite field with q elements. A *(t, n)-threshold secret sharing sche
 
 + If any *t* or more users jointly perform a Lagrange interpolation with their shares, they obtain the secret polynomial *f(x)*, and *f(0)* yields the secret *s*.
 
+## Generating shares and reconstruction of the secret
+
 In addition to the above definition, we also encode the digest of the secret as *f(q-1)* as stated in SLIP-0039: Shamir's Secret-Sharing for Mnemonic Codes. Let *s* be the secret to be shared and *D* be it's digest such that, *D =* HMAC-SHA256(*R || s*)[*:d*] || *R*, where *R* is the randomness with length *m-d* in bits, for *m = log<sub>2</sub> q* and some integer *d*. 
 
 ![shamir](images/shamir.jpg)
@@ -51,9 +53,7 @@ In other words the digest share *D* is composed of two parts; first *d*-bit part
 
 ![digest](images/digest.jpg)
  
-Our scheme takes a secret mnemonic as string, converts it to binary string and performs padding if needed. Then it is converted to integer. After generating the integer shares, all the shares are converted into string and parsed as distinct n mnemonics. Below we describe only the share generation and secret reconstruction phases. 
-
-## Generating shares and reconstruction of the secret
+Our scheme takes a secret mnemonic as string, converts it to binary string and performs padding if needed. Then it is converted to integer. After generating the integer shares, all the shares are converted into string and parsed as distinct n mnemonics. Below we describe Lagrange polynomial interpolation, share generation and secret reconstruction. 
 
 ### Polynomial interpolation
 Lagrange interpolation formula tells us that constructing a degree *t-1* polynomial requires at least *t* points. Assume that we have *t* distinct points *(x<sub>1</sub>,y<sub>1</sub>), (x<sub>2</sub>, y<sub>2</sub>), … , (x<sub>t</sub>, y<sub>t</sub>)*. Then we can construct the unique degree *t-1* polynomial as follows: 
@@ -99,10 +99,10 @@ where *l<sub>j</sub>(x)* is the Lagrange basis polynomial with respect to the *j
 
 + Our shares are stored in *json* files which are created in the same location with **create_shares.py**.  The shares include the following information:
 
-	 ```Python
-	  {
-	    "id": i,
-	    "share": [
+	```Python
+	{
+	"id": i,
+	"share": [
 		"word_1",
 		"word_2",
 		"word_3",
@@ -110,28 +110,31 @@ where *l<sub>j</sub>(x)* is the Lagrange basis polynomial with respect to the *j
 		.
 		.
 		"word_nw"
-	    ]
+	]
 	}
-	 ```
+	```
  
  + If -v flag is used with **create_shares.py** then the share (*json*) files include additional public reconstruction data, e.i. irreducible polynomial and the dictionary. 
  
-	  ```Python
-	  {
-	    "id": i,
-	    "share": [
+	```Python
+	{
+	"id": i,
+	"share": [
 		"word_1",
 		"word_2",
-		"word_3",
+		"word_3"
 		.
 		.
 		.
 		"word_nw"
-	    ],
-	    "irr_polynomial": f(x),
-	    "word_list": []
-	}
-	 ```
+	],
+	"total_shares": n,
+	"threshold": t,
+	"primitive_poly": <polynomial in string form>,
+	"dictionary": <word list>
+	} 
+	```
+	 
 ## Design rationale
 
 ### Role of the digest
@@ -139,12 +142,12 @@ where *l<sub>j</sub>(x)* is the Lagrange basis polynomial with respect to the *j
 + On the other hand it decreases the entropy from *2<sup>m</sup>* to *2<sup>m-d</sup>* (for further information please see security analysis). 
 
 ### Number of words and Galois field
-+ Number of words *nw* and the number of bits *nb* which is the size of the dictionary from which the words are picked determine the size of our Galois field. 
++ Number of words *nw* and the number of bits *nb* determine the size of our Galois field. 
 + We have the primitive polynomials of degree up to 660. Therefore, for a dictionary of size 2048, e.i. *nb = 11*, our scheme supports up to 60 word secrets. 
 
 ### Security
   + Although Shamir’s secret sharing scheme (SSS) is information theoretically secure, there is a known active adversary attack against it. Assume an adversary who interacts with *t-1* shareholders and perform share reconstruction with a faulty share. If she can do this again with another *t-1* shareholders (1 different shareholder suffices), she can construct the secret without knowing anything about the secret. In order to avoid such an attack we plan to take some security measures which force the active adversaries to behave passively. We are going to use a composition of authentication schemes and a ZK proofs for the reconstruction process.
-  + Another security issue for our modified scheme is the decreasing entropy because of the digest check that is used in the reconstruction phase. But ensuring that *m-d > 128* can defeat this low entropy weakness. 
+  + Another security issue for our modified scheme is the decreasing entropy because of the digest check that is used in the reconstruction phase. But ensuring *m-d > 128* can defeat this low entropy weakness. 
   + Finally we have another issue for the security. Assume that an attacker has *k* shares such that *t < k < n*, and assume that *e* shares among *k* are faulty shares. In this case Lagrange interpolation does not work because of the faulty shares. But if *e < t < k/3* then the [*Berlekamp-Welch*](https://en.wikipedia.org/wiki/Berlekamp%E2%80%93Welch_algorithm) algorithm works and the adversary can reconstruct the secret without knowing the true shares.
 
 ### References
