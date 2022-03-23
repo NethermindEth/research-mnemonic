@@ -1,4 +1,4 @@
-# Reference implementation for Mnemonics Research Project
+# Readme
 
 ## Table of contents
   * [Description](#description)

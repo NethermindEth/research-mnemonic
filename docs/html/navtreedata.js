@@ -25,32 +25,32 @@
 var NAVTREE =
 [
   [ "Mnemonic sharing", "index.html", [
-    [ "Reference implementation for Mnemonics Research Project", "md_research_mnemonic__r_e_a_d_m_e.html", [
-      [ "Table of contents", "md_research_mnemonic__r_e_a_d_m_e.html#autotoc_md1", null ],
-      [ "Description", "md_research_mnemonic__r_e_a_d_m_e.html#autotoc_md2", null ],
-      [ "Notation", "md_research_mnemonic__r_e_a_d_m_e.html#autotoc_md3", null ],
-      [ "Shamir secret sharing scheme", "md_research_mnemonic__r_e_a_d_m_e.html#autotoc_md4", [
-        [ "1. Share Generation Phase:", "md_research_mnemonic__r_e_a_d_m_e.html#autotoc_md5", null ],
-        [ "2. Reconstruction Phase:", "md_research_mnemonic__r_e_a_d_m_e.html#autotoc_md6", null ]
+    [ "Readme", "md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e.html", [
+      [ "Table of contents", "md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e.html#autotoc_md4", null ],
+      [ "Description", "md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e.html#autotoc_md5", null ],
+      [ "Notation", "md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e.html#autotoc_md6", null ],
+      [ "Shamir secret sharing scheme", "md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e.html#autotoc_md7", [
+        [ "1. Share Generation Phase:", "md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e.html#autotoc_md8", null ],
+        [ "2. Reconstruction Phase:", "md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e.html#autotoc_md9", null ]
       ] ],
-      [ "Generating shares and reconstruction of the secret", "md_research_mnemonic__r_e_a_d_m_e.html#autotoc_md7", [
-        [ "Polynomial interpolation", "md_research_mnemonic__r_e_a_d_m_e.html#autotoc_md8", null ],
-        [ "Share Generation", "md_research_mnemonic__r_e_a_d_m_e.html#autotoc_md9", [
-          [ "INPUT: secret <em>s</em>, total number of shares <em>n</em>, threshold <em>t</em>, order of Galois field <em>q</em>, irreducible polynomial of GF(<em>q</em>)", "md_research_mnemonic__r_e_a_d_m_e.html#autotoc_md10", null ],
-          [ "OUTPUT: list of <em>n</em> shares", "md_research_mnemonic__r_e_a_d_m_e.html#autotoc_md11", null ]
+      [ "Generating shares and reconstruction of the secret", "md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e.html#autotoc_md10", [
+        [ "Polynomial interpolation", "md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e.html#autotoc_md11", null ],
+        [ "Share Generation", "md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e.html#autotoc_md12", [
+          [ "INPUT: secret <em>s</em>, total number of shares <em>n</em>, threshold <em>t</em>, order of Galois field <em>q</em>, irreducible polynomial of GF(<em>q</em>)", "md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e.html#autotoc_md13", null ],
+          [ "OUTPUT: list of <em>n</em> shares", "md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e.html#autotoc_md14", null ]
         ] ],
-        [ "Secret Reconstruction", "md_research_mnemonic__r_e_a_d_m_e.html#autotoc_md12", [
-          [ "INPUT: list of share id <em>x</em>, list of access shares <em>y</em>, order of Galois field <em>q</em>, irreducible polynomial of GF(<em>q</em>), digest length <em>d</em>.", "md_research_mnemonic__r_e_a_d_m_e.html#autotoc_md13", null ],
-          [ "OUTPUT: secret <em>s'</em> or abort.", "md_research_mnemonic__r_e_a_d_m_e.html#autotoc_md14", null ]
+        [ "Secret Reconstruction", "md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e.html#autotoc_md15", [
+          [ "INPUT: list of share id <em>x</em>, list of access shares <em>y</em>, order of Galois field <em>q</em>, irreducible polynomial of GF(<em>q</em>), digest length <em>d</em>.", "md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e.html#autotoc_md16", null ],
+          [ "OUTPUT: secret <em>s'</em> or abort.", "md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e.html#autotoc_md17", null ]
         ] ]
       ] ],
-      [ "Basic usage", "md_research_mnemonic__r_e_a_d_m_e.html#autotoc_md15", null ],
-      [ "Format of a share", "md_research_mnemonic__r_e_a_d_m_e.html#autotoc_md16", null ],
-      [ "Design rationale", "md_research_mnemonic__r_e_a_d_m_e.html#autotoc_md17", [
-        [ "Role of the digest", "md_research_mnemonic__r_e_a_d_m_e.html#autotoc_md18", null ],
-        [ "Number of words and Galois field", "md_research_mnemonic__r_e_a_d_m_e.html#autotoc_md19", null ],
-        [ "Security", "md_research_mnemonic__r_e_a_d_m_e.html#autotoc_md20", null ],
-        [ "References", "md_research_mnemonic__r_e_a_d_m_e.html#autotoc_md21", null ]
+      [ "Basic usage", "md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e.html#autotoc_md18", null ],
+      [ "Format of a share", "md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e.html#autotoc_md19", null ],
+      [ "Design rationale", "md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e.html#autotoc_md20", [
+        [ "Role of the digest", "md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e.html#autotoc_md21", null ],
+        [ "Number of words and Galois field", "md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e.html#autotoc_md22", null ],
+        [ "Security", "md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e.html#autotoc_md23", null ],
+        [ "References", "md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e.html#autotoc_md24", null ]
       ] ]
     ] ],
     [ "Packages", "namespaces.html", [

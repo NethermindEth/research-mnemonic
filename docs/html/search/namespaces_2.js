@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['reconstruct_0',['reconstruct',['../namespacereconstruct.html',1,'']]]
+  ['shamir_0',['shamir',['../namespaceshamir.html',1,'']]]
 ];

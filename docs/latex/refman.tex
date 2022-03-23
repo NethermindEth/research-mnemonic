@@ -116,6 +116,24 @@
   \newunicodechar{²}{${}^{2}$}% Superscript two
   \newunicodechar{³}{${}^{3}$}% Superscript three
   % Hyperlinks
+    % Hyperlinks (required, but should be loaded last)
+    \ifpdf
+      \usepackage[pdftex,pagebackref=true]{hyperref}
+    \else
+      \ifxetex
+        \usepackage[pagebackref=true]{hyperref}
+      \else
+        \usepackage[ps2pdf,pagebackref=true]{hyperref}
+      \fi
+    \fi
+    \hypersetup{%
+      colorlinks=true,%
+      linkcolor=blue,%
+      citecolor=blue,%
+      unicode,%
+      pdftitle=Mnemonic sharing,%
+      pdfsubject=Share mnemonics using Shamir Secret Sharing -\/-\/ a Nethermind project%
+    }
   % Custom commands used by the header
   % Custom commands
   \newcommand{\clearemptydoublepage}{%
@@ -134,6 +152,12 @@
 \begin{document}
   \raggedbottom
   % Titlepage & ToC
+    % To avoid duplicate page anchors due to reuse of same numbers for
+    % the index (be it as roman numbers)
+    \hypersetup{pageanchor=false,
+                bookmarksnumbered=true,
+                pdfencoding=unicode
+               }
   \pagenumbering{alph}
   \begin{titlepage}
   \vspace*{7cm}
@@ -148,19 +172,19 @@
   \tableofcontents
   \clearemptydoublepage
   \pagenumbering{arabic}
+  % re-enable anchors again
+  \hypersetup{pageanchor=true}
 %--- Begin generated contents ---
-\chapter{Reference implementation for Mnemonics Research Project}
-\label{md_research_mnemonic__r_e_a_d_m_e}
-\input{md_research_mnemonic__r_e_a_d_m_e}
+\chapter{Readme}
+\label{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e}
+\Hypertarget{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e}
+\input{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e}
 \chapter{Namespace Index}
 \input{namespaces}
 \chapter{Namespace Documentation}
 \input{namespacecreate__shares}
-\input{namespacepoly__text__to__json}
 \input{namespacereconstruct}
 \input{namespaceshamir}
-\input{namespacetests_1_1test__shamir}
-\input{namespacetests_1_1test__word__coding}
 \input{namespaceword__coding}
 %--- End generated contents ---
 % Index

@@ -1,4 +1,4 @@
-"""Module implementing the functions that perform Shamir secret sharing on numerical inputs/outputs"""
+"""!Module implementing the functions that perform Shamir secret sharing on numerical inputs/outputs"""
 
 from math import floor, log2
 from random import randint
@@ -8,19 +8,19 @@ import os
 
 
 def get_polynomial_degree(polynomial:str):
-    """Gets degree of a polynomial in string form with the galois package"""
+    """!Gets degree of a polynomial in string form with the galois package"""
 
     return galois.Poly.String(polynomial).degree
 
 
 def create_digest(randomness:bytes, shared_secret:bytes, digest_length=4):
-    """Digest function according to SLIP39. Digest length set to 4 by default as per SLIP39"""
+    """!Digest function according to SLIP39. Digest length set to 4 by default as per SLIP39"""
 
     return hmac.new(randomness, shared_secret, "sha256").digest()[:digest_length]
 
 
 def lagrange_interpolation(x:list, y:list, at_points:list, primitive_poly:str):
-    """Performs Lagrange interpolation on a Galois field GF(2^d), where d is the degree of primitive_poly.
+    """!Performs Lagrange interpolation on a Galois field GF(2^d), where d is the degree of primitive_poly.
     
     Given the data of n (x,y) points on a Galois field GF=GF(2^d), returns the outputs of a polynomial 
     of degree n-1 that passes through all of these points, evaluated at the list of points at_points.
@@ -66,7 +66,7 @@ def lagrange_interpolation(x:list, y:list, at_points:list, primitive_poly:str):
 
 
 def share_generation(secret:int, num_shares:int, threshold:int, primitive_poly:str, digest_length=4):
-    """Turns an element of a Galois Field (in integer representation) into many, via Shamir secret sharing
+    """!Turns an element of a Galois Field (in integer representation) into many, via Shamir secret sharing
 
     This Shamir secret sharing implementation starts with a secret in decimal form, with secret<=q,
     and constructs a random polynomial f(x) of degree t-1 such that evaluation of f(x) at 0 and q-1
@@ -126,7 +126,7 @@ def share_generation(secret:int, num_shares:int, threshold:int, primitive_poly:s
     return final_y
 
 def secret_reconstruction(x:list, y:list, primitive_poly:str, digest_length=4):
-    """Reconstruct secret from the shares, and check for consistency with the encoded digest.
+    """!Reconstruct secret from the shares, and check for consistency with the encoded digest.
 
     Inputs:
     * x: list with the x-values corresponding to each numerical share.

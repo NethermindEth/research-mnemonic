@@ -1,5 +1,5 @@
 def get_primitive_poly(degree):
-    """Returns, in string form, a primitive polynomial over GF(2) of degree between 9 and 660.
+    """!Returns, in string form, a primitive polynomial over GF(2) of degree between 9 and 660.
     
     These primitive polynomials have been obtained from the following paper:
 

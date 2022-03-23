@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['poly_5ftext_5fto_5fjson_0',['poly_text_to_json',['../namespacepoly__text__to__json.html',1,'']]]
+  ['readme_0',['Readme',['../md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e.html',1,'']]],
+  ['reconstruct_1',['reconstruct',['../namespacereconstruct.html',1,'']]]
 ];

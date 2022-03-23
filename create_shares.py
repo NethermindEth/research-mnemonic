@@ -1,4 +1,4 @@
-"""Take a secret phrase and apply Shamir Secret Sharing to encode it into n secret phrases.
+"""!Take a secret phrase and apply Shamir Secret Sharing to encode it into n secret phrases.
 
 Using Shamir Secret Sharing, a secret phrase with "nw" words can be encoded into n secret phrases,
 each with "nw" words as well. Before encoding, a threshold parameter t (with t<=n) is defined, so 

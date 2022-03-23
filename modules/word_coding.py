@@ -1,9 +1,9 @@
-"""Module for encoding/decoding a secret phrase into a binary number, using a dictionary."""
+"""!Module for encoding/decoding a secret phrase into a binary number, using a dictionary."""
 from math import log2
 
 
 def text_to_list(text_path):
-    """Transforms a one-word-per-line text file into a Python list"""
+    """!Transforms a one-word-per-line text file into a Python list"""
     word_list = []
     with open(text_path, 'r') as filehandle:
         for word in filehandle:
@@ -12,7 +12,7 @@ def text_to_list(text_path):
 
 
 def get_dictionary_bits(word_list):
-    """Gets the number of bits a given wordlist dictionary represents.
+    """!Gets the number of bits a given wordlist dictionary represents.
     
     The word list to be used as a dictionary for encoding/decoding purposes should always have 2^N 
     elements, since each mnemonic word will be encoded into an N-bit number. After checking for this
@@ -25,7 +25,7 @@ def get_dictionary_bits(word_list):
 
 
 def encode_words(word_list, seed_phrase):
-    """Turns a seed phrase into a binary number, using a given word list for the encoding."""
+    """!Turns a seed phrase into a binary number, using a given word list for the encoding."""
 
     # First, turn each seed word into a binary number.
     binary_numbers = []
@@ -39,7 +39,7 @@ def encode_words(word_list, seed_phrase):
 
 
 def decode_words(word_list, secret_number):
-    """Turns a secret binary number into a seed phrase, using a given word list for the decoding."""
+    """!Turns a secret binary number into a seed phrase, using a given word list for the decoding."""
 
     slice_size = get_dictionary_bits(word_list)
     slices = [str(secret_number)[i : i + slice_size] for i in range(

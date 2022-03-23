@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['reconstruct_0',['reconstruct',['../namespacereconstruct.html',1,'']]],
-  ['reference_20implementation_20for_20mnemonics_20research_20project_1',['Reference implementation for Mnemonics Research Project',['../md_research_mnemonic__r_e_a_d_m_e.html',1,'']]]
+  ['secret_5freconstruction_0',['secret_reconstruction',['../namespaceshamir.html#a563499ba0bed3c0210657a0dbbebbd85',1,'shamir']]],
+  ['shamir_1',['shamir',['../namespaceshamir.html',1,'']]],
+  ['share_5fgeneration_2',['share_generation',['../namespaceshamir.html#a18056e460b7d27d1506095c673513ba1',1,'shamir']]]
 ];

@@ -1,0 +1,164 @@
+\hypertarget{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e_autotoc_md4}{}\doxysection{Table of contents}\label{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e_autotoc_md4}
+
+\begin{DoxyItemize}
+\item Description
+\item Notation
+\item Shamir\textquotesingle{}s secret sharing scheme (SSS)
+\item Generating shares and reconstruction of the secret
+\item Basic usage
+\item Format of a share
+\item Design rationale
+\item References
+\end{DoxyItemize}\hypertarget{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e_autotoc_md5}{}\doxysection{Description}\label{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e_autotoc_md5}
+In this project we implement a modified version of Shamir’s secret sharing scheme (SSS) in order to share a secret phrase, called mnemonics, in a secure way. In the following we give the notation that we use, then we give the definition of Shamir\textquotesingle{}s secret sharing scheme and our modified scheme. We describe how we generate shares and reconstruct the secret. Then we give a basic usage information and the format of a share file. Finally, we give a few comments on design rationale.\hypertarget{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e_autotoc_md6}{}\doxysection{Notation}\label{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e_autotoc_md6}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Symbol   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Descripton    }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Symbol   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Descripton    }\\\cline{1-2}
+\endhead
+{\itshape n}   &Number of shares    \\\cline{1-2}
+{\itshape t}   &Threshold    \\\cline{1-2}
+{\itshape s}   &Secret    \\\cline{1-2}
+{\itshape D}   &Digest of the secret    \\\cline{1-2}
+{\itshape nb}   &Number of bits, e.\+i. $\ast$nb = log\textsubscript{2} len(dictionary)$\ast$    \\\cline{1-2}
+{\itshape nw}   &Number of words in the mnemonic, e.\+i. {\itshape nw = len(secret)}    \\\cline{1-2}
+{\itshape m}   &Size of {\itshape q} in bits, e.\+i. {\itshape m = nb $\ast$ nw}    \\\cline{1-2}
+{\itshape q}   &Order of the Galois field, e.\+i. $\ast$q = 2\textsuperscript{m}$\ast$    \\\cline{1-2}
+F   &Galois field, e.\+i. F = GF({\itshape q})    \\\cline{1-2}
+{\itshape d}   &Number of bits taken from the hash of the secret, the first part of the digest {\itshape D}.    \\\cline{1-2}
+{\itshape R}   &Number of bits of the randomness which is the remaining part of the digest {\itshape D}.   \\\cline{1-2}
+\end{longtabu}
+\hypertarget{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e_autotoc_md7}{}\doxysection{Shamir secret sharing scheme}\label{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e_autotoc_md7}
+Let F be a finite field with q elements. A $\ast$(t, n)-\/threshold secret sharing scheme$\ast$ shares a non-\/zero secret {\itshape s} among {\itshape n} users such that any {\itshape t} or more shares can reconstruct the secret but {\itshape t-\/1} or less cannot. Shamir\textquotesingle{}s secret sharing scheme is an ideal and perfect $\ast$(t, n)-\/thresholds scheme$\ast$ and can be defined in two phases as follows\+:\hypertarget{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e_autotoc_md8}{}\doxysubsection{1. Share Generation Phase\+:}\label{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e_autotoc_md8}
+
+\begin{DoxyItemize}
+\item A dealer chooses a secret polynomial {\itshape f(x)} with degree {\itshape t-\/1}, such that its constant term is the secret to be shared {\itshape s}.
+\item The dealer sends the tuple $\ast$(x\textsubscript{i}, f(x\textsubscript{i}))$\ast$ as the share to {\itshape i}-\/th user, where $\ast$x\textsubscript{i}$\ast$\textquotesingle{}s are all non-\/zero and distinct for {\itshape i = 1, … , n}.
+\end{DoxyItemize}\hypertarget{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e_autotoc_md9}{}\doxysubsection{2. Reconstruction Phase\+:}\label{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e_autotoc_md9}
+
+\begin{DoxyItemize}
+\item If any {\itshape t} or more users jointly perform a Lagrange interpolation with their shares, they obtain the secret polynomial {\itshape f(x)}, and {\itshape f(0)} yields the secret {\itshape s}.
+\end{DoxyItemize}
+
+In addition to the above definition, we also encode the digest of the secret as {\itshape f(q-\/1)} as stated in SLIP-\/0039\+: Shamir\textquotesingle{}s Secret-\/\+Sharing for Mnemonic Codes. Let {\itshape s} be the secret to be shared and {\itshape D} be it\textquotesingle{}s digest such that, {\itshape D =} HMAC-\/\+SHA256({\itshape R $\vert$$\vert$ s})\mbox{[}$\ast$\+:d$\ast$\mbox{]} $\vert$$\vert$ {\itshape R}, where {\itshape R} is the randomness with length {\itshape m-\/d} in bits, for $\ast$m = log\textsubscript{2} q$\ast$ and some integer {\itshape d}.
+
+
+
+In other words the digest share {\itshape D} is composed of two parts; first {\itshape d}-\/bit part is the first {\itshape d} bits of the output of the hash function and the remaining part is a randomness with {\itshape m-\/d} bit length.
+
+
+
+Our scheme takes a secret mnemonic as string, converts it to binary string and performs padding if needed. Then it is converted to integer. After generating the integer shares, all the shares are converted into string and parsed as distinct n mnemonics. Below we describe only the share generation and secret reconstruction phases.\hypertarget{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e_autotoc_md10}{}\doxysection{Generating shares and reconstruction of the secret}\label{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e_autotoc_md10}
+\hypertarget{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e_autotoc_md11}{}\doxysubsection{Polynomial interpolation}\label{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e_autotoc_md11}
+Lagrange interpolation formula tells us that constructing a degree {\itshape t-\/1} polynomial requires at least {\itshape t} points. Assume that we have {\itshape t} distinct points $\ast$(x\textsubscript{1},y\textsubscript{1}), (x\textsubscript{2}, y\textsubscript{2}), … , (x\textsubscript{t}, y\textsubscript{t})$\ast$. Then we can construct the unique degree {\itshape t-\/1} polynomial as follows\+:
+
+
+
+where $\ast$l\textsubscript{j}(x)$\ast$ is the Lagrange basis polynomial with respect to the {\itshape j}-\/th point, i.\+e.
+
+\hypertarget{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e_autotoc_md12}{}\doxysubsection{Share Generation}\label{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e_autotoc_md12}
+\hypertarget{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e_autotoc_md13}{}\doxysubsubsection{INPUT\+: secret $<$em$>$s$<$/em$>$, total number of shares $<$em$>$n$<$/em$>$, threshold $<$em$>$t$<$/em$>$, order of Galois field $<$em$>$q$<$/em$>$, irreducible polynomial of GF($<$em$>$q$<$/em$>$)}\label{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e_autotoc_md13}
+\hypertarget{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e_autotoc_md14}{}\doxysubsubsection{OUTPUT\+: list of $<$em$>$n$<$/em$>$ shares}\label{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e_autotoc_md14}
+
+\begin{DoxyItemize}
+\item Encode {\itshape s = f(0)} and the digest {\itshape D = f(q-\/1)}.
+\item Pick random {\itshape t-\/2} more points, i.\+e. $\ast$(x\textsubscript{1}, y\textsubscript{1}), (x\textsubscript{2}, y\textsubscript{2}), … , (x\textsubscript{t-\/2}, y\textsubscript{t-\/2})$\ast$.
+\item Using the shares $\ast$(0, s), (q-\/1, D), (x\textsubscript{1}, y\textsubscript{1}), (x\textsubscript{2}, y\textsubscript{2}), … , (x\textsubscript{t-\/2}, y\textsubscript{t-\/2})$\ast$, perform Lagrange interpolation and construct the unique degree {\itshape t-\/1} polynomial {\itshape f(x)}.
+\item Generate {\itshape n-\/t+2} more shares by evaluating {\itshape f(x)} at the points $\ast$x\textsubscript{t-\/1}, … , x\textsubscript{n}$\ast$.
+\item Output {\itshape n} shares $\ast$(x\textsubscript{i}, y\textsubscript{i})$\ast$ for {\itshape i = 1, … , n}.
+\end{DoxyItemize}\hypertarget{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e_autotoc_md15}{}\doxysubsection{Secret Reconstruction}\label{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e_autotoc_md15}
+\hypertarget{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e_autotoc_md16}{}\doxysubsubsection{INPUT\+: list of share id $<$em$>$x$<$/em$>$, list of access shares $<$em$>$y$<$/em$>$, order of Galois field $<$em$>$q$<$/em$>$, irreducible polynomial of GF($<$em$>$q$<$/em$>$), digest length $<$em$>$d$<$/em$>$.}\label{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e_autotoc_md16}
+\hypertarget{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e_autotoc_md17}{}\doxysubsubsection{OUTPUT\+: secret $<$em$>$s\textquotesingle{}$<$/em$>$ or abort.}\label{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e_autotoc_md17}
+
+\begin{DoxyItemize}
+\item Apply Lagrange interpolation fort he shares $\ast$(x\textsubscript{j} , y\textsubscript{j}) for j = i\textsubscript{1}, … , i\textsubscript{t}$\ast$, and recover the secret polynomial {\itshape f(x)}.
+\item Compute the secret {\itshape s\textquotesingle{} = f(0)}
+\item Compute the digest {\itshape D\textquotesingle{} = f(-\/1)}
+\item If HMAC-\/\+SHA256({\itshape D\textquotesingle{}}\mbox{[}{\itshape d\+:}\mbox{]} $\vert$$\vert$ {\itshape s\textquotesingle{}})\mbox{[}$\ast$\+:d$\ast$\mbox{]} = {\itshape D\textquotesingle{}}\mbox{[}$\ast$\+:d$\ast$\mbox{]}, then return {\itshape s\textquotesingle{}}. Otherwise abort.
+\end{DoxyItemize}\hypertarget{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e_autotoc_md18}{}\doxysection{Basic usage}\label{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e_autotoc_md18}
+
+\begin{DoxyItemize}
+\item One can share his secret by running below command in the terminal.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{Python create\_shares.py -\/n [number of shares] -\/t [threshold value] -\/s [path/secret.txt] -\/v [optional]}
+
+\end{DoxyCode}
+
+\item If the secret file is not defined then the secret is requested to be typed on the terminal.
+\item The {\bfseries{reconstruct.\+py}} takes {\itshape json} files automatically from the same location and outputs the secret {\itshape s} if the number of the shares is enough.
+\end{DoxyItemize}\hypertarget{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e_autotoc_md19}{}\doxysection{Format of a share}\label{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e_autotoc_md19}
+
+\begin{DoxyItemize}
+\item Our shares are stored in {\itshape json} files which are created in the same location with {\bfseries{create\+\_\+shares.\+py}}. The shares include the following information\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{  \{}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}id"{}}: i,}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}share"{}}: [}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}word\_1"{}},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}word\_2"{}},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}word\_3"{}},}
+\DoxyCodeLine{    .}
+\DoxyCodeLine{    .}
+\DoxyCodeLine{    .}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}word\_nw"{}}}
+\DoxyCodeLine{    ]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+\begin{DoxyItemize}
+\item If -\/v flag is used with {\bfseries{create\+\_\+shares.\+py}} then the share ({\itshape json}) files include additional public reconstruction data, e.\+i. irreducible polynomial and the dictionary.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{  \{}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}id"{}}: i,}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}share"{}}: [}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}word\_1"{}},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}word\_2"{}},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}word\_3"{}},}
+\DoxyCodeLine{    .}
+\DoxyCodeLine{    .}
+\DoxyCodeLine{    .}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}word\_nw"{}}}
+\DoxyCodeLine{    ],}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}irr\_polynomial"{}}: f(x),}
+\DoxyCodeLine{    \textcolor{stringliteral}{"{}word\_list"{}}: []}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ 
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e_autotoc_md20}{}\doxysection{Design rationale}\label{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e_autotoc_md20}
+\hypertarget{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e_autotoc_md21}{}\doxysubsection{Role of the digest}\label{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e_autotoc_md21}
+
+\begin{DoxyItemize}
+\item The digest is encoded as a point in our scheme. It is the evaluation of the polynomial {\itshape f(x)} at {\itshape q-\/1}, e.\+i. {\itshape f(q-\/1)}. Using digest provides us an additional check before returning the reconstructed secret with probability {\itshape 1/d}.
+\item On the other hand it decreases the entropy from $\ast$2\textsuperscript{m}$\ast$ to $\ast$2\textsuperscript{m-\/d}$\ast$ (for further information please see security analysis).
+\end{DoxyItemize}\hypertarget{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e_autotoc_md22}{}\doxysubsection{Number of words and Galois field}\label{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e_autotoc_md22}
+
+\begin{DoxyItemize}
+\item Number of words {\itshape nw} and the number of bits {\itshape nb} which is the size of the dictionary from which the words are picked determine the size of our Galois field.
+\item We have the primitive polynomials of degree up to 660. Therefore, for a dictionary of size 2048, e.\+i. {\itshape nb = 11}, our scheme supports up to 60 word secrets.
+\end{DoxyItemize}\hypertarget{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e_autotoc_md23}{}\doxysubsection{Security}\label{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e_autotoc_md23}
+
+\begin{DoxyItemize}
+\item Although Shamir’s secret sharing scheme (SSS) is information theoretically secure, there is a known active adversary attack against it. Assume an adversary who interacts with {\itshape t-\/1} shareholders and perform share reconstruction with a faulty share. If she can do this again with another {\itshape t-\/1} shareholders (1 different shareholder suffices), she can construct the secret without knowing anything about the secret. In order to avoid such an attack we plan to take some security measures which force the active adversaries to behave passively. We are going to use a composition of authentication schemes and a ZK proofs for the reconstruction process.
+\item Another security issue for our modified scheme is the decreasing entropy because of the digest check that is used in the reconstruction phase. But ensuring that {\itshape m-\/d \texorpdfstring{$>$}{>} 128} can defeat this low entropy weakness.
+\item Finally we have another issue for the security. Assume that an attacker has {\itshape k} shares such that {\itshape t \texorpdfstring{$<$}{<} k \texorpdfstring{$<$}{<} n}, and assume that {\itshape e} shares among {\itshape k} are faulty shares. In this case Lagrange interpolation does not work because of the faulty shares. But if {\itshape e \texorpdfstring{$<$}{<} t \texorpdfstring{$<$}{<} k/3} then the \href{https://en.wikipedia.org/wiki/Berlekamp\%E2\%80\%93Welch_algorithm}{\texttt{ {\itshape Berlekamp-\/\+Welch}}} algorithm works and the adversary can reconstruct the secret without knowing the true shares.
+\end{DoxyItemize}\hypertarget{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e_autotoc_md24}{}\doxysubsection{References}\label{md__c___users__laptop__documents__projects_research_mnemonic__r_e_a_d_m_e_autotoc_md24}
+
+\begin{DoxyEnumerate}
+\item \href{https://web.mit.edu/6.857/OldStuff/Fall03/ref/Shamir-HowToShareASecret.pdf}{\texttt{ Shamir, A.\+: How to share a secret. Communications of the Association for Computing Machinery 22(11), 612\+\_\+613 (Nov 1979)}}
+\item \href{https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki}{\texttt{ BIP-\/39\+: Mnemonic code for generating deterministic keys}}
+\item \href{https://github.com/satoshilabs/slips/blob/master/slip-0039.md}{\texttt{ SLIP-\/0039\+: Shamir\textquotesingle{}s Secret-\/\+Sharing for Mnemonic Codes}} 
+\end{DoxyEnumerate}

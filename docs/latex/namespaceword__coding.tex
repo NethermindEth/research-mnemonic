@@ -1,54 +1,42 @@
-\doxysection{word\+\_\+coding Namespace Reference}
+\hypertarget{namespaceword__coding}{}\doxysection{word\+\_\+coding Namespace Reference}
 \label{namespaceword__coding}\index{word\_coding@{word\_coding}}
+
+
+Module for encoding/decoding a secret phrase into a binary number, using a dictionary.  
+
+
 \doxysubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-def \textbf{ text\+\_\+to\+\_\+list} (text\+\_\+path)
-\item 
-def \textbf{ get\+\_\+dictionary\+\_\+bits} (word\+\_\+list)
-\item 
-def \textbf{ encode\+\_\+words} (word\+\_\+list, seed\+\_\+phrase)
-\item 
-def \textbf{ decode\+\_\+words} (word\+\_\+list, secret\+\_\+number)
-\end{DoxyCompactItemize}
+\mbox{\Hypertarget{namespaceword__coding_a3b7850263fe085574793bde520b74fea}\label{namespaceword__coding_a3b7850263fe085574793bde520b74fea}} 
+def {\bfseries text\+\_\+to\+\_\+list} (text\+\_\+path)
+\begin{DoxyCompactList}\small\item\em Transforms a one-\/word-\/per-\/line text file into a Python list. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespaceword__coding_a61ad28767efb3623c54625c9e00276f7}{get\+\_\+dictionary\+\_\+bits}} (word\+\_\+list)
+\begin{DoxyCompactList}\small\item\em Gets the number of bits a given wordlist dictionary represents. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{namespaceword__coding_a90df4933f53f5874a926f5328b4335ce}\label{namespaceword__coding_a90df4933f53f5874a926f5328b4335ce}} 
+def {\bfseries encode\+\_\+words} (word\+\_\+list, seed\+\_\+phrase)
+\begin{DoxyCompactList}\small\item\em Turns a seed phrase into a binary number, using a given word list for the encoding. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{namespaceword__coding_a01a5805472b9cc0228944b902ff9ad65}\label{namespaceword__coding_a01a5805472b9cc0228944b902ff9ad65}} 
+def {\bfseries decode\+\_\+words} (word\+\_\+list, secret\+\_\+number)
+\begin{DoxyCompactList}\small\item\em Turns a secret binary number into a seed phrase, using a given word list for the decoding. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
-\begin{DoxyVerb}Module for encoding/decoding a secret phrase into a binary number, using a dictionary.\end{DoxyVerb}
- 
+Module for encoding/decoding a secret phrase into a binary number, using a dictionary. 
 
 \doxysubsection{Function Documentation}
-\mbox{\label{namespaceword__coding_a01a5805472b9cc0228944b902ff9ad65}} 
-\index{word\_coding@{word\_coding}!decode\_words@{decode\_words}}
-\index{decode\_words@{decode\_words}!word\_coding@{word\_coding}}
-\doxysubsubsection{decode\_words()}
-{\footnotesize\ttfamily def word\+\_\+coding.\+decode\+\_\+words (\begin{DoxyParamCaption}\item[{}]{word\+\_\+list,  }\item[{}]{secret\+\_\+number }\end{DoxyParamCaption})}
-
-\begin{DoxyVerb}Turns a secret binary number into a seed phrase, using a given word list for the decoding.\end{DoxyVerb}
- \mbox{\label{namespaceword__coding_a90df4933f53f5874a926f5328b4335ce}} 
-\index{word\_coding@{word\_coding}!encode\_words@{encode\_words}}
-\index{encode\_words@{encode\_words}!word\_coding@{word\_coding}}
-\doxysubsubsection{encode\_words()}
-{\footnotesize\ttfamily def word\+\_\+coding.\+encode\+\_\+words (\begin{DoxyParamCaption}\item[{}]{word\+\_\+list,  }\item[{}]{seed\+\_\+phrase }\end{DoxyParamCaption})}
-
-\begin{DoxyVerb}Turns a seed phrase into a binary number, using a given word list for the encoding.\end{DoxyVerb}
- \mbox{\label{namespaceword__coding_a61ad28767efb3623c54625c9e00276f7}} 
+\mbox{\Hypertarget{namespaceword__coding_a61ad28767efb3623c54625c9e00276f7}\label{namespaceword__coding_a61ad28767efb3623c54625c9e00276f7}} 
 \index{word\_coding@{word\_coding}!get\_dictionary\_bits@{get\_dictionary\_bits}}
 \index{get\_dictionary\_bits@{get\_dictionary\_bits}!word\_coding@{word\_coding}}
-\doxysubsubsection{get\_dictionary\_bits()}
+\doxysubsubsection{\texorpdfstring{get\_dictionary\_bits()}{get\_dictionary\_bits()}}
 {\footnotesize\ttfamily def word\+\_\+coding.\+get\+\_\+dictionary\+\_\+bits (\begin{DoxyParamCaption}\item[{}]{word\+\_\+list }\end{DoxyParamCaption})}
 
-\begin{DoxyVerb}Gets the number of bits a given wordlist dictionary represents.
 
-The word list to be used as a dictionary for encoding/decoding purposes should always have 2^N 
+
+Gets the number of bits a given wordlist dictionary represents. 
+
+\begin{DoxyVerb}The word list to be used as a dictionary for encoding/decoding purposes should always have 2^N 
 elements, since each mnemonic word will be encoded into an N-bit number. After checking for this
 condition, the number N=number_of_bits is returned as an integer.
 \end{DoxyVerb}
- \mbox{\label{namespaceword__coding_a3b7850263fe085574793bde520b74fea}} 
-\index{word\_coding@{word\_coding}!text\_to\_list@{text\_to\_list}}
-\index{text\_to\_list@{text\_to\_list}!word\_coding@{word\_coding}}
-\doxysubsubsection{text\_to\_list()}
-{\footnotesize\ttfamily def word\+\_\+coding.\+text\+\_\+to\+\_\+list (\begin{DoxyParamCaption}\item[{}]{text\+\_\+path }\end{DoxyParamCaption})}
-
-\begin{DoxyVerb}Transforms a one-word-per-line text file into a Python list\end{DoxyVerb}
  
