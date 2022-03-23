@@ -110,7 +110,7 @@ where *l<sub>j</sub>(x)* is the Lagrange basis polynomial with respect to the *j
 		.
 		.
 		"word_nw"
-		]
+	]
 	}
 	```
  
@@ -127,7 +127,7 @@ where *l<sub>j</sub>(x)* is the Lagrange basis polynomial with respect to the *j
 		.
 		.
 		"word_nw"
-		],
+	],
 	"total_shares": n,
 	"threshold": t,
 	"primitive_poly": <polynomial in string form>,
