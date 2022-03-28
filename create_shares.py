@@ -11,7 +11,7 @@ Requisites
 1) Before running this script, a dictionary of words to encode secret phrases, with the name
 "wordlist.txt", must be provided in the same folder as the script. This dictionary must:
     * Have 2^nb words, where nb is an integer (so that each word represents an nb-bit number)
-    * Be a .txt file where each line has a single word.
+    * Be a .txt file where each line has a single wopiprd.
 
 This package comes pre-loaded with BIP-39's 2048-word dictionary.
 
@@ -69,6 +69,7 @@ import glob
 import json
 import re
 import os
+import galois
 
 
 # Empty the contents of shares folder, create it if it doesn't exist.
