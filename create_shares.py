@@ -69,7 +69,6 @@ import glob
 import json
 import re
 import os
-import galois
 
 
 # Empty the contents of shares folder, create it if it doesn't exist.

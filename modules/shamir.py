@@ -9,8 +9,9 @@ import os
 
 def get_polynomial_degree(polynomial:str):
     """!Gets degree of a polynomial in string form with the galois package"""
-
-    return galois.Poly.Str(polynomial).degree
+    
+    monomials = polynomial.split('+')[0].strip()
+    return int(monomials[2:])
 
 
 def create_digest(randomness:bytes, shared_secret:bytes, digest_length=4):
