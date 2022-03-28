@@ -71,11 +71,13 @@ import re
 import os
 
 
-# Empty shares folder
-files = glob.glob('shares/*')
-for f in files:
-    os.remove(f)
-
+# Empty the contents of shares folder, create it if it doesn't exist.
+if os.path.exists('shares'):
+    files = glob.glob('shares/*')
+    for f in files:
+        os.remove(f)
+else:
+    os.mkdir('shares')
 
 # Parser initialized to take command line arguments
 parser = argparse.ArgumentParser()
