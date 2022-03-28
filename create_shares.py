@@ -11,7 +11,7 @@ Requisites
 1) Before running this script, a dictionary of words to encode secret phrases, with the name
 "wordlist.txt", must be provided in the same folder as the script. This dictionary must:
     * Have 2^nb words, where nb is an integer (so that each word represents an nb-bit number)
-    * Be a .txt file where each line has a single wopiprd.
+    * Be a .txt file where each line has a single word.
 
 This package comes pre-loaded with BIP-39's 2048-word dictionary.
 
@@ -102,7 +102,7 @@ nb = word_coding.get_dictionary_bits(word_list)
 # Obtain the secret, which will either be loaded from a .txt or directly from the command line.
 # Case 1: will the secret be loaded from a .txt file?
 if secret != None:
-    regex = r"^[A-Za-z]:(\\|\/).*\.[tT][xX][tT]"
+    regex = r"^(?:[A-Za-z]:)?(\\|\/).*\.[tT][xX][tT]"
     file_path_found = re.search(regex, secret.strip())
     file_path = file_path_found.group(0) if file_path_found else None
 else:
