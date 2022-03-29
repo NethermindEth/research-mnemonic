@@ -93,7 +93,7 @@
 		\begin{enumerate}
 			\item Let $s \in \FF_q$ be the secret to be shared and $D \in \FF_q$ be it's digest such that 
 			\begin{equation*}
-			D = \hsha2(R,s)[:d] || R
+			D = \hsha2(R,s)[:d] \concat R
 			\end{equation*} 
 			\michals{13.03}{Please define a macro for the hash function, don't write \texttt{\textbackslash textrm\{HMAC-SHA256\}}}
 			\ahmets{13.03}{done.}
@@ -151,6 +151,56 @@
 	to be continued...
 	
 	\ahmets{21.03}{We met with Lucy and discussed about the security of our scheme. She will define 2 games for original and modified Shamir's scheme and show how secure the modified one is.}
+	
+	\section{Formal Security}
+	First we prove the security of the original scheme.	
+	Let $\FF_{q}$ be an extension field where $q = 2^{m}$ for some $m \in \ZZ$. 
+	Let $\sP_{s}^{t - 1}$ be the set of all polynomials over $\FF_{q}$ with constant term $s$ and degree $t - 1$.
+	The number of elements of $\sP_{s}^{t - 1}$ is exactly $|\FF_{q}|^{t-1}$. 
+	We define an algorithm $\sdv$ which takes $n, t \in \ZZ$ and the secret $s$ as inputs, where $n$ is the number of shares and $t$ is the threshold. 
+	The algoritm $\sdv(s, n, t)$ chooses a random polynomial $p(x)$ from $\sP_{s}^{t - 1}$ and outputs $n$ shares $p(x_1), \ldots, p(x_n)$.
+	
+		\pcb{
+		p(x) \sample \sP_{s}^{t - 1}\\
+		\pcreturn p(x_1), \ldots, p(x_n)}
+	
+	Now we claim that every $t-1$ shares are distributed uniformly in $\FF_q$. 
+	In order to prove this claim we fix any $t-1$ values $y_1, \ldots, y_{t-1} \in \FF_q$, subset  $I \subset [n]$ and $|I| = t-1$. 
+	\begin{itemize}
+	 	\item There is exactly one polynomial $p(x) \in \sP_{s}^{t - 1}$ that satisfies $p(0) = s$ and $p(x_{i}) = y_{i}$ for every $i \in I$. 
+	 	The probability that $\sdv(s, n, t)$ choose $p(x)$ exactly $1/|\FF_q|^{t-1}$.
+	 	\item There is exactly one polynomial $q(x) \in \sP_{s}^{t - 1}$ that satisfies $q(0) = s'$ and $q(x_{i}) = y_{i}$ for every $i \in I$. 
+	 	The probability that $\sdv(s', n, t)$ choose $q(x)$ exactly $1/|\FF_q|^{t-1}$.
+	\end{itemize}
+	Therefore we have
+	\begin{align*}
+		\probsub{p(x) \sample {\sP_{s}^{t - 1}}}{p(x_1) = y_1, \ldots, p(x_{t-1}) = y_{t-1}} &= \probsub{q(x) \sample {\sP_{s'}^{t - 1}}}{q(x_1) = y_1, \ldots, q(x_{t-1}) = y_{t-1}} \\
+		&= 1/|\FF_q|^{t-1}.
+	\end{align*}
+	
+	Therefore an adversary against the original scheme cannot do anything better than a random guess whose probability is exactly $1/2^m$.
+	
+	Now we move on our modified scheme. 	
+	In the modified version the digest share, e.i. $D = k \concat R$, is also encoded as $p(-1)$, where  $k$ is the first $d$ bit of the output of $\hsha(R, s)$ and $R$ is an $m - d$ bit randomness. 
+	We define an algorithm $\bdv$ which takes $y_i$ for $i \in I$, and $t \in \ZZ$ and $k$ as inputs, where $y_i$'s are $t - 1$ shares and $t$ is the threshold.
+	The algoritm $\bdv(y_1, \ldots, y_{t-1}, t, k)$ outputs a candidate secret $s'$. It works as follows:
+	
+	\pcb{
+		s' \sample \FF_q\\
+		D' = \frac{s' - \sum\limits_{j = 1}^{t-1} y_{j}\ell_{j}(0)}{\ell_{t}(0)}\\
+		\pcif D'[:d] \neq k \pcthen\\
+		\t \text{Restart with a fresh s'}\\
+		\pcelse\\
+		\t \pcreturn s'}
+	where $\ell_{j}(x)$ is the  Lagrange basis polynomial with respect to the $j$-th share.
+	Given a fixed $k$, for each uniformly sampled $D \in \FF_q$ there exist exactly $2^{m - d}$ possible randomness $R$.  
+	The probability that the algorithm $\bdv$ returns the correct secret value is 
+	
+	\begin{equation*}
+		\condprob{s = s', s' \leftarrow \bdv(y_1, \ldots, y_{t-1}, t, k)}{k \sample {\FF_{2^d}}} = 1/2^{m-d}
+	\end{equation*}
+	
+	even it is given the value $k$.
 	
 	%\section{Introduction}
 	%\label{sec:introduction}
