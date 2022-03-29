@@ -167,10 +167,10 @@
 	Now we claim that every $t-1$ shares are distributed uniformly in $\FF_q$. 
 	In order to prove this claim we fix any $t-1$ values $y_1, \ldots, y_{t-1} \in \FF_q$, subset  $I \subset [n]$ and $|I| = t-1$. 
 	\begin{itemize}
-	 	\item There is exactly one polynomial $p(x) \in \sP_{s}^{t - 1}$ that satisfies $p(0) = s$ and $p(x_{i}) = y_{i}$ for every $i \in I$. 
-	 	The probability that $\sdv(s, n, t)$ choose $p(x)$ exactly $1/|\FF_q|^{t-1}$.
+	 	\item There is exactly one polynomial $p(x) \in \sP_{s}^{t - 1}$ that satisfies $p(0) = s$ and $p(x_{i}) = y_{i}$ for every $i \in I$. \michals{29.03}{This is not well written. points $(x_i, y_i)$ determines $s$ while the above could be read as "any $s$ and set $(x_i, y_i)$ determine a single polynomial."}
+	 	The probability that $\sdv(s, n, t)$ chooses $p(x)$ exactly $1/|\FF_q|^{t-1}$.
 	 	\item There is exactly one polynomial $q(x) \in \sP_{s}^{t - 1}$ that satisfies $q(0) = s'$ and $q(x_{i}) = y_{i}$ for every $i \in I$. 
-	 	The probability that $\sdv(s', n, t)$ choose $q(x)$ exactly $1/|\FF_q|^{t-1}$.
+	 	The probability that $\sdv(s', n, t)$ chooses $q(x)$ exactly $1/|\FF_q|^{t-1}$.
 	\end{itemize}
 	Therefore we have
 	\begin{align*}
