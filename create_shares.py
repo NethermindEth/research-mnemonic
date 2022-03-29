@@ -103,10 +103,16 @@ nb = word_coding.get_dictionary_bits(word_list)
 if secret != None:
     regex = r"^(?:[A-Za-z]:)?(\\|\/).*"
     file_path_found = re.search(regex, secret.strip())
-    file_path = file_path_found.group(0) if file_path_found else None
+    if file_path_found:
+        file_path = file_path_found.group(0)
+        print("Loading secret file from path: " + file_path)
+    else:
+        file_path = None
+        print("Loading secret phrase from command line")
 else:
     #If no secret was provided, we will be loading secret.txt by default.
     file_path = 'secret.txt'
+    print("Loading secret from 'secret.txt' in the script's directory")
 
 
 # If a file path was assigned above, load it.
@@ -150,7 +156,7 @@ for i in range (len(shares)):
     file_name = "shares/share_" + str(i+1) + ".json"
     share_data = {
             'id': i+1,
-            'share' : reconstructed_shared_secrets,
+            'share' : reconstructed_shared_secrets
             }
     print(share_data)
 

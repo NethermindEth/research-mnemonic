@@ -8,7 +8,7 @@ import os
 
 
 def get_polynomial_degree(polynomial:str):
-    """!Gets degree of a polynomial in string form with the galois package"""
+    """!Gets degree of a string-form polynomial on GF(2). Monomials must be of the form x^<number>"""
     
     monomials = polynomial.split('+')[0].strip()
     return int(monomials[2:])
