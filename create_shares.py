@@ -101,7 +101,7 @@ nb = word_coding.get_dictionary_bits(word_list)
 # Obtain the secret, which will either be loaded from a .txt or directly from the command line.
 # Case 1: will the secret be loaded from a .txt file?
 if secret != None:
-    regex = r"^(?:[A-Za-z]:)?(\\|\/).*\.[tT][xX][tT]"
+    regex = r"^(?:[A-Za-z]:)?(\\|\/).*"
     file_path_found = re.search(regex, secret.strip())
     file_path = file_path_found.group(0) if file_path_found else None
 else:
