@@ -34,7 +34,7 @@
 % Custom header
 %
 
-\input{tex_files/ZZ_header}
+\input{ZZ_header}
 
 \DeclareRobustCommand{\michals}[2] {{\color{magenta}{$\big[$\scriptsize\textsf{Michal #1:}} #2$\big]$}}
 
@@ -206,11 +206,7 @@
 	%\label{sec:introduction}
 	%\input{tex_files/01_introduction}
 	
-	\ifnum\fullversion=1
-	\bibliographystyle{splncs03}
-	\else
-	\bibliographystyle{alpha-short}
-	\fi
+	\bibliographystyle{alpha}
 	\bibliography{cryptobib/abbrev3,cryptobib/crypto}
 	
 \end{document} 
