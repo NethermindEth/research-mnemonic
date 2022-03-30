@@ -69,7 +69,7 @@
 	In Mnemonics project we use a modified version of Shamir's Secret Sharing Scheme (SSS) \cite{Shamir79} which can be stated as below. 
 	
 	\begin{definition}\label{def:shamir}
-		Let $\FF_q$ be a finite field with $q$ elements and $t,n \in \ZZ$. A $(t, n)$-thresholds secret sharing scheme shares a non-zero secret $s \in \FF_q$ among $n$ users such that any $t$ or more shares can reconstruct the secret but $t-1$ or less cannot. Shamir's secret sharing scheme is an ideal and perfect A $(t, n)$-thresholds scheme and can be defined in two phases as follows:
+		Let $\FF_q$ be a finite field with $q$ elements and $t,n \in \ZZ$. A $(t, n)$-thresholds secret sharing scheme shares a secret $s \in \FF_q$ among $n$ users such that any $t$ or more shares can reconstruct the secret but $t-1$ or less cannot. Shamir's secret sharing scheme is an ideal and perfect A $(t, n)$-thresholds scheme and can be defined in two phases as follows:
 		
 		\begin{enumerate}
 			\item \textbf{Share Generation Phase:} 
@@ -117,11 +117,11 @@
 	
 	The Lagrange interpolation formula is
 	\begin{equation}\label{eq:Lag_int}
-	f(x) = \sum\limits_{j = 1}^{t} y_{j} \ell_{j}(x)
+	f(x) = \sum\limits_{j = 1}^{t} y_{j} \ell_{j}(x),
 	\end{equation}
-	, where $\ell_{j}(x)$ is the  Lagrange basis polynomial WRT the $j$-th point, i.e.
+	where $\ell_{j}(x)$ is the  Lagrange basis polynomial WRT the $j$-th point, i.e.
 	\begin{equation}\label{eq:Lag_Basis}
-	\ell_{j}(x) = \prod\limits_{\substack{k = 1 \\ k \neq j}}^{t} \frac{x - x_{k}}{x_{j} - x_{k}}
+	\ell_{j}(x) = \prod\limits_{\substack{k = 1 \\ k \neq j}}^{t} \frac{x - x_{k}}{x_{j} - x_{k}}.
 	\end{equation}
 	
 	Since $\adv$ knows the $x$ coordinates of $t$ points she holds, she can compute the Lagrange basis polynomials according to (\ref{eq:Lag_Basis}). 
@@ -130,27 +130,25 @@
 	
 	\begin{align*}
 	s &= f(0)\\
-	&= \sum\limits_{j = 1}^{t-1} y_{j}\ell_{j}(0) + y_{t}\ell_{t}(0)
+	&= \sum\limits_{j = 1}^{t-1} y_{j}\ell_{j}(0) + y_{t}\ell_{t}(0),
 	\end{align*}
 	and 
 	\begin{equation}\label{eq:thelast}
-	s - \sum\limits_{j = 1}^{t-1} y_{j}\ell_{j}(0) = y_{t}\ell_{t}(0)
+	s - \sum\limits_{j = 1}^{t-1} y_{j}\ell_{j}(0) = y_{t}\ell_{t}(0).
 	\end{equation}
 	
-	We know from the Definition \ref{def:shamir} that the secret is non-zero. \michals{12.03.22}{That's not correct, we only have that the shares are not values at 0.} \ahmets{13.03}{yes you are right. The only non-zero thing is the secret. I changed it.}. Since the $x$ coordinates are all distinct, the Lagrange basis polynomials are also non-zero. There exist one unknown in both sides of (\ref{eq:thelast}), i.e. $s$ and $y_{t}$. Since $s, y_{t} \in \FF_q^{*}$, for each possible value of $s \in \FF_q$ there exist a unique value $y_{t} \in \FF_q$. But Since $y_{t} = D$, $\adv$ can perform a brute-force attack on the secret $s$ and using (\ref{eq:thelast}) she eliminates the candidate secret giving invalid digest. More precisely $\adv$ can proceed as follows.
-	\begin{itemize}
-		\item Picks an $s'$ from $\FF_q$,
-		\item set $D' = \frac{s' - \sum\limits_{j = 1}^{t-1} y_{j}\ell_{j}(0)}{\ell_{t}(0)}$,
-		\item Checks wether the first $d$ bits of $D'$ is equal to $\hsha(R, s')[:d]$, where $R$ is the remaining part of $D'$.
-		\item If they are equal, then $s' = s$ with probability $1/2^{m - d}$. 
-		\item Otherwise eliminate the candidate secret $s'$ and try with a fresh $s' \in \FF_q$. 
-	\end{itemize}
-	Since above attack works for $2^{d}$ different values of $s' \in \FF_q$, the brute-force space decreases from $\bigO{2^{m}}$ to $\bigO{2^{m - d}}$. \michals{13.03}{There is no such a thing as "bruteforce space" for SSS -- this scheme is perfectly secure, i.e it remains secure even against unbounded adversaries}
+	\michals{12.03.22}{That's not correct, we only have that the shares are not values at 0.} \ahmets{29.03}{Removed.}. Since the $x$ coordinates are all distinct, evaluation values of the Lagrange basis polynomials at zero are all non-zero. There exist one unknown in both sides of (\ref{eq:thelast}), i.e. $s$ and $y_{t}$. Since $s, y_{t} \in \FF_q$, for each possible value of $s \in \FF_q$ there exist a unique value $y_{t} \in \FF_q$. But Since $y_{t} = D$, $\adv$ can perform a brute-force attack on the secret $s$ and using (\ref{eq:thelast}) she eliminates the candidate secret giving invalid digest. More precisely $\adv$ can proceed as follows:
+	
+		\pcb{
+		s' \sample \FF_q\\
+		D' = \frac{s' - \sum\limits_{j = 1}^{t-1} y_{j}\ell_{j}(0)}{\ell_{t}(0)}\\
+		\pcif D'[:d] \neq \hsha(R \concat s')[:d] \pcthen\\
+		\t \text{Restart with a fresh $s'$}\\
+		\pcelse\\
+		\t \pcreturn s'}
+	
+	\michals{13.03}{There is no such a thing as "bruteforce space" for SSS -- this scheme is perfectly secure, i.e it remains secure even against unbounded adversaries}\ahmets{29.03}{Removed.}
 	\michals{13.03.22}{please use macros from cryptocode}\ahmets{13.03}{done}
-	
-	to be continued...
-	
-	\ahmets{21.03}{We met with Lucy and discussed about the security of our scheme. She will define 2 games for original and modified Shamir's scheme and show how secure the modified one is.}
 	
 	\section{Formal Security}
 	First we prove the security of the original scheme.	
@@ -169,7 +167,7 @@
 	\begin{itemize}
 	 	\item There is exactly one polynomial $p(x) \in \sP_{s}^{t - 1}$ that satisfies $p(0) = s$ and $p(x_{i}) = y_{i}$ for every $i \in I$. \michals{29.03}{This is not well written. points $(x_i, y_i)$ determines $s$ while the above could be read as "any $s$ and set $(x_i, y_i)$ determine a single polynomial."}
 	 	The probability that $\sdv(s, n, t)$ chooses $p(x)$ exactly $1/|\FF_q|^{t-1}$.
-	 	\item There is exactly one polynomial $q(x) \in \sP_{s}^{t - 1}$ that satisfies $q(0) = s'$ and $q(x_{i}) = y_{i}$ for every $i \in I$. 
+	 	\item There is exactly one polynomial $q(x) \in \sP_{s'}^{t - 1}$ that satisfies $q(0) = s'$ and $q(x_{i}) = y_{i}$ for every $i \in I$. 
 	 	The probability that $\sdv(s', n, t)$ chooses $q(x)$ exactly $1/|\FF_q|^{t-1}$.
 	\end{itemize}
 	Therefore we have
@@ -189,15 +187,15 @@
 		s' \sample \FF_q\\
 		D' = \frac{s' - \sum\limits_{j = 1}^{t-1} y_{j}\ell_{j}(0)}{\ell_{t}(0)}\\
 		\pcif D'[:d] \neq k \pcthen\\
-		\t \text{Restart with a fresh s'}\\
+		\t \text{Restart with a fresh $s'$}\\
 		\pcelse\\
 		\t \pcreturn s'}
 	where $\ell_{j}(x)$ is the  Lagrange basis polynomial with respect to the $j$-th share.
 	Given a fixed $k$, for each uniformly sampled $D \in \FF_q$ there exist exactly one randomness $R$.  
-	The probability that the algorithm $\bdv$ returns the correct secret value is 
+	Since the randomness $R$ belongs to $\FF_{2^{m - d}}$, the probability that the algorithm $\bdv$ returns the correct secret value is 
 	
 	\begin{equation*}
-		\condprob{s = s', s' \leftarrow \bdv(y_1, \ldots, y_{t-1}, t, k)}{k \sample {\FF_{2^d}}} = 1/2^{m-d}
+		\condprob{s = s', s' \leftarrow \bdv(y_1, \ldots, y_{t-1}, t, k)}{k \sample {\FF_{2^d}}} = 1/2^{m - d}
 	\end{equation*}
 	
 	even it is given the value $k$.
