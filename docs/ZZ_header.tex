@@ -10,8 +10,6 @@
 \usepackage{tikz}
 \usetikzlibrary{positioning,calc}
 \usepackage{xspace}
-\usepackage{amsmath} %\usepackage{amsthm}
-\usepackage{amssymb}
 \usepackage{mathtools}
 \usepackage{pifont}
 \usepackage{etoolbox}
@@ -30,6 +28,17 @@
 \usepackage{stmaryrd}
 \usepackage[textsize=small]{todonotes}
 \usepackage{multirow}
+
+\DeclareFontFamily{U}{mathx}{\hyphenchar\font45}
+\DeclareFontShape{U}{mathx}{m}{n}{<-> mathx10}{}
+\DeclareSymbolFont{mathx}{U}{mathx}{m}{n}
+\DeclareMathAccent{\widebar}{0}{mathx}{"73}
+
+%\let\vec\vec
+\usepackage{amssymb,amsmath}
+\let\vec\boldsymbol
+
+
 \usepackage[
 n, % or lambda
 advantage,
@@ -112,10 +121,6 @@ keys
 \renewcommand{\pckeystyle}[1]{\ensuremath{\mathsf{#1}}}
 
 
-\let\vec\mathbf
-\newcommand{\bit}{\ensuremath{\{0,1\}}\xspace}
-\newcommand{\getsr}{\leftarrow_{r}}
-
 %--------------------------------------------------------
 % Standard proba, games, proofs, sampling, distributions
 %--------------------------------------------------------
@@ -142,95 +147,6 @@ keys
 \newcommand{\Sample}{\ensuremath{\mathsf{Sample}}\xspace}
 \newcommand{\Sim}{\ensuremath{\mathsf{Sim}}\xspace}
 
-%--------------------------------------------------------
-% Adversaries, oracles
-%--------------------------------------------------------
-
-\newcommand{\AdvA}{\ensuremath{\mathcal{A}}\xspace}
-\newcommand{\AdvB}{\ensuremath{\mathcal{B}}\xspace}
-\newcommand{\AdvC}{\ensuremath{\mathcal{C}}\xspace}
-\newcommand{\AdvD}{\ensuremath{\mathcal{D}}\xspace}
-
-
-%--------------------------------------------------------
-% Classes, sets, groups
-%--------------------------------------------------------
-
-\newcommand{\BPP}{\ensuremath{\mathsf{BPP}}\xspace}
-\newcommand{\NP}{\ensuremath{\mathsf{NP}}\xspace}
-\newcommand{\coNP}{\ensuremath{\mathsf{coNP}}\xspace}
-\newcommand{\PSPACE}{\ensuremath{\mathsf{PSPACE}}\xspace}
-
-\newcommand{\Gt}{\mathbb{G}_{\mathsf{T}}}
-\newcommand{\Hset}{\mathbb{H}}
-\newcommand{\Zn}{\mathbb{Z}_n}
-\newcommand{\Group}{\mathbb{G}}
-
-\newcommand{\Lang}{\ensuremath{\mathscr{L}}}
-\newcommand{\Lpar}{\ensuremath{\Lang_{\param}}\xspace}
-\newcommand{\setX}{\mathcal{X}}
-\newcommand{\setY}{\mathcal{Y}}
-\newcommand{\keyspace}{\mathcal{K}}
-
-
-%--------------------------------------------------------
-% Primitives, algorithms
-%--------------------------------------------------------
-
-\newcommand{\proverS}{\ensuremath{\mathsf{P}_{\Sigma}}\xspace}
-\newcommand{\verifierS}{\ensuremath{\mathsf{V}_{\Sigma}}\xspace}
-
-\newcommand{\sender}{\ensuremath{\mathsf{S}}\xspace}
-\newcommand{\receiver}{\ensuremath{\mathsf{R}}\xspace}
-\newcommand{\ZK}{\textsf{ZK}\xspace}
-\newcommand{\zk}{\textsf{zk}\xspace}
-\newcommand{\HVZK}{\textsf{HVZK}\xspace}
-\newcommand{\NIZK}{\hardprobfont{NIZK}\xspace}
-\newcommand{\NIZKs}{\hardprobfont{NIZKs}\xspace}
-\newcommand{\NIWI}{\hardprobfont{NIWI}\xspace}
-\newcommand{\sigmap}{$\Sigma$-protocol\xspace}
-\newcommand{\sigmaps}{$\Sigma$-protocols\xspace}
-\newcommand{\OT}{\ensuremath{\mathsf{OT}}\xspace}
-\newcommand{\OTs}{\ensuremath{\mathsf{OTs}}\xspace}
-\newcommand{\Eval}{\ensuremath{\mathsf{Eval}}\xspace}
-\newcommand{\PRG}{\ensuremath{\mathsf{PRG}}\xspace}
-\newcommand{\Hash}{\ensuremath{\mathsf{H}}\xspace}
-\newcommand{\Setup}{\ensuremath{\mathsf{Setup}}\xspace}
-\newcommand{\GroupGen}{\textsf{BilinearGen}\xspace}
-\newcommand{\DDHGen}{\textsf{DHGen}\xspace}
-\newcommand{\PGen}{\textsf{PGen}\xspace}
-\newcommand{\KeyGen}{\ensuremath{\mathsf{KeyGen}}\xspace}
-\newcommand{\Enc}{\ensuremath{\mathsf{Enc}}\xspace}
-\newcommand{\Dec}{\ensuremath{\mathsf{Dec}}\xspace}
-\newcommand{\INDCCA}{\ensuremath{\mathsf{IND\text{-}CCA}}\xspace}
-\newcommand{\INDCPA}{\ensuremath{\mathsf{IND\text{-}CPA}}\xspace}
-\newcommand{\Rand}{\ensuremath{\mathsf{Rand}}\xspace}
-\newcommand{\com}{\ensuremath{\mathsf{com}}\xspace}
-\newcommand{\Commit}{\ensuremath{\mathsf{Commit}}\xspace}
-\newcommand{\Prove}{\ensuremath{\mathsf{Prove}}\xspace}
-\newcommand{\prove}{\ensuremath{\mathsf{prove}}\xspace}
-\newcommand{\Verify}{\ensuremath{\mathsf{Verify}}\xspace}
-\newcommand{\Answer}{\ensuremath{\mathsf{Answer}}\xspace}
-\newcommand{\Open}{\ensuremath{\mathsf{Open}}\xspace}
-\newcommand{\myproof}{\ensuremath{\vec{\pi}}\xspace}
-\newcommand{\Gen}{\ensuremath{\mathsf{Setup}}\xspace}
-\newcommand{\KGen}{\ensuremath{\mathsf{KeyGen}}\xspace}
-\newcommand{\Equivocate}{\ensuremath{\mathsf{Equivocate}}\xspace}
-\newcommand{\SimSetup}{\ensuremath{\mathsf{SimSetup}}\xspace}
-\newcommand{\Stretch}{\ensuremath{\mathsf{Stretch}}\xspace}
-\newcommand{\Trapdoor}{\ensuremath{\mathsf{Trapdoor}}\xspace}
-
-
-\newcommand{\ek}{\ensuremath{\mathsf{ek}}\xspace}
-
-\newcommand{\pvk}{\ensuremath{\mathsf{pvk}}\xspace}
-\newcommand{\PVK}{\ensuremath{\mathsf{PVK}}\xspace}
-
-\newcommand{\aux}{\ensuremath{{\mathsf{aux}}}\xspace}
-\newcommand{\crs}{\ensuremath{{\mathsf{crs}}}\xspace}
-\newcommand{\param}{\ensuremath{{\mathsf{par}}}\xspace}
-\newcommand{\trap}{\ensuremath{\mathcal{T}}\xspace}
-\newcommand{\eps}{\varepsilon}
 
 %--------------------------------------------------------
 % Hard problems
@@ -273,42 +189,7 @@ keys
 
 \newcommand{\hsha}{{\textrm{HMAC-SHA256}}}
 \createpseudocodeblock {pcb}{center, boxed}{}{}{}
-%--------------------------------------------------------
-% Double angle brackets
-%--------------------------------------------------------
 
-\makeatletter
-\DeclareFontFamily{OMX}{MnSymbolE}{}
-\DeclareSymbolFont{MnLargeSymbols}{OMX}{MnSymbolE}{m}{n}
-\SetSymbolFont{MnLargeSymbols}{bold}{OMX}{MnSymbolE}{b}{n}
-\DeclareFontShape{OMX}{MnSymbolE}{m}{n}{
-    <-6>  MnSymbolE5
-   <6-7>  MnSymbolE6
-   <7-8>  MnSymbolE7
-   <8-9>  MnSymbolE8
-   <9-10> MnSymbolE9
-  <10-12> MnSymbolE10
-  <12->   MnSymbolE12
-}{}
-\DeclareFontShape{OMX}{MnSymbolE}{b}{n}{
-    <-6>  MnSymbolE-Bold5
-   <6-7>  MnSymbolE-Bold6
-   <7-8>  MnSymbolE-Bold7
-   <8-9>  MnSymbolE-Bold8
-   <9-10> MnSymbolE-Bold9
-  <10-12> MnSymbolE-Bold10
-  <12->   MnSymbolE-Bold12
-}{}
+\newcommand{\samplePoly}{\pcalgostyle{Samp}}
 
-\let\llangle\@undefined
-\let\rrangle\@undefined
-\DeclareMathDelimiter{\llangle}{\mathopen}%
-                     {MnLargeSymbols}{'164}{MnLargeSymbols}{'164}
-\DeclareMathDelimiter{\rrangle}{\mathclose}%
-                     {MnLargeSymbols}{'171}{MnLargeSymbols}{'171}
-\makeatother
-
-%%% Local Variables:
-%%% mode: latex
-%%% TeX-master: "../main"
-%%% End:
+\newcommand{\smallset}[1]{\{#1\}}

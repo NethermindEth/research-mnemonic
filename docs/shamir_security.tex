@@ -150,30 +150,30 @@
 	\michals{13.03}{There is no such a thing as "bruteforce space" for SSS -- this scheme is perfectly secure, i.e it remains secure even against unbounded adversaries}\ahmets{29.03}{Removed.}
 	\michals{13.03.22}{please use macros from cryptocode}\ahmets{13.03}{done}
 	
-	\section{Formal Security}
+	\section{Security proof}
 	First we prove the security of the original scheme.	
-	Let $\FF_{q}$ be an extension field where $q = 2^{m}$ for some $m \in \ZZ$. 
+	Let $\FF_{q}$ be an extension field where $q = 2^{m}$ for some $m \in \NN$. 
 	Let $\sP_{s}^{t - 1}$ be the set of all polynomials over $\FF_{q}$ with constant term $s$ and degree $t - 1$.
-	The number of elements of $\sP_{s}^{t - 1}$ is exactly $|\FF_{q}|^{t-1}$. 
-	We define an algorithm $\sdv$ which takes $n, t \in \ZZ$ and the secret $s$ as inputs, where $n$ is the number of shares and $t$ is the threshold. 
-	The algoritm $\sdv(s, n, t)$ chooses a random polynomial $p(x)$ from $\sP_{s}^{t - 1}$ and outputs $n$ shares $p(x_1), \ldots, p(x_n)$.
+	The number of elements of $\sP_{s}^{t - 1}$ is exactly $q^{t-1}$. 
+	We define an algorithm $\samplePoly$ which takes the secret $s$, parameters $n, t \in \NN$ and vector $\vec{x} = (x_1, \ldots, x_n)$ as intput. $\samplePoly(s, n, t, \vec{x})$ chooses a random polynomial $p(X)$ from $\sP_{s}^{t - 1}$ and outputs $n$ shares $p(x_1), \ldots, p(x_n)$, cf.~\cref{fig:sample_poly}
 	
-		\pcb{
-		p(x) \sample \sP_{s}^{t - 1}\\
-		\pcreturn p(x_1), \ldots, p(x_n)}
-	
-	Now we claim that every $t-1$ shares are distributed uniformly in $\FF_q$. 
-	In order to prove this claim we fix any $t-1$ values $y_1, \ldots, y_{t-1} \in \FF_q$, subset  $I \subset [n]$ and $|I| = t-1$. 
-	\begin{itemize}
-	 	\item There is exactly one polynomial $p(x) \in \sP_{s}^{t - 1}$ that satisfies $p(0) = s$ and $p(x_{i}) = y_{i}$ for every $i \in I$. \michals{29.03}{This is not well written. points $(x_i, y_i)$ determines $s$ while the above could be read as "any $s$ and set $(x_i, y_i)$ determine a single polynomial."}
-	 	The probability that $\sdv(s, n, t)$ chooses $p(x)$ exactly $1/|\FF_q|^{t-1}$.
-	 	\item There is exactly one polynomial $q(x) \in \sP_{s'}^{t - 1}$ that satisfies $q(0) = s'$ and $q(x_{i}) = y_{i}$ for every $i \in I$. 
-	 	The probability that $\sdv(s', n, t)$ chooses $q(x)$ exactly $1/|\FF_q|^{t-1}$.
-	\end{itemize}
+	\begin{figure}
+		\centering
+		\begin{pcvstack}[boxed]
+			\procedure{$\samplePoly (s, n, t, \vec{x})$}{
+			p(X) \sample \sP_{s}^{t - 1}\\
+			\pcreturn p(x_1), \ldots, p(x_n)}
+		\end{pcvstack}
+		\caption{Sampling random polynomial shares}
+		\label{fig:sample_poly}
+	\end{figure}
+
+	Now we claim that every $t-1$ shares output by $\samplePoly (s, n, t, \vec{x})$ are distributed uniformly in $\FF_q$. In order to prove this claim we fix any $t-1$ values $y_1, \ldots, y_{t-1} \in \FF_q$ and subset $I \subset [n]$ such that $|I| = t-1$. Note that for any $s$ and $\smallset{y_i}_{i \in I}$ there is exactly one polynomial $p(X) \in \sP_{s}^{t - 1}$ that satisfies $p(0) = s$ and $p(x_{i}) = y_{i}$, for $i \in I$, and the probability that $\samplePoly(s, n, t, \vec{x})$ chooses $p(X)$ is $1/q^{t-1}$. Similarly, for any $s'$ there is exactly one polynomial $q(X) \in \sP_{s'}^{t - 1}$ that satisfies $q(0) = s'$ and $q(x_{i}) = y_{i}$, for $i \in I$, and the probability that $\samplePoly(s', n, t, \vec{x})$ chooses $q(X)$ is $1/q^{t-1}$.
+
 	Therefore we have
 	\begin{align*}
-		\probsub{p(x) \sample {\sP_{s}^{t - 1}}}{p(x_1) = y_1, \ldots, p(x_{t-1}) = y_{t-1}} &= \probsub{q(x) \sample {\sP_{s'}^{t - 1}}}{q(x_1) = y_1, \ldots, q(x_{t-1}) = y_{t-1}} \\
-		&= 1/|\FF_q|^{t-1}.
+		\probsub{p(X) \sample {\sP_{s}^{t - 1}}}{p(x_1) = y_1, \ldots, p(x_{t-1}) = y_{t-1}} &= \probsub{q(X) \sample {\sP_{s'}^{t - 1}}}{q(x_1) = y_1, \ldots, q(x_{t-1}) = y_{t-1}} \\
+		&= 1/q^{t-1}.
 	\end{align*}
 	
 	Therefore an adversary against the original scheme cannot do anything better than a random guess whose probability is exactly $1/2^m$.
