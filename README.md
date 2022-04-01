@@ -5,6 +5,7 @@
   * [Notation](#notation)
   * [Shamir's secret sharing scheme (SSS)](#shamir-secret-sharing-scheme)
   * [Generating shares and reconstruction of the secret](#generating-shares-and-reconstruction-of-the-secret)
+  * [Working with the project](#working-with-the-project)
   * [Basic usage](#basic-usage)
   * [Format of a share](#format-of-a-share)
   * [Design rationale](#design-rationale)
@@ -83,6 +84,28 @@ where *l<sub>j</sub>(x)* is the Lagrange basis polynomial with respect to the *j
 + Compute the secret *s' = f(0)*
 + Compute the digest *D' = f(-1)*
 + If HMAC-SHA256(*D'*[*d:*] || *s'*)[*:d*] = *D'*[*:d*], then return *s'*. Otherwise abort.
+
+## Working with the project
+
++ Project uses Pipenv as a tool to manage packages and their versions properly.
+
++ Make sure you have pipenv installed on your local machine or install it using
+
+```shell
+python -m pip install pipenv
+```
+
++ Install the required packages using 
+
+```shell
+pipenv install
+```
+
++ Run the project using (Read [Basic usage](#basic-usage) for detailed Information)
+
+```shell
+pipenv run python create_shares.py
+```
 
 
 ## Basic usage
