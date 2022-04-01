@@ -1,11 +1,19 @@
 """!Module implementing the functions that perform Shamir secret sharing on numerical inputs/outputs"""
-
+from modules.get_primitive_poly import get_primitive_poly
 from math import floor, log2
 from random import randint
+from turtle import shearfactor
 import galois
 import hmac
 import os
 
+def randomness_generator(randomness_length: int):
+    """!Picks a random integer from [0-2**randomness_length], translates it as a binary of desired length."""
+    
+    randomness_int = randint(0, 2**randomness_length)
+    format_string = '0' + str(randomness_length) + 'b'
+    randomness_bin = format(randomness_int, format_string)
+    return randomness_bin
 
 def get_polynomial_degree(polynomial:str):
     """!Gets degree of a string-form polynomial on GF(2). Monomials must be of the form x^<number>"""
@@ -15,9 +23,11 @@ def get_polynomial_degree(polynomial:str):
 
 
 def create_digest(randomness:bytes, shared_secret:bytes, digest_length=4):
-    """!Digest function according to SLIP39. Digest length set to 4 by default as per SLIP39"""
-
-    return hmac.new(randomness, shared_secret, "sha256").digest()[:digest_length]
+    """!Digest function according to SLIP39. Digest length set to 4 bits by default."""
+    
+    digest_byte = hmac.new(randomness, shared_secret, "sha256").digest()
+    digest_int = int.from_bytes(digest_byte, "big")
+    return bin(digest_int)[2:(2 + digest_length)]
 
 
 def lagrange_interpolation(x:list, y:list, at_points:list, primitive_poly:str):
@@ -85,7 +95,7 @@ def share_generation(secret:int, num_shares:int, threshold:int, primitive_poly:s
 
     Output: list of integers representing the secret shares.
     """
-
+    
     # Get the size of the Galois field to be used:
     q = 2**get_polynomial_degree(primitive_poly)
 
@@ -94,17 +104,17 @@ def share_generation(secret:int, num_shares:int, threshold:int, primitive_poly:s
     assert q>=secret, 'More words are needed to encode this secret!'
 
     # Choose a randomness for digest
-    randomness_length = int(floor(log2(q)/8)-digest_length)
-    randomness = os.urandom(randomness_length)
+    randomness_length = get_polynomial_degree(primitive_poly) - digest_length
+    randomness = randomness_generator(randomness_length)
 
     # Compute digest with concatenation of randomness and secret as input. 
     # TODO: Consider generalizing the byte length.
-    digest = create_digest(randomness, str(secret).encode(), digest_length)
-
+    digest = create_digest(str(randomness).encode(), str(secret).encode(), digest_length)
+    
     # Compute the digest share which is concatenation of digest and randomness in bytes
-    digest_share_byte = digest + randomness
-    digest_share_int = int.from_bytes(digest_share_byte, "big")
-
+    digest_share_bin= digest + randomness
+    digest_share_int = int(digest_share_bin, 2)
+ 
     # Adding the x and y coordinates of the secret and its digest to the correponding list. 
     initial_int_index = [q-1, 0]
     initial_int_shares = [digest_share_int, secret]
@@ -140,7 +150,6 @@ def secret_reconstruction(x:list, y:list, primitive_poly:str, digest_length=4):
 
     q = 2**get_polynomial_degree(primitive_poly)
     reconstructed_secret, reconstructed_digest = lagrange_interpolation(x, y, [0, q-1], primitive_poly)
-    digest_byte = reconstructed_digest.to_bytes(int(floor(log2(q)/8)), 'big')
-    
-    assert digest_byte[:digest_length] == create_digest(digest_byte[digest_length:], str(reconstructed_secret).encode(), digest_length), "Invalid digest of the shared secret."
+    digest_binary = bin(reconstructed_digest)
+    assert digest_binary[2:(2 + digest_length)] == create_digest(str(digest_binary[(2 + digest_length):]).encode(), str(reconstructed_secret).encode(), digest_length), "Invalid digest of the shared secret."
     return reconstructed_secret
