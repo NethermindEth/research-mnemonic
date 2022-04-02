@@ -27,11 +27,19 @@ jobs:
       with:
         python-version: "3.9"
     
-    - name: Setup pipenv and build
+    - name: Setup pipenv
       uses: dschep/install-pipenv-action@v1
     
-    - name: Build Package
+    - name: Install Dependencies with Pipenv
       run: |
         pipenv install --dev
-        pipenv run pyinstaller research-mnemonic.spec
     
+    - name: Install Pywin32 if on windows
+      run: |
+         if [ "$RUNNER_OS" == "Windows" ]; then
+          pipenv install pywin32
+         fi
+         
+    - name: Create Package
+      run: |
+        pipenv run pyinstaller research-mnemonic.spec
