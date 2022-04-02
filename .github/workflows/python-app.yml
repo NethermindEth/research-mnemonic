@@ -32,6 +32,6 @@ jobs:
     
     - name: Build Package
       run: |
-        pipenv install
+        pipenv install --dev
         pipenv run pyinstaller research-mnemonic.spec
     
