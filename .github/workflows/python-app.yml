@@ -36,9 +36,10 @@ jobs:
     
     - name: Install Pywin32 if on windows
       run: |
-         if["$RUNNER_OS"=="Windows"]; then
+         if [ "$RUNNER_OS" == "Windows" ]; then
           pipenv install pywin32
          fi
+      shell: bash
          
     - name: Create Package
       run: |
