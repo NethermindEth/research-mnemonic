@@ -37,7 +37,7 @@ jobs:
     - name: Install Pywin32 if on windows
       run: |
          if [ "$RUNNER_OS" == "Windows" ]; then
-          pipenv install pywin32 pywin32-ctypes
+          pipenv install pywin32-ctypes pefile
          fi
       shell: bash
          
