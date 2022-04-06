@@ -5,20 +5,22 @@ name: Python application
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
-permissions:
-  contents: read
+    tags:
+      - '*'
 
 jobs:
-  build:
+  publish:
 
     runs-on: ${{ matrix.os }}
     strategy:
-            matrix:
-                os: [windows-latest, ubuntu-latest]
+      matrix:
+        include:
+        - os: ubuntu-latest
+          artifact_name: research-mnemonic
+          asset_name: research-mnemonic-linux-amd64
+        - os: windows-latest
+          artifact_name: research-mnemonic.exe
+          asset_name: research-mnemonic-windows.exe
 
     steps:
     - uses: actions/checkout@v3
@@ -43,4 +45,13 @@ jobs:
          
     - name: Create Package
       run: |
-        pipenv run pyinstaller research-mnemonic.spec
+        pipenv run pyinstaller main.py
+    
+    - name: Upload binaries to release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: dist/${{ matrix.artifact_name }}
+        asset_name: ${{ matrix.asset_name }}
+        tag: ${{ github.ref }}
+        overwrite: true
