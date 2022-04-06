@@ -62,7 +62,7 @@
 \begin{document}
 	\title{Security Analysis of Modified Shamir's Secret Sharing Scheme}
 	
-	\author{Research Team}
+	\author{Nethermind}
 	\maketitle
 	
 	\section{Problem Definition}
@@ -87,7 +87,7 @@
 		\end{enumerate}
 	\end{definition}
 	
-	In addition to the above definition, we also encode the digest of the secret as $f(-1)$ as stated in ``\textit{SLIP-0039 : Shamir's Secret-Sharing for Mnemonic Codes}''. Our modified scheme is as follows:
+	In addition to the above definition, we also encode the digest of the secret as $f(-1)$ as stated in \emph{SLIP-0039 : Shamir's Secret-Sharing for Mnemonic Codes}. Our modified scheme is as follows:
 	\begin{enumerate}
 		\item \textbf{Share Generation Phase:}  
 		\begin{enumerate}
@@ -151,31 +151,53 @@
 	\michals{13.03.22}{please use macros from cryptocode}\ahmets{13.03}{done}
 	
 	\section{Security proof}
-	First we prove the security of the original scheme.	
-	Let $\FF_{q}$ be an extension field where $q = 2^{m}$ for some $m \in \NN$. 
-	Let $\sP_{s}^{t - 1}$ be the set of all polynomials over $\FF_{q}$ with constant term $s$ and degree $t - 1$.
-	The number of elements of $\sP_{s}^{t - 1}$ is exactly $q^{t-1}$. 
-	We define an algorithm $\samplePoly$ which takes the secret $s$, parameters $n, t \in \NN$ and vector $\vec{x} = (x_1, \ldots, x_n)$ as intput. $\samplePoly(s, n, t, \vec{x})$ chooses a random polynomial $p(X)$ from $\sP_{s}^{t - 1}$ and outputs $n$ shares $p(x_1), \ldots, p(x_n)$, cf.~\cref{fig:sample_poly}
+
+	We start by showing security of the original scheme \cite{Shamir79}. Denote by $S$ a random variable that representing value at $0$ of some randomly chosen degree-$(t - 1)$ polynomial $f (X) \in \FF_q [X]$. We want to show that any adversary who knows at most $t - 1$ evaluations of $f (X)$ cannot tell $f (0)$ with probability greater than $1 / q$. More precisely, we show that 
+	\[ 
+		\condprob{S = s}{f(x_1) = y_1, \ldots, f(x_{t - 1}) = y_{t - 1}} = 1/q\,.
+	\] 
+	This follows directly from the fact that for each set of evaluations $(x_i, y_i)$ and $s$ there exists exactly one polynomial $f (X)$ such that $f(0) = s$ and $f(x_i) = y_i$. Hence, all values $s$ are equally probable.
+
+	We now show security of our modified scheme. Let $b$ be the number of bits of the secret's digest revealed in $f(-1)$. We need to compute probability
+	\[ 
+		\condprob{S = s \land f(-1) = (\ro(r, s)[b:] \| r)}{f(x_1) = y_1, \ldots, f(x_{t - 1}) = y_{t - 1}}.
+	\] 
+	First, we note that $\ro (r, s)[b:] = f(-1)[b:]$ equals $1/2^{b}$. Hence
+	\[
+		\condprob{S = s \land f(-1) = (\ro(r, s)[b:] \| r)}{f(x_1) = y_1, \ldots, f(x_{t - 1}) = y_{t - 1}}.
+	\] 
+
+	Proof idea -- show that for each $s'$ there is $r$ such that $f(-1) = (\ro(r, s)[b:] \| r)$
+
+	First we prove the security of the original scheme.	Let $\FF_{q}$ be an extension field where $q = 2^{m}$ for some $m \in \NN$. Let $\sP{t - 1}$ be the set of all polynomials over $\FF_{q}$ with degree $t - 1$. The number of elements of $\sP_{s}^{t - 1}$ is exactly $q^{t}$. 
+	We define an algorithm $\samplePoly$ which takes parameters $n, t \in \NN$ and vector $\vec{x} = (x_1, \ldots, x_n)$ as intput, then chooses a random polynomial $p(X)$ from $\sP^{t - 1}$ and outputs $n$ shares $p(x_1), \ldots, p(x_n)$, cf.~\cref{fig:sample_poly}
 	
 	\begin{figure}
 		\centering
 		\begin{pcvstack}[boxed]
-			\procedure{$\samplePoly (s, n, t, \vec{x})$}{
-			p(X) \sample \sP_{s}^{t - 1}\\
+			\procedure{$\samplePoly (n, t, \vec{x})$}{
+			p(X) \sample \sP^{t - 1}\\
 			\pcreturn p(x_1), \ldots, p(x_n)}
 		\end{pcvstack}
 		\caption{Sampling random polynomial shares}
 		\label{fig:sample_poly}
 	\end{figure}
 
-	Now we claim that every $t-1$ shares output by $\samplePoly (s, n, t, \vec{x})$ are distributed uniformly in $\FF_q$. In order to prove this claim we fix any $t-1$ values $y_1, \ldots, y_{t-1} \in \FF_q$ and subset $I \subset [n]$ such that $|I| = t-1$. Note that for any $s$ and $\smallset{y_i}_{i \in I}$ there is exactly one polynomial $p(X) \in \sP_{s}^{t - 1}$ that satisfies $p(0) = s$ and $p(x_{i}) = y_{i}$, for $i \in I$, and the probability that $\samplePoly(s, n, t, \vec{x})$ chooses $p(X)$ is $1/q^{t-1}$. Similarly, for any $s'$ there is exactly one polynomial $q(X) \in \sP_{s'}^{t - 1}$ that satisfies $q(0) = s'$ and $q(x_{i}) = y_{i}$, for $i \in I$, and the probability that $\samplePoly(s', n, t, \vec{x})$ chooses $q(X)$ is $1/q^{t-1}$.
-
-	Therefore we have
-	\begin{align*}
-		\probsub{p(X) \sample {\sP_{s}^{t - 1}}}{p(x_1) = y_1, \ldots, p(x_{t-1}) = y_{t-1}} &= \probsub{q(X) \sample {\sP_{s'}^{t - 1}}}{q(x_1) = y_1, \ldots, q(x_{t-1}) = y_{t-1}} \\
-		&= 1/q^{t-1}.
-	\end{align*}
+	Now we show that for every $t - 1$ shares output by $\samplePoly (n, t, \vec{x})$ probability that 
 	
+	 are distributed uniformly in $\FF_q$. In order to prove this claim we take a subset $I \subset [n]$ and values $\smallset{y_i}_{i \in I}$ from $\FF_q$. Note that for any $s \in \FF_q$ there is exactly one polynomial $p(X)$ of degree $t - 1$ such that $p(0) = s$ and $p(x_{i}) = y_{i}$, for $i \in I$. Probability that   
+	
+	$t - 1$ values $y_1, \ldots, y_{t - 1} \in \FF_q$ and subset $I \subset [n]$ such that $|I| = t-1$. Note that for any $s$ and $\smallset{y_i}_{i \in I}$ there is exactly one polynomial $p(X) \in \sP_{s}^{t - 1}$ that satisfies $p(0) = s$ and $p(x_{i}) = y_{i}$, for $i \in I$, and the probability that $\samplePoly(s, n, t, \vec{x})$ chooses $p(X)$ is $1/q^{t-1}$. Similarly, for any $s'$ there is exactly one polynomial $q(X) \in \sP_{s'}^{t - 1}$ that satisfies $q(0) = s'$ and $q(x_{i}) = y_{i}$, for $i \in I$, and the probability that $\samplePoly(s', n, t, \vec{x})$ chooses $q(X)$ is $1/q^{t-1}$.
+
+%	Therefore we have
+%	\begin{align*}
+%		\probsub{p(X) \sample {\sP_{s}^{t - 1}}}{p(x_1) = y_1, \ldots, p(x_{t-1}) = y_{t-1}} &= \probsub{q(X) \sample {\sP_{s'}^{t - 1}}}{q(x_1) = y_1, \ldots, q(x_{t-1}) = y_{t-1}} \\
+%		&= 1/q^{t-1}.
+%	\end{align*}
+
+	\[
+		\Pr (p(0) = s | p(x_i) = y_i)
+	\]
 	Therefore an adversary against the original scheme cannot do anything better than a random guess whose probability is exactly $1/2^m$.
 	
 	Now we move on our modified scheme. 	
