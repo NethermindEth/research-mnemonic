@@ -48,7 +48,7 @@ jobs:
          
     - name: Create Package
       run: |
-        pipenv run pyinstaller main.py
+        pipenv run pyinstaller main.py -n research-mnemonic
     
     - name: Upload binaries to release
       uses: svenstaro/upload-release-action@v2
