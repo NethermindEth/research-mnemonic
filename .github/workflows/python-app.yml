@@ -9,7 +9,7 @@ on:
     - v*
 
 jobs:
-  publish:
+  build:
 
     runs-on: ${{ matrix.os }}
     strategy:
