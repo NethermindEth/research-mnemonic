@@ -24,6 +24,10 @@ jobs:
             artifact_name: research-mnemonic.exe
             asset_name: research-mnemonic-windows.exe
 
+    permissions:
+      contents: write
+      packages: write 
+
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python 3.9
