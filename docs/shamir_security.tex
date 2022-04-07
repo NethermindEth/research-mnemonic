@@ -182,12 +182,12 @@
 	Since there exist a unique polynomial for every possible value of $s$ and the secret $s$ is an element of $\FF_q$, for every fixed $t-1$ shares, the secret can take exactly $|\FF_q|$ distinct values. 
 	Namely, for a  degree $t - 1$ secret polynomial $f(x)$ and fixed $t-1$ points $(x_1, y_1), \ldots, (x_{t-1}, y_{t-1})$, such that $f(x_i) = y_i$, $x_i, y_i \in \FF_q$ and $x_i \neq 0$, all the possible values that the secret $s \in \FF_q$ can take, satisfying $f(0) = s$, are equiprobable, that is exactly $1/q$.  
 	 
-	Therefore an adversary against the original scheme who holds $t-1$ shares cannot do anything better than a random guess whose probability is exactly $1/q = 1/2^m$.
+	Therefore any $\ppt$ adversary $\adv$ against the original scheme who holds $t-1$ shares cannot do anything better than a random guess whose probability is exactly $1/q = 1/2^m$.
 	
 	Now we move on our modified scheme. 	
-	In the modified version, the digest share, e.i. $D = k \concat R$, is also encoded as $f(-1)$, where  $k$ is the first $d$ bit of the output of $\hsha(R, s)$ and $R$ is an $m - d$ bit randomness. 
+	In the modified version, the digest share, e.i. $D = k \concat R$, is also encoded as $f(-1)$, where  $k$ is the first $d$ bits of the output of $\hsha(R, s)$ and $R$ is an $m - d$ bit randomness. 
 	We define an algorithm $\bdv$ which takes $t-1$ shares $y_i$ for $i \in I$, threshold $t \in \ZZ$ and the length of partial digest $k \in \ZZ$ as inputs.
-	The algoritm $\bdv(y_1, \ldots, y_{t-1}, t, k)$ outputs a candidate secret $s'$. It works as follows:
+	The algoritm $\bdv(y_1, \ldots, y_{t-1}, t, k)$ outputs a candidate secret $s'$ as follows:
 	
 	\pcb{
 		s' \sample \FF_q\\
@@ -198,13 +198,22 @@
 		\t \pcreturn s'}
 	where $\ell_{j}(x)$ is the  Lagrange basis polynomial with respect to the $j$-th share.
 	Given a fixed $k$, for each uniformly sampled $D \in \FF_q$ there exist exactly one randomness $R$.  
-	Since the randomness $R$ belongs to $\FF_{2^{m - d}}$, the probability that the algorithm $\bdv$ returns the correct secret value is 
+	Since the randomness $R$ belongs to $\{0,1\}^{2^{m - d}}$, the probability that the algorithm $\bdv$ returns the correct secret value is 
 	
 	\begin{equation*}
-		\condprob{s = s', s' \leftarrow \bdv(y_1, \ldots, y_{t-1}, t, k)}{k \sample {\FF_{2^d}}} = 1/2^{m - d}
+		\condprob{s = s', s' \leftarrow \bdv(y_1, \ldots, y_{t-1}, t, k)}{k \in \{0,1\}^{2^{d}}} = 1/2^{m - d}.
 	\end{equation*}
-	even it is given the value $k$.
 	
+	Suppose that the adversary $\adv$ against the original scheme has access to the algorithm $\bdv$.
+	We already have the following probabilities:
+	\begin{itemize}
+		\item $\condprob{s' = s}{s' \sample \FF_q} = 1/2^{m}$,
+		\item $\condprob{s' = s}{s' \leftarrow \bdv(y_1, \ldots, y_{t-1}, t, k)} = 1/2^{m - d}$.
+	\end{itemize}
+	
+	 $\adv$ gives a random $k$ and a threshold $t$ along with the $t-1$ shares to $\bdv$ as inputs. 
+	 $\bdv$ proceeds as defined above and eventually outputs a candidate secret $s'$.
+	 Then $\adv$ use this $s'$ in order to guess the secret with probability $1/2^{m - d}$.
 	%\section{Introduction}
 	%\label{sec:introduction}
 	%\input{tex_files/01_introduction}
