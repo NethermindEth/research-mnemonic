@@ -6,7 +6,7 @@ name: Python application build and release
 on:
   push:
     tags:
-      - v*
+      - "*"
 
   workflow_dispatch:
 
