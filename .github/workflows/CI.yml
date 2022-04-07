@@ -53,11 +53,9 @@ jobs:
         run: |
           pipenv run pyinstaller main.py -n research-mnemonic
 
-      - name: Upload binaries to release
-        uses: svenstaro/upload-release-action@v2
+      - uses: "marvinpinto/action-automatic-releases@latest"
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: dist/${{ matrix.artifact_name }}
-          asset_name: ${{ matrix.asset_name }}
-          tag: ${{ github.ref }}
-          overwrite: true
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
+          files: |
+            dist/${{ matrix.artifact_name }}
