@@ -6,55 +6,54 @@ name: Python application build and release
 on:
   push:
     tags:
-    - v*
-    
+      - v*
+
   workflow_dispatch:
 
 jobs:
   build:
-
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
         include:
-        - os: ubuntu-latest
-          artifact_name: research-mnemonic
-          asset_name: research-mnemonic-linux-amd64
-        - os: windows-latest
-          artifact_name: research-mnemonic.exe
-          asset_name: research-mnemonic-windows.exe
+          - os: ubuntu-latest
+            artifact_name: research-mnemonic
+            asset_name: research-mnemonic-linux-amd64
+          - os: windows-latest
+            artifact_name: research-mnemonic.exe
+            asset_name: research-mnemonic-windows.exe
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python 3.9
-      uses: actions/setup-python@v3
-      with:
-        python-version: "3.9"
-    
-    - name: Setup pipenv
-      uses: dschep/install-pipenv-action@v1
-    
-    - name: Install Dependencies with Pipenv
-      run: |
-        pipenv install --dev
-    
-    - name: Install Pywin32 if on windows
-      run: |
-         if [ "$RUNNER_OS" == "Windows" ]; then
-          pipenv install pywin32-ctypes pefile
-         fi
-      shell: bash
-         
-    - name: Create Package
-      run: |
-        pipenv run pyinstaller main.py -n research-mnemonic
-    
-    - name: Upload binaries to release
-      uses: svenstaro/upload-release-action@v2
-      with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: dist/${{ matrix.artifact_name }}
-        asset_name: ${{ matrix.asset_name }}
-        tag: ${{ github.ref }}
-        overwrite: true
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.9"
+
+      - name: Setup pipenv
+        uses: dschep/install-pipenv-action@v1
+
+      - name: Install Dependencies with Pipenv
+        run: |
+          pipenv install --dev
+
+      - name: Install Pywin32 if on windows
+        run: |
+          if [ "$RUNNER_OS" == "Windows" ]; then
+           pipenv install pywin32-ctypes pefile
+          fi
+        shell: bash
+
+      - name: Create Package
+        run: |
+          pipenv run pyinstaller main.py -n research-mnemonic
+
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: dist/${{ matrix.artifact_name }}
+          asset_name: ${{ matrix.asset_name }}
+          tag: ${{ github.ref }}
+          overwrite: true
