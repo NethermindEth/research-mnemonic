@@ -69,7 +69,7 @@
 	In Mnemonics project we use a modified version of Shamir's Secret Sharing Scheme (SSS) \cite{Shamir79} which can be stated as below. 
 	
 	\begin{definition}\label{def:shamir}
-		Let $\FF_q$ be a finite field with $q$ elements and $t,n \in \ZZ$. A $(t, n)$-thresholds secret sharing scheme shares a secret $s \in \FF_q$ among $n$ users such that any $t$ or more shares can reconstruct the secret but $t-1$ or less cannot. Shamir's secret sharing scheme is an ideal and perfect A $(t, n)$-thresholds scheme and can be defined in two phases as follows:
+		Let $\FF_q$ be a finite field with $q$ elements and $t,n \in \ZZ$. A $(t, n)$-thresholds secret sharing scheme shares a secret $s \in \FF_q$ among $n$ users such that any $t$ or more shares can reconstruct the secret but $t-1$ or less cannot. SSS is an ideal and perfect A $(t, n)$-thresholds scheme and can be defined in two phases as follows:
 		
 		\begin{enumerate}
 			\item \textbf{Share Generation Phase:} 
@@ -87,7 +87,7 @@
 		\end{enumerate}
 	\end{definition}
 	
-	In addition to the above definition, we also encode the digest of the secret as $f(-1)$ as stated in ``\textit{SLIP-0039 : Shamir's Secret-Sharing for Mnemonic Codes}''. Our modified scheme is as follows:
+	In addition to the above definition, we also encode the digest of the secret as $f(-1)$ as stated in ``\textit{SLIP-0039 : Shamir's Secret-Sharing for Mnemonic Codes}''. Our modified scheme, e.i. Shamir's secret sharing with digest (SSSd), is as follows:
 	\begin{enumerate}
 		\item \textbf{Share Generation Phase:}  
 		\begin{enumerate}
@@ -111,14 +111,14 @@
 	\end{enumerate}
 	
 	\section{Formal Proof}
-	Firstly we show that the original Shamir's secret sharing scheme is unconditionally secure even against unbounded adversaries.
-	Let $\FF_{q}$ be an extension field where $q = 2^{m}$ for some $m \in \ZZ$. 
+	Firstly we show that the SSS is unconditionally secure even against unbounded adversaries.
+	Let $\FF_{q}$ be a Galois field where $q = 2^{m}$ for some $m \in \ZZ$. 
 	Let $\sP_{s}^{t - 1}$ be the set of all polynomials over $\FF_{q}$ with constant term $s$ and degree $t - 1$.
 	The number of elements of $\sP_{s}^{t - 1}$ is exactly $q^{t-1}$. 
 	We define an algorithm $\sdv$ which takes $n, t \in \ZZ$ and the secret $s$ as inputs, where $n$ is the number of shares and $t$ is the threshold. 
 	The algoritm $\sdv(s, n, t)$ works as follows:
 	
-		\pcb{
+	\pcb{
 		f(x) \sample \sP_{s}^{t - 1}\\
 		\pcreturn f(x_1), \ldots, f(x_n)}
 	for distinct $x_i \in \FF_q^*$ and $i = 1, \ldots, n$.
@@ -133,59 +133,62 @@
 	Therefore, for distinct secrets $s,s' \in \FF_q$ we have exactly the same probabilities such that
 	
 	\begin{align*}
-		\probsub{f(x) \sample {\sP_{s}^{t - 1}}}{f(x_1) = y_1, \ldots, f(x_{t-1}) = y_{t-1}} &= \probsub{g(x) \sample {\sP_{s'}^{t - 1}}}{g(x_1) = y_1, \ldots, g(x_{t-1}) = y_{t-1}} \\
-		&= 1/q^{t-1}.
+	\probsub{f(x) \sample {\sP_{s}^{t - 1}}}{f(x_1) = y_1, \ldots, f(x_{t-1}) = y_{t-1}} &= \probsub{g(x) \sample {\sP_{s'}^{t - 1}}}{g(x_1) = y_1, \ldots, g(x_{t-1}) = y_{t-1}} \\
+	&= 1/q^{t-1}.
 	\end{align*}
 	
 	In other words, for a fixed $t-1$ shares $y_1, \ldots, y_{t-1} \in \FF_q$, and a secret $s \in \FF_q$, there exist only one polynomial $f(x)$ with degree $t-1$, satisfying $f(x_i) = y_i$ for $i = 1, \ldots, t-1$ and $f(0) = s$.
 	Since there exist a unique polynomial for every possible value of $s$ and the secret $s$ is an element of $\FF_q$, for every fixed $t-1$ shares, the secret can take exactly $|\FF_q|$ distinct values. 
 	Namely, for a  degree $t - 1$ secret polynomial $f(x)$ and fixed $t-1$ points $(x_1, y_1), \ldots, (x_{t-1}, y_{t-1})$, such that $f(x_i) = y_i$, $x_i, y_i \in \FF_q$ and $x_i \neq 0$, all the possible values that the secret $s \in \FF_q$ can take, satisfying $f(0) = s$, are equiprobable, that is exactly $1/q$.  
- 
-	Therefore any adversary against the original scheme who holds $t-1$ shares cannot do anything better than a random guess whose probability is exactly $1/q = 1/2^m$.
-
-
+	
+	Therefore any adversary against the SSS who holds $t-1$ shares cannot do anything better than a random guess whose probability is exactly $1/q = 1/2^m$.
+	
+	
 	Now we move on our modified scheme. 	
-	In the modified version, the digest share, e.i. $D = k \concat R$, is also encoded as $f(-1)$, where  $k$ is the first $d$ bits of the output of $\hsha(R, s)$ and $R$ is an $m - d$ bit randomness. 
+	In SSSd, the digest share, e.i. $D = k \concat R$, is also encoded as $f(-1)$, where  $k$ is the first $d$ bits of the output of $\hsha(R, s)$ and $R$ is an $m - d$ bit randomness. 
+	\begin{definition}
+		A $\ppt$ algorithm is called $(Q, d, \epsilon)$-adversary for SSSd scheme if it makes at most $Q$ queries and breaks the SSSd scheme with probability greater than $Q \cdot 2^{d} \cdot \epsilon$, where $d$ is the length of the partial digest of the secret concetanated with a randomness and $\epsilon$ is the success probability of an unbounded adversary against the original SSS. We say that SSSd is $(Q, d, \epsilon)$-secure if no $(Q, d, \epsilon)$-adversary exists. 
+	\end{definition}
 	
 	\begin{theorem}
-		Our modified Shamir's secret sharing scheme \michals{8.4}{Give the modified scheme a name, it will be easier to refer to it.} is $(Q, d, \epsilon)$-secure in  the random oracle model, where $Q$ is the maximum number of queries that any $\ppt$ adversary can make, $d$ is the length of the partial digest of the secret concetanated with a randomness and $\epsilon$ is the success probability of an unbounded adversary against the original Shamir's secret sharing scheme. \michals{8.4}{Introduce another definition for $(Q, d, \epsilon)$ security where you precisely describe the probability we are talikng about.}
-		More precisely, any $\ppt$ adversary $\bdv$ succeeds with probability at most $Q \cdot 2^{d} \cdot \epsilon$.   
+		SSSd is $(Q, d, \epsilon)$-secure in  the random oracle mode.
+		More precisely, any $\ppt$ adversary against SSSd succeeds with probability at most $Q \cdot 2^{d} \cdot \epsilon$.   
 	\end{theorem}
 	
 	\begin{proof}
-		Assume that we have a $\ppt$ adversary  $\bdv^{\hash(\cdot)}$ against our modified scheme which is given access to the random oracle $\hash(\cdot)$, takes $t-1$ shares as input and outputs the secret with probability at most $\epsilon'$.
-		Let $\adv$ be another $\ppt$ adversary against the original Shamir's secret sharing scheme who \michals{8.4}{$\adv$ doesn't need to be ppt} holds $t-1$ shares among $n$, i.e.~$y_i \in \FF_q$, $i \in I \subset \{1, \ldots, n\}$ where $I$ is the set of indexes of these $t-1$ shares.
-2		On input $\{y_i: i \in I\}$ and  $\bdv^{\hash(\cdot)}$, adversary $\adv$ runs as follows:
+		Assume that we have a $\ppt$ adversary  $\bdv^{\hash(\cdot)}$ against our SSSd scheme which is given access to the random oracle $\hash(\cdot)$, takes $t-1$ shares as input and outputs the secret with probability at most $\epsilon'$.
+		Let $\adv$ be another adversary against the SSS who holds $t-1$ shares among $n$, i.e.~$y_i \in \FF_q$, $i \in I \subset \{1, \ldots, n\}$ where $I$ is the set of indexes of these $t-1$ shares.
+		On input $\{y_i: i \in I\}$ and  $\bdv^{\hash(\cdot)}$, adversary $\adv$ runs as follows:
 		\begin{enumerate}
-		 	\item Picks a $d$-bit random partial digest $k' \sample \{0,1\}^{d}$,
-		 	\item Runs $\bdv^{\hash(\cdot)}(\{y_i: i \in I\})$, 
-		 	\item Guesses a query index $\changedmx{h}{i} \sample \{1, \ldots, Q\}$, where $Q$ is the maximum number of random oracle queries that $\bdv$ can make,
-		 	\item Internally simulates the random oracle queries $\hash(R'\concat s')$ \michals{8.4}{What does it mean that $\bdv$ simulates the queries? It takes queries from $\adv$ and responds on them accroding to what you wrote below} and responds $\bdv^{\hash(\cdot)}$'s $j$-th query as follows:
-		 	\begin{enumerate}
-		 		\item Receives the query $\hash(x)$. \michals{8.4}{It receives $x$ not hash of it.}
-		 		\item If $j \neq \changedmx{h}{i}$, then responds with a random $r_\changedmx{j{i}} \sample \{0,1\}^{d}$, \michals{8.4}{The random oracle should be modelled a bit differently. Let it output a string of length equal to the output of the hash function we actually use.}
-		 		\item If $j = \changedmx{h}{i}$, then responds with $k'$. \michals{8.4}{See above}
-		 	\end{enumerate}
-	 		\item Parses $x$ as $R'\concat s'$ and returns $s'$\changedmx{ as the secret of the original Shamir's secret sharing scheme with probability at most $\epsilon$}{}.
+			\item Picks a random $r_{0} \sample \{0,1\}^{\ell}$, where $\ell$ is the length of the output of the random oracle in bits.
+			\item Runs $\bdv^{\hash(\cdot)}(\{y_i: i \in I\})$, 
+			\item Guesses a query index $i \sample \{1, \ldots, Q\}$,
+			\item Responds $\bdv^{\hash(\cdot)}$'s $j$-th query $M$ as follows:
+			\begin{enumerate}
+				\item If $j \neq i$, then responds with a random $r_{j} \sample \{0,1\}^{\ell}$, 
+				\item If $j = i$, then responds with $r_{0}$.	
+				\item Parses $M$ as $R'\concat s'$ and returns $s'$.
+			\end{enumerate}
+		
 		\end{enumerate} 
 		The success probability of the adversary $\adv$ depends on the following probabilities:
 		\begin{itemize}
-		 	\item The success probability of the adversary $\bdv^{\hash(\cdot)}$ which is at most $\epsilon'$,
-		 	\item The probability of the correct index guess which is bounded with $\frac{1}{Q}$ and 
-		 	\item The probability of the correct digest guess, \changedmx{e.i.}{i.e.}~$2^{-d}$ .
+			\item The success probability of the adversary $\bdv^{\hash(\cdot)}$ which is at most $\epsilon'$,
+			\item The probability of the correct index guess which is bounded with $\frac{1}{Q}$ and 
+			\item The probability of the correct digest guess, i.e. $2^{-d}$.
 		\end{itemize}
 		
 		Therefore, overall success probability of $\adv$ is 
 		\begin{equation*}
-			\condprob{s' = s}{s' \leftarrow \adv(\bdv^{\hash^(\cdot)}, \{y_i: i \in I\})} \changedmx{=}{\leq} \epsilon \leq 2^{-d}\frac{\epsilon'}{Q},
+		\condprob{s' = s}{s' \leftarrow \adv(\bdv^{\hash(\cdot)}, \{y_i: i \in I\})} \leq \epsilon \leq 2^{-d}\frac{\epsilon'}{Q},
 		\end{equation*}
 		which gives us $\epsilon' \leq Q \cdot 2^{d} \cdot \epsilon$.
 		
 		From the security discussion of the original Shamir's secret sharing scheme above, we know that probability of a random guess is $2^{-m}$, which is the best probability that any unbounded adversary succeeds. Therefore we have $\epsilon' \leq Q \cdot 2^{-m+d}$.
 		
 	\end{proof}
-	 
-	 
+	
+	
 	%\section{Introduction}
 	%\label{sec:introduction}
 	%\input{tex_files/01_introduction}
