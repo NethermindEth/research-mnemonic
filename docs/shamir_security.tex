@@ -148,41 +148,40 @@
 	In the modified version, the digest share, e.i. $D = k \concat R$, is also encoded as $f(-1)$, where  $k$ is the first $d$ bits of the output of $\hsha(R, s)$ and $R$ is an $m - d$ bit randomness. 
 	
 	\begin{theorem}
-		Our modified Shamir's secret sharing scheme is $(Q, d, \epsilon)$-secure in  the random oracle model, where $Q$ is the maximum number of queries that any $\ppt$ adversary can make, $d$ is the length of the partial digest of the secret concetanated with a randomness and $\epsilon$ is the success probability of an unbounded adversary against the original Shamir's secret sharing scheme. 
+		Our modified Shamir's secret sharing scheme \michals{8.4}{Give the modified scheme a name, it will be easier to refer to it.} is $(Q, d, \epsilon)$-secure in  the random oracle model, where $Q$ is the maximum number of queries that any $\ppt$ adversary can make, $d$ is the length of the partial digest of the secret concetanated with a randomness and $\epsilon$ is the success probability of an unbounded adversary against the original Shamir's secret sharing scheme. \michals{8.4}{Introduce another definition for $(Q, d, \epsilon)$ security where you precisely describe the probability we are talikng about.}
 		More precisely, any $\ppt$ adversary $\bdv$ succeeds with probability at most $Q \cdot 2^{d} \cdot \epsilon$.   
 	\end{theorem}
 	
 	\begin{proof}
 		Assume that we have a $\ppt$ adversary  $\bdv^{\hash(\cdot)}$ against our modified scheme which is given access to the random oracle $\hash(\cdot)$, takes $t-1$ shares as input and outputs the secret with probability at most $\epsilon'$.
-		Let $\adv$ be another $\ppt$ adversary against the original Shamir's secret sharing scheme who holds $t-1$ shares among $n$, e.i. $y_i \in \FF_q$, $i \in I \subset \{1, \ldots, n\}$ where $I$ is the set of indexes of these $t-1$ shares.
-		On input $\{y_i: i \in I\}$ and  $\bdv^{\hash(\cdot)}$, adversary $\adv$ runs as follows:
+		Let $\adv$ be another $\ppt$ adversary against the original Shamir's secret sharing scheme who \michals{8.4}{$\adv$ doesn't need to be ppt} holds $t-1$ shares among $n$, i.e.~$y_i \in \FF_q$, $i \in I \subset \{1, \ldots, n\}$ where $I$ is the set of indexes of these $t-1$ shares.
+2		On input $\{y_i: i \in I\}$ and  $\bdv^{\hash(\cdot)}$, adversary $\adv$ runs as follows:
 		\begin{enumerate}
 		 	\item Picks a $d$-bit random partial digest $k' \sample \{0,1\}^{d}$,
 		 	\item Runs $\bdv^{\hash(\cdot)}(\{y_i: i \in I\})$, 
-		 	\item Guesses a query index $h \sample \{1, \ldots, Q\}$, where $Q$ is the maximum number of random oracle queries that $\bdv$ can make,
-		 	\item Internally simulates the random oracle queries $\hash(R'\concat s')$ and responds $\bdv^{\hash(\cdot)}$'s $j$-th query as follows:
+		 	\item Guesses a query index $\changedmx{h}{i} \sample \{1, \ldots, Q\}$, where $Q$ is the maximum number of random oracle queries that $\bdv$ can make,
+		 	\item Internally simulates the random oracle queries $\hash(R'\concat s')$ \michals{8.4}{What does it mean that $\bdv$ simulates the queries? It takes queries from $\adv$ and responds on them accroding to what you wrote below} and responds $\bdv^{\hash(\cdot)}$'s $j$-th query as follows:
 		 	\begin{enumerate}
-		 		\item Receives the query $\hash(x)$.
-		 		\item If $j \neq h$, then responds with a random $r_i \sample \{0,1\}^{d}$,
-		 		\item If $j = h$, then responds with $k'$.
+		 		\item Receives the query $\hash(x)$. \michals{8.4}{It receives $x$ not hash of it.}
+		 		\item If $j \neq \changedmx{h}{i}$, then responds with a random $r_\changedmx{j{i}} \sample \{0,1\}^{d}$, \michals{8.4}{The random oracle should be modelled a bit differently. Let it output a string of length equal to the output of the hash function we actually use.}
+		 		\item If $j = \changedmx{h}{i}$, then responds with $k'$. \michals{8.4}{See above}
 		 	\end{enumerate}
-	 		\item Parses $x$ as $R'\concat s'$ and returns $s'$ as the secret of the original Shamir's secret sharing scheme with probability at most $\epsilon$.
+	 		\item Parses $x$ as $R'\concat s'$ and returns $s'$\changedmx{ as the secret of the original Shamir's secret sharing scheme with probability at most $\epsilon$}{}.
 		\end{enumerate} 
 		The success probability of the adversary $\adv$ depends on the following probabilities:
 		\begin{itemize}
 		 	\item The success probability of the adversary $\bdv^{\hash(\cdot)}$ which is at most $\epsilon'$,
 		 	\item The probability of the correct index guess which is bounded with $\frac{1}{Q}$ and 
-		 	\item The probability of the correct digest guess, e.i. $2^{-d}$ .
+		 	\item The probability of the correct digest guess, \changedmx{e.i.}{i.e.}~$2^{-d}$ .
 		\end{itemize}
 		
 		Therefore, overall success probability of $\adv$ is 
 		\begin{equation*}
-			\condprob{s' = s}{s' \leftarrow \adv(\bdv^{\hash^(\cdot)}, \{y_i: i \in I\})} = \epsilon \leq 2^{-d}\frac{\epsilon'}{Q},
+			\condprob{s' = s}{s' \leftarrow \adv(\bdv^{\hash^(\cdot)}, \{y_i: i \in I\})} \changedmx{=}{\leq} \epsilon \leq 2^{-d}\frac{\epsilon'}{Q},
 		\end{equation*}
 		which gives us $\epsilon' \leq Q \cdot 2^{d} \cdot \epsilon$.
 		
-		From the security discussion of the original Shamir's secret sharing scheme above, we know that probability of a random guess is $2^{-m}$, which is the best probability that any unbounded adversary succeeds. 
-		Therefore we have $\epsilon' \leq Q \cdot 2^{-m+d}$.
+		From the security discussion of the original Shamir's secret sharing scheme above, we know that probability of a random guess is $2^{-m}$, which is the best probability that any unbounded adversary succeeds. Therefore we have $\epsilon' \leq Q \cdot 2^{-m+d}$.
 		
 	\end{proof}
 	 
