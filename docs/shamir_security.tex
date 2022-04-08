@@ -148,9 +148,8 @@
 	In the modified version, the digest share, e.i. $D = k \concat R$, is also encoded as $f(-1)$, where  $k$ is the first $d$ bits of the output of $\hsha(R, s)$ and $R$ is an $m - d$ bit randomness. 
 	
 	\begin{theorem}
-		Let $\FF_q$ be a finite field with $q = 2^m$ elements, for some $m \in \ZZ$.
-		Our modified Shamir's secret sharing scheme is $(Q,\epsilon)$-secure in  the random oracle model, where $Q$ is the maximum number of queries that any $\ppt$ adversary can make and $\epsilon$ is the success probability of an unbounded adversary against the original Shamir's secret sharing scheme. 
-		More precisely, any $\ppt$ adversary $\bdv$ succeeds with probability at most $Q \cdot 2^{-m+d}$, where $d$ is the length of the partial digest of the secret concetanated with an $m - d$ bit randomness.   
+		Our modified Shamir's secret sharing scheme is $(Q, d, \epsilon)$-secure in  the random oracle model, where $Q$ is the maximum number of queries that any $\ppt$ adversary can make, $d$ is the length of the partial digest of the secret concetanated with a randomness and $\epsilon$ is the success probability of an unbounded adversary against the original Shamir's secret sharing scheme. 
+		More precisely, any $\ppt$ adversary $\bdv$ succeeds with probability at most $Q \cdot 2^{d} \cdot \epsilon$.   
 	\end{theorem}
 	
 	\begin{proof}
