@@ -177,15 +177,13 @@
 		
 		Therefore, overall success probability of $\adv$ is 
 		\begin{equation*}
-			\condprob{s' = s}{s' \leftarrow \adv(\bdv^{\hash^(\cdot)}, \{y_i: i \in I\})} \leq 2^{-d}\frac{\epsilon'}{Q}
+			\condprob{s' = s}{s' \leftarrow \adv(\bdv^{\hash^(\cdot)}, \{y_i: i \in I\})} = \epsilon \leq 2^{-d}\frac{\epsilon'}{Q},
 		\end{equation*}
-		 
+		which gives us $\epsilon' \leq Q \cdot 2^{d} \cdot \epsilon$.
+		
 		From the security discussion of the original Shamir's secret sharing scheme above, we know that probability of a random guess is $2^{-m}$, which is the best probability that any unbounded adversary succeeds. 
-		Therefore we have 
-		\begin{align*}
-			2^{-d}\frac{\epsilon'}{Q} &\leq 2^{-m}\\
-			\epsilon' &\leq Q \cdot 2^{-m+d}.
-		\end{align*}
+		Therefore we have $\epsilon' \leq Q \cdot 2^{-m+d}$.
+		
 	\end{proof}
 	 
 	 
