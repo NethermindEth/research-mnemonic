@@ -1,11 +1,20 @@
 """!Module for encoding/decoding a secret phrase into a binary number, using a dictionary."""
 from math import log2
+import os
+import sys
 
 
 def text_to_list(text_path):
     """!Transforms a one-word-per-line text file into a Python list"""
     word_list = []
-    with open(text_path, 'r') as filehandle:
+    # if _MEIPASS env variable exists then code is running from exe
+    # the variable consists of current dir of executable
+    # if it doesn't exist then simply load the directory 
+    # in which current file is as bundle_dir
+    bundle_dir = getattr(sys, '_MEIPASS', os.path.abspath(os.path.dirname(__name__)))
+    path_to_file = os.path.abspath(os.path.join(bundle_dir,text_path))
+    
+    with open(path_to_file, 'r') as filehandle:
         for word in filehandle:
             word_list.append(word.rstrip('\n'))
     return word_list

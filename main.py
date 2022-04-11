@@ -7,6 +7,7 @@ import glob
 import json
 import re
 import os
+import sys
 
 
 def create_shares(args):
@@ -107,6 +108,13 @@ def create_shares(args):
     else:
         #If no secret was provided, we will be loading secret.txt by default.
         file_path = 'secret.txt'
+
+        # if _MEIPASS env variable exists then code is running from exe
+        # the variable consists of current dir of executable
+        # if it doesn't exist then simply load the directory 
+        # in which current file is as bundle_dir
+        bundle_dir = getattr(sys, '_MEIPASS', os.path.abspath(os.path.dirname(__name__)))
+        file_path = os.path.abspath(os.path.join(bundle_dir,file_path))
         print("Loading secret from 'secret.txt' in the script's directory")
 
     # If a file path was assigned above, load it.
