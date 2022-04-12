@@ -7,6 +7,7 @@
   * [Generating shares and reconstruction of the secret](#generating-shares-and-reconstruction-of-the-secret)
   * [Working with the project](#working-with-the-project)
   * [Basic usage](#basic-usage)
+  * [Using with Docker build](#using-with-docker-build)
   * [Format of a share](#format-of-a-share)
   * [Design rationale](#design-rationale)
   * [References](#references)
@@ -118,6 +119,30 @@ pipenv run python create_shares.py
 
 + The **reconstruct.py** takes *json* files automatically from the same location and outputs the secret *s* if the number of the shares is enough.
 
+## Using with Docker build
+
++ You can directly use this app using Docker cli without installing anything.
+ Make sure you have docker cli available on your machine.
+
++ Create a `shares` directory wherever you want to store the files this 
+app will generate. This is necessary for the app to function correctly.
+
+```
+mkdir shares
+```
+
++ Run this command to generate shares (Make sure to replace CURRENT_VERSION 
+with appropriate version numbers)
+
+```
+docker run -v shares:/usr/src/app/shares nethermindeth/research-mnemonic:CURRENT_VERSION main.py create_shares -n 4 -t 4
+```
+
++ Run this to reconstruct words from data in shares directory.
+
+```
+docker run -v shares:/usr/src/app/shares nethermindeth/research-mnemonic:CURRENT_VERSION main.py reconstruct
+```
 ## Format of a share
 
 + Our shares are stored in *json* files which are created in the same location with **create_shares.py**.  The shares include the following information:
