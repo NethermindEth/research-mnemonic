@@ -105,7 +105,7 @@ pipenv install
 + Run the project using (Read [Basic usage](#basic-usage) for detailed Information)
 
 ```shell
-pipenv run python create_shares.py
+pipenv run python main.py
 ```
 
 
@@ -113,7 +113,7 @@ pipenv run python create_shares.py
 + One can share his secret by running below command in the terminal.
 
 	```Python
-	  Python create_shares.py -n [number of shares] -t [threshold value] -s [path/secret.txt] -v [optional]
+	  Python main.py create_shares -n [number of shares] -t [threshold value] -s [path/secret.txt] -v [optional]
 	 ```
 + If the secret file is not defined then the secret is requested to be typed on the terminal. 
 
