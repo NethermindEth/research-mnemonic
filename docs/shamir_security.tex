@@ -147,21 +147,21 @@
 	Now we move on our modified scheme. 	
 	In SSSd, the digest share, e.i. $D = k \concat R$, is also encoded as $f(-1)$, where  $k$ is the first $d$ bits of the output of $\hsha(R, s)$ and $R$ is an $m - d$ bit randomness. 
 	\begin{definition}
-		A $\ppt$ algorithm is called $(Q, d, \epsilon)$-adversary for SSSd scheme if it makes at most $Q$ queries and breaks the SSSd scheme with probability greater than $Q \cdot 2^{d} \cdot \epsilon$, where $d$ is the length of the partial digest of the secret concetanated with a randomness and $\epsilon$ is the success probability of an unbounded adversary against the original SSS. We say that SSSd is $(Q, d, \epsilon)$-secure if no $(Q, d, \epsilon)$-adversary exists. 
+		A $\ppt$ algorithm is called $(Q, d, \epsilon)$-adversary for SSSd scheme if it makes at most $Q$ queries and breaks the SSSd scheme with probability greater than $Q \cdot 2^{d} \cdot \epsilon$, where $d$ is the length of the partial digest of the secret concetanated with a randomness and $\epsilon$ is the success probability of an unbounded adversary against the SSS. We say that SSSd is $(Q, d, \epsilon)$-secure if no $(Q, d, \epsilon)$-adversary exists. 
 	\end{definition}
 	
 	\begin{theorem}
 		SSSd is $(Q, d, \epsilon)$-secure in  the random oracle mode.
-		More precisely, any $\ppt$ adversary against SSSd succeeds with probability at most $Q \cdot 2^{d} \cdot \epsilon$.   
+		More precisely, any $\ppt$ adversary against the SSSd succeeds with probability at most $Q \cdot 2^{d} \cdot \epsilon$.   
 	\end{theorem}
 	
 	\begin{proof}
-		Assume that we have a $\ppt$ adversary  $\bdv^{\hash(\cdot)}$ against our SSSd scheme which is given access to the random oracle $\hash(\cdot)$, takes $t-1$ shares as input and outputs the secret with probability at most $\epsilon'$.
-		Let $\adv$ be another adversary against the SSS who holds $t-1$ shares among $n$, i.e.~$y_i \in \FF_q$, $i \in I \subset \{1, \ldots, n\}$ where $I$ is the set of indexes of these $t-1$ shares.
-		On input $\{y_i: i \in I\}$ and  $\bdv^{\hash(\cdot)}$, adversary $\adv$ runs as follows:
+		Assume that we have a $\ppt$ adversary  $\bdv^{\hash(\cdot)}$ against the SSSd scheme which is given access to the random oracle $\hash(\cdot)$, takes the length of the partial digest $d$ and $t-1$ shares among $n$, i.e.~$y_i \in \FF_q$, $i \in I \subset \{1, \ldots, n\}$ where $I$ is the set of indexes with $|I| = t - 1$, as inputs and outputs the secret with probability at most $\epsilon'$.
+		Let $\adv$ be another adversary against the SSS who holds $t-1$ shares, i.e. $\{y_i: i \in I\}$.
+		On input $\bdv^{\hash(\cdot)}$ and $\{y_i: i \in I\}$, adversary $\adv$ runs as follows:
 		\begin{enumerate}
 			\item Picks a random $r_{0} \sample \{0,1\}^{\ell}$, where $\ell$ is the length of the output of the random oracle in bits.
-			\item Runs $\bdv^{\hash(\cdot)}(\{y_i: i \in I\})$, 
+			\item Runs $\bdv^{\hash(\cdot)}(d, \{y_i: i \in I\})$, 
 			\item Guesses a query index $i \sample \{1, \ldots, Q\}$,
 			\item Responds $\bdv^{\hash(\cdot)}$'s $j$-th query $M$ as follows:
 			\begin{enumerate}
@@ -180,11 +180,11 @@
 		
 		Therefore, overall success probability of $\adv$ is 
 		\begin{equation*}
-		\condprob{s' = s}{s' \leftarrow \adv(\bdv^{\hash(\cdot)}, \{y_i: i \in I\})} \leq \epsilon \leq 2^{-d}\frac{\epsilon'}{Q},
+		\condprob{s' = s}{s' \leftarrow \adv(\bdv^{\hash(\cdot)}, \{y_i: i \in I\})} \leq \epsilon' \cdot \frac{1}{Q} \cdot 2^{-d} \leq \epsilon,
 		\end{equation*}
 		which gives us $\epsilon' \leq Q \cdot 2^{d} \cdot \epsilon$.
 		
-		From the security discussion of the original Shamir's secret sharing scheme above, we know that probability of a random guess is $2^{-m}$, which is the best probability that any unbounded adversary succeeds. Therefore we have $\epsilon' \leq Q \cdot 2^{-m+d}$.
+		From the discussion about the security of the SSS scheme above, we know that probability of a random guess is $2^{-m}$, which is the best probability that any unbounded adversary succeeds. Therefore we have $\epsilon' \leq Q \cdot 2^{-m+d}$.
 		
 	\end{proof}
 	
