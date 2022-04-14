@@ -44,10 +44,11 @@ jobs:
 
       - name: Create Package
         run: |
-          pipenv run pyinstaller main.py -n research-mnemonic --onefile
+          pipenv run pyinstaller research-mnemonic.spec
 
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: dist/${{ matrix.artifact_name }}
+

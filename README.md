@@ -7,6 +7,7 @@
   * [Generating shares and reconstruction of the secret](#generating-shares-and-reconstruction-of-the-secret)
   * [Working with the project](#working-with-the-project)
   * [Basic usage](#basic-usage)
+  * [Using with Docker build](#using-with-docker-build)
   * [Format of a share](#format-of-a-share)
   * [Design rationale](#design-rationale)
   * [References](#references)
@@ -80,7 +81,7 @@ where *l<sub>j</sub>(x)* is the Lagrange basis polynomial with respect to the *j
 ### Secret Reconstruction
 #### INPUT: list of share id *x*, list of access shares *y*, order of Galois field *q*, irreducible polynomial of GF(*q*), digest length *d*.
 #### OUTPUT: secret *s'* or abort.
-+ Apply Lagrange interpolation fort he shares *(x<sub>j</sub> , y<sub>j</sub>) for j = i<sub>1</sub>, … , i<sub>t</sub>*, and recover the secret polynomial *f(x)*.
++ Apply Lagrange interpolation for the shares *(x<sub>j</sub> , y<sub>j</sub>) for j = i<sub>1</sub>, … , i<sub>t</sub>*, and recover the secret polynomial *f(x)*.
 + Compute the secret *s' = f(0)*
 + Compute the digest *D' = f(-1)*
 + If HMAC-SHA256(*D'*[*d:*] || *s'*)[*:d*] = *D'*[*:d*], then return *s'*. Otherwise abort.
@@ -104,7 +105,7 @@ pipenv install
 + Run the project using (Read [Basic usage](#basic-usage) for detailed Information)
 
 ```shell
-pipenv run python create_shares.py
+pipenv run python main.py
 ```
 
 
@@ -112,12 +113,36 @@ pipenv run python create_shares.py
 + One can share his secret by running below command in the terminal.
 
 	```Python
-	  Python create_shares.py -n [number of shares] -t [threshold value] -s [path/secret.txt] -v [optional]
+	  Python main.py create_shares -n [number of shares] -t [threshold value] -s [path/secret.txt] -v [optional]
 	 ```
 + If the secret file is not defined then the secret is requested to be typed on the terminal. 
 
 + The **reconstruct.py** takes *json* files automatically from the same location and outputs the secret *s* if the number of the shares is enough.
 
+## Using with Docker build
+
++ You can directly use this app using Docker cli without installing anything.
+ Make sure you have docker cli available on your machine.
+
++ Create a `shares` directory wherever you want to store the files this 
+app will generate. This is necessary for the app to function correctly.
+
+```
+mkdir shares
+```
+
++ Run this command to generate shares (Make sure to replace CURRENT_VERSION 
+with appropriate version numbers)
+
+```
+docker run -v shares:/usr/src/app/shares nethermindeth/research-mnemonic:CURRENT_VERSION main.py create_shares -n 4 -t 4
+```
+
++ Run this to reconstruct words from data in shares directory.
+
+```
+docker run -v shares:/usr/src/app/shares nethermindeth/research-mnemonic:CURRENT_VERSION main.py reconstruct
+```
 ## Format of a share
 
 + Our shares are stored in *json* files which are created in the same location with **create_shares.py**.  The shares include the following information:

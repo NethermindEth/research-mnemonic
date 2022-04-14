@@ -8,8 +8,8 @@ galois = "*"
 
 [dev-packages]
 pyinstaller = "*"
-pywin32-ctypes = "*"
-pefile = "*"
+pywin32-ctypes = {version = "*", sys_platform = "== 'win32'"}
+pefile = {version = "*", sys_platform = "== 'win32'"}
 
 [requires]
 python_version = "3.9"
