@@ -81,7 +81,7 @@ where *l<sub>j</sub>(x)* is the Lagrange basis polynomial with respect to the *j
 ### Secret Reconstruction
 #### INPUT: list of share id *x*, list of access shares *y*, order of Galois field *q*, irreducible polynomial of GF(*q*), digest length *d*.
 #### OUTPUT: secret *s'* or abort.
-+ Apply Lagrange interpolation fort he shares *(x<sub>j</sub> , y<sub>j</sub>) for j = i<sub>1</sub>, … , i<sub>t</sub>*, and recover the secret polynomial *f(x)*.
++ Apply Lagrange interpolation for the shares *(x<sub>j</sub> , y<sub>j</sub>) for j = i<sub>1</sub>, … , i<sub>t</sub>*, and recover the secret polynomial *f(x)*.
 + Compute the secret *s' = f(0)*
 + Compute the digest *D' = f(-1)*
 + If HMAC-SHA256(*D'*[*d:*] || *s'*)[*:d*] = *D'*[*:d*], then return *s'*. Otherwise abort.
