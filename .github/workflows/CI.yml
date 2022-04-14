@@ -58,7 +58,7 @@ jobs:
             mv dist/${{ matrix.artifact_name }} dist/${{ matrix.artifact_name }}_Mac
             echo "file_name=dist/${{ matrix.artifact_name }}_Mac" >> $GITHUB_ENV
           fi
-          ls -al
+          ls -R
         shell: bash
 
       - name: Release
