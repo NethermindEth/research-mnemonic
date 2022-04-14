@@ -41,6 +41,10 @@ jobs:
       - name: Install Dependencies with Pipenv
         run: |
           pipenv install --dev
+
+      - name: Create Package
+        run: |
+          pipenv run pyinstaller research-mnemonic.spec
       
       - name: Rename packages
         run: |
@@ -54,10 +58,6 @@ jobs:
             mv dist/${{ matrix.artifact_name }} dist/${{ matrix.artifact_name }}_Mac
           fi
         shell: bash
-
-      - name: Create Package
-        run: |
-          pipenv run pyinstaller research-mnemonic.spec
 
       - name: Release
         uses: softprops/action-gh-release@v1
