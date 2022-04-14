@@ -253,7 +253,7 @@ def main():
     """!Wrapper to execute the create_shares and reconstruct routines from the command line."""
 
     # Top-level parser: choose routine to execute.
-    parser = argparse.ArgumentParser(description="Calls create_shares or reconstruct.")
+    parser = argparse.ArgumentParser(description="Calls create_shares or reconstruct. Append -h to either argument for additional help.")
     subparsers = parser.add_subparsers()
 
     # Subparser for create_shares
@@ -273,7 +273,11 @@ def main():
     args = parser.parse_args()
 
     # Execute the relevant function
-    args.func(args)
+    if hasattr(args, 'func'):
+        args.func(args)
+    else:
+        print("Invalid call, must specify the argument 'create_shares' or 'reconstruct'. \n")
+        args = parser.parse_args(['-h'])
 
 
 # Execute the wrapper upon running this file.
