@@ -49,15 +49,15 @@ jobs:
       - name: Rename packages
         run: |
           if [ "$RUNNER_OS" == "Linux" ]; then
-            echo "file_name=dist/research-mnemonic_linux" >> $GITHUB_ENV
-            mv dist/${{ matrix.artifact_name }} ${{ env.file_name }}
+            echo "file_name=dist/research-mnemonic-linux" >> $GITHUB_ENV
+            mv dist/${{ matrix.artifact_name }} dist/research-mnemonic-linux
           elif [ "$RUNNER_OS" == "Windows" ]; then
             echo "file_name=dist/research-mnemonic-windows.exe" >> $GITHUB_ENV
-            mv dist/${{ matrix.artifact_name }} ${{ env.file_name }}
+            mv dist/${{ matrix.artifact_name }} dist/research-mnemonic-windows.exe
             
           elif [ "$RUNNER_OS" == "macOS" ]; then
-            echo "file_name=dist/research-mnemonic_mac" >> $GITHUB_ENV
-            mv dist/${{ matrix.artifact_name }} ${{ env.file_name }}
+            echo "file_name=dist/research-mnemonic-mac" >> $GITHUB_ENV
+            mv dist/${{ matrix.artifact_name }} dist/research-mnemonic-mac
           fi
           ls -R
         shell: bash
