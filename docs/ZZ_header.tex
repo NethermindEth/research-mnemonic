@@ -2,7 +2,6 @@
 
 % Packages
 %
-
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{hyperref}
@@ -10,8 +9,9 @@
 \usepackage{tikz}
 \usetikzlibrary{positioning,calc}
 \usepackage{xspace}
-\usepackage{amsmath} %\usepackage{amsthm}
+\usepackage{amsmath} 
 \usepackage{amssymb}
+%\usepackage{amsthm}
 \usepackage{mathtools}
 \usepackage{pifont}
 \usepackage{etoolbox}
@@ -270,13 +270,19 @@ keys
 \newcommand{\size}[1]{\ensuremath{\left\vert #1 \right\vert}\xspace}
 \newcommand{\myand}{\ensuremath{\mathsf{and}}\xspace}
 \newcommand{\myxor}{\ensuremath{\mathsf{xor}}\xspace}
-
 \newcommand{\mynot}{\ensuremath{\mathsf{not}}\xspace}
 \newcommand{\Input}{\ensuremath{\mathsf{Input}}\xspace}
 
 
+%--------------------------------------------------------
+% defined by Ahmet
+%--------------------------------------------------------
 \newcommand{\hsha}{{\textrm{HMAC-SHA256}}}
 \createpseudocodeblock {pcb}{center, boxed}{}{}{}
+
+\newenvironment{pf}{\noindent\textit{Proof.}\quad}{\hfill{$\Box \newline$}}
+\newenvironment{rmrk}{\noindent\textbf{Remark}\quad}
+
 %--------------------------------------------------------
 % Double angle brackets
 %--------------------------------------------------------
@@ -286,30 +292,30 @@ keys
 \DeclareSymbolFont{MnLargeSymbols}{OMX}{MnSymbolE}{m}{n}
 \SetSymbolFont{MnLargeSymbols}{bold}{OMX}{MnSymbolE}{b}{n}
 \DeclareFontShape{OMX}{MnSymbolE}{m}{n}{
-    <-6>  MnSymbolE5
-   <6-7>  MnSymbolE6
-   <7-8>  MnSymbolE7
-   <8-9>  MnSymbolE8
-   <9-10> MnSymbolE9
-  <10-12> MnSymbolE10
-  <12->   MnSymbolE12
+	<-6>  MnSymbolE5
+	<6-7>  MnSymbolE6
+	<7-8>  MnSymbolE7
+	<8-9>  MnSymbolE8
+	<9-10> MnSymbolE9
+	<10-12> MnSymbolE10
+	<12->   MnSymbolE12
 }{}
 \DeclareFontShape{OMX}{MnSymbolE}{b}{n}{
-    <-6>  MnSymbolE-Bold5
-   <6-7>  MnSymbolE-Bold6
-   <7-8>  MnSymbolE-Bold7
-   <8-9>  MnSymbolE-Bold8
-   <9-10> MnSymbolE-Bold9
-  <10-12> MnSymbolE-Bold10
-  <12->   MnSymbolE-Bold12
+	<-6>  MnSymbolE-Bold5
+	<6-7>  MnSymbolE-Bold6
+	<7-8>  MnSymbolE-Bold7
+	<8-9>  MnSymbolE-Bold8
+	<9-10> MnSymbolE-Bold9
+	<10-12> MnSymbolE-Bold10
+	<12->   MnSymbolE-Bold12
 }{}
 
 \let\llangle\@undefined
 \let\rrangle\@undefined
 \DeclareMathDelimiter{\llangle}{\mathopen}%
-                     {MnLargeSymbols}{'164}{MnLargeSymbols}{'164}
+{MnLargeSymbols}{'164}{MnLargeSymbols}{'164}
 \DeclareMathDelimiter{\rrangle}{\mathclose}%
-                     {MnLargeSymbols}{'171}{MnLargeSymbols}{'171}
+{MnLargeSymbols}{'171}{MnLargeSymbols}{'171}
 \makeatother
 
 %%% Local Variables:

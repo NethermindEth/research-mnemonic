@@ -69,7 +69,7 @@
 	In Mnemonics project we use a modified version of Shamir's Secret Sharing Scheme (SSS) \cite{Shamir79} which can be stated as below. 
 	
 	\begin{definition}\label{def:shamir}
-		Let $\FF_q$ be a finite field with $q$ elements and $t,n \in \ZZ$. A $(t, n)$-thresholds secret sharing scheme shares a secret $s \in \FF_q$ among $n$ users such that any $t$ or more shares can reconstruct the secret but $t-1$ or less cannot. SSS is an ideal and perfect A $(t, n)$-thresholds scheme and can be defined in two phases as follows:
+		Let $\FF_q$ be a finite field with $q$ elements and $t,n \in \ZZ$. A $(t, n)$-thresholds secret sharing scheme shares a secret $s \in \FF_q$ among $n$ users such that any $t$ or more shares can reconstruct the secret but $t-1$ or less cannot. SSS is an ideal and perfect. A $(t, n)$-thresholds scheme can be defined in two phases as follows:
 		
 		\begin{enumerate}
 			\item \textbf{Share Generation Phase:} 
@@ -126,15 +126,15 @@
 	Now we will show that for a fixed set of $t-1$ shares, the values that secret $s \in \FF_q$ can take are uniformly distributed in $\FF_q$. 
 	To this end, we fix $t-1$ shares $y_1, \ldots, y_{t-1} \in \FF_q$. Let  $I \subset \{1, \ldots, n\}$ be the set of indices of the fixed $t-1$ shares. 
 	
-	There is exactly one polynomial $f(x) \in \sP_{s}^{t - 1}$ that satisfies $f(0) = s$ and $f(x_{i}) = y_{i}$ for $i \in I$. \michals{29.03}{This is not well written. points $(x_i, y_i)$ determines $s$ while the above could be read as "any $s$ and set $(x_i, y_i)$ determine a single polynomial."}
+	There is exactly one polynomial $f(x) \in \sP_{s}^{t - 1}$ that satisfies $f(0) = s$ and $f(x_{i}) = y_{i}$ for $i \in I$.
 	Therefore the probability that $\sdv(s, n, t)$ chooses $f(x)$ exactly $1/q^{t-1}$.
 	Now assume that we have another secret $s'$ For the same fixed set of $t-1$ shares.  
 	From the same discussion above we can say that there is exactly one polynomial $g(x) \in \sP_{s'}^{t - 1}$ that satisfies $g(0) = s'$ and $g(x_{i}) = y_{i}$ for every $i \in I$.
 	Therefore, for distinct secrets $s,s' \in \FF_q$ we have exactly the same probabilities such that
 	
 	\begin{align*}
-	\probsub{f(x) \sample {\sP_{s}^{t - 1}}}{f(x_1) = y_1, \ldots, f(x_{t-1}) = y_{t-1}} &= \probsub{g(x) \sample {\sP_{s'}^{t - 1}}}{g(x_1) = y_1, \ldots, g(x_{t-1}) = y_{t-1}} \\
-	&= 1/q^{t-1}.
+		\probsub{f(x) \sample {\sP_{s}^{t - 1}}}{f(x_1) = y_1, \ldots, f(x_{t-1}) = y_{t-1}} &= \probsub{g(x) \sample {\sP_{s'}^{t - 1}}}{g(x_1) = y_1, \ldots, g(x_{t-1}) = y_{t-1}} \\
+		&= 1/q^{t-1}.
 	\end{align*}
 	
 	In other words, for a fixed $t-1$ shares $y_1, \ldots, y_{t-1} \in \FF_q$, and a secret $s \in \FF_q$, there exist only one polynomial $f(x)$ with degree $t-1$, satisfying $f(x_i) = y_i$ for $i = 1, \ldots, t-1$ and $f(0) = s$.
@@ -143,24 +143,23 @@
 	
 	Therefore any adversary against the SSS who holds $t-1$ shares cannot do anything better than a random guess whose probability is exactly $1/q = 1/2^m$.
 	
-	
 	Now we move on our modified scheme. 	
 	In SSSd, the digest share, e.i. $D = k \concat R$, is also encoded as $f(-1)$, where  $k$ is the first $d$ bits of the output of $\hsha(R, s)$ and $R$ is an $m - d$ bit randomness. 
-	\begin{definition}
+	\begin{definition} \label{def: q_d_e_security}
 		A $\ppt$ algorithm is called $(Q, d, \epsilon)$-adversary for SSSd scheme if it makes at most $Q$ queries and breaks the SSSd scheme with probability greater than $Q \cdot 2^{d} \cdot \epsilon$, where $d$ is the length of the partial digest of the secret concetanated with a randomness and $\epsilon$ is the success probability of an unbounded adversary against the SSS. We say that SSSd is $(Q, d, \epsilon)$-secure if no $(Q, d, \epsilon)$-adversary exists. 
 	\end{definition}
 	
 	\begin{theorem}
 		SSSd is $(Q, d, \epsilon)$-secure in  the random oracle mode.
-		More precisely, any $\ppt$ adversary against the SSSd succeeds with probability at most $Q \cdot 2^{d} \cdot \epsilon$.   
+		More precisely, any $\ppt$ adversary against the SSSd succeeds with probability at most $Q \cdot 2^{d} \cdot \epsilon$, where $Q, d$ and $\epsilon$ are as defined in Definition \ref{def: q_d_e_security}.   
 	\end{theorem}
 	
-	\begin{proof}
+	\begin{pf}
 		Assume that we have a $\ppt$ adversary  $\bdv^{\hash(\cdot)}$ against the SSSd scheme which is given access to the random oracle $\hash(\cdot)$, takes the length of the partial digest $d$ and $t-1$ shares among $n$, i.e.~$y_i \in \FF_q$, $i \in I \subset \{1, \ldots, n\}$ where $I$ is the set of indexes with $|I| = t - 1$, as inputs and outputs the secret with probability at most $\epsilon'$.
-		Let $\adv$ be another adversary against the SSS who holds $t-1$ shares, i.e. $\{y_i: i \in I\}$.
-		On input $\bdv^{\hash(\cdot)}$ and $\{y_i: i \in I\}$, adversary $\adv$ runs as follows:
+		Let $\adv$ be another adversary against the SSS which is given to oracle access to $\bdv^{\hash(\cdot)}$ and holds $t-1$ shares, i.e. $\{y_i: i \in I\}$.
+		On input $\{y_i: i \in I\}$, adversary $\adv$ runs as follows:
 		\begin{enumerate}
-			\item Picks a random $r_{0} \sample \{0,1\}^{\ell}$, where $\ell$ is the length of the output of the random oracle in bits.
+			\item Guesses an oracle output $r_{0} \sample \{0,1\}^{\ell}$ such that the first $d$-bit part is the correct partial digest guess, where $\ell$ is the length of the output of the random oracle in bits.
 			\item Runs $\bdv^{\hash(\cdot)}(d, \{y_i: i \in I\})$, 
 			\item Guesses a query index $i \sample \{1, \ldots, Q\}$,
 			\item Responds $\bdv^{\hash(\cdot)}$'s $j$-th query $M$ as follows:
@@ -169,7 +168,6 @@
 				\item If $j = i$, then responds with $r_{0}$.	
 				\item Parses $M$ as $R'\concat s'$ and returns $s'$.
 			\end{enumerate}
-		
 		\end{enumerate} 
 		The success probability of the adversary $\adv$ depends on the following probabilities:
 		\begin{itemize}
@@ -177,18 +175,16 @@
 			\item The probability of the correct index guess which is bounded with $\frac{1}{Q}$ and 
 			\item The probability of the correct digest guess, i.e. $2^{-d}$.
 		\end{itemize}
-		
 		Therefore, overall success probability of $\adv$ is 
 		\begin{equation*}
 		\condprob{s' = s}{s' \leftarrow \adv(\bdv^{\hash(\cdot)}, \{y_i: i \in I\})} \leq \epsilon' \cdot \frac{1}{Q} \cdot 2^{-d} \leq \epsilon,
 		\end{equation*}
-		which gives us $\epsilon' \leq Q \cdot 2^{d} \cdot \epsilon$.
-		
-		From the discussion about the security of the SSS scheme above, we know that probability of a random guess is $2^{-m}$, which is the best probability that any unbounded adversary succeeds. Therefore we have $\epsilon' \leq Q \cdot 2^{-m+d}$.
-		
-	\end{proof}
-	
-	
+		which gives us $\epsilon' \leq Q \cdot 2^{d} \cdot \epsilon$. 
+	\end{pf}
+
+	\begin{rmrk}
+		From the discussion about the security of the SSS scheme above, we know that probability of a random guess is $2^{-m}$, which is the best probability that any unbounded adversary succeeds. Therefore we have $\epsilon' \leq Q \cdot 2^{-m+d}$. 
+	\end{rmrk}
 	%\section{Introduction}
 	%\label{sec:introduction}
 	%\input{tex_files/01_introduction}
