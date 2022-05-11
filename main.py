@@ -2,6 +2,7 @@
 
 from modules.get_primitive_poly import get_primitive_poly
 from modules import shamir, word_coding
+import hashlib
 import argparse
 import glob
 import json
@@ -129,13 +130,19 @@ def create_shares(args):
     # Secret should have between 3 and 60 words, and all words in the secret should be in the dictionary.
     secret = secret.strip().split(' ')
     nw = len(secret)
-    assert nw in range(3,61), "Secret has " + str(nw) + " words, but it must have between 3 and 60 words"
+    assert nw in range(12,61), "Secret has " + str(nw) + " words, but it must have between 12 and 60 words"
     assert set(secret).issubset(set(word_list)), "Not every word in the secret is contained in the dictionary"
 
+    num_checksum_bits = nw * 11 % 32
+    num_entropy_bits = nw * 11 - num_checksum_bits
+
+    assert n <= 2 ** num_checksum_bits, "For a secret seed with " + str(nw) + " words, a maximum of " + str(
+        2 ** num_checksum_bits) + " shares can be generated"
+
     # Convert secret to numerical form with word_coding.py, so that shares can be generated with shamir.py
-    binary_secret = word_coding.encode_words(word_list, secret)
+    binary_secret = word_coding.encode_words(word_list, secret)[:-num_checksum_bits]
     decimal_secret = int(binary_secret,2)
-    primitive_poly = get_primitive_poly(nb*nw)
+    primitive_poly = get_primitive_poly(nb*nw - num_checksum_bits)
     shares = shamir.share_generation(decimal_secret, n, t, primitive_poly)
 
     # Output public reconstruction data.
@@ -150,13 +157,13 @@ def create_shares(args):
 
     # For each share, output a JSON file including id and secret share (word-encoded).
     for i in range (len(shares)):
-        reconstructed_shared_secrets = word_coding.decode_words(word_list, format(shares[i], "b").zfill(nb*nw))
+        share_with_checksum = int(format(shares[i], 'b').zfill(num_entropy_bits) + format(i + 1, 'b').zfill(num_checksum_bits), 2)
+        reconstructed_shared_secrets = word_coding.decode_words(word_list,format(share_with_checksum, "b").zfill(nb * nw))
         file_name = "shares/share_" + str(i+1) + ".json"
         share_data = {
-                'id': i+1,
                 'share' : reconstructed_shared_secrets
                 }
-        print(share_data)
+        print(' '.join(reconstructed_shared_secrets))
 
         # Add public reconstruction data to each share if --verbose was used.
         if verbose:
@@ -195,7 +202,7 @@ def reconstruct(args):
     The file secret_reconstructed.txt is generated in the script's folder. The reconstructed secret is
     also printed on the command line.
     """
-    
+
     # Read verbose flag off args.
     verbose = args.verbose
 
@@ -216,7 +223,10 @@ def reconstruct(args):
             raise RuntimeError('shares/reconstruction_data.json does not contain all the reconstruction data')
 
     dict_bits = word_coding.get_dictionary_bits(word_list)
-    num_words = shamir.get_polynomial_degree(primitive_poly)//dict_bits
+    polynomial_degree = shamir.get_polynomial_degree(primitive_poly)
+    num_checksum_bits = polynomial_degree // 32
+
+    num_words = (shamir.get_polynomial_degree(primitive_poly) + num_checksum_bits) // dict_bits
 
     #Extract ID and mnenmonic share data from each share, in numerical form via word_coding
     x_id = []
@@ -232,16 +242,30 @@ def reconstruct(args):
             except KeyError:
                 raise RuntimeError('-v flag was added, but not all the shares are verbose')
         assert len(json_share['share']) == num_words, 'A share has a number of words inconsistent with the given polynomial and dictionary'
-        
-        x_id.append(json_share['id'])
+
         binary_share = word_coding.encode_words(word_list, json_share['share'])
-        y_shares.append(int(binary_share,2))
+        x = int(binary_share[-num_checksum_bits:], 2)
+        y = int(binary_share[:-num_checksum_bits], 2)
+        x_id.append(x)
+        y_shares.append(y)
+
+    # Call the reconstruction routine and save to file
+    assert threshold <= len(y_shares), 'Not enough shares for secret reconstruction'
+
+    # Our shares only encoded the entropy of the secret seed
+    reconstructed_secret_entropy = shamir.secret_reconstruction(x_id, y_shares, primitive_poly)
+
+    # We need to derive the checksum to decode a valid seed
+    entropyHashBytes = hashlib.sha256(reconstructed_secret_entropy.to_bytes(polynomial_degree // 8, 'big')).hexdigest()
+    digest_binary = format(int(entropyHashBytes.zfill(64), 16), 'b').zfill(256)
+    checksum = digest_binary[:num_checksum_bits]
+
+    # Combine entropy and checksum
+    reconstructed_secret = int(format(reconstructed_secret_entropy, 'b').zfill(polynomial_degree) + checksum, 2)
 
     #Call the reconstruction routine and save to file
-    assert threshold <= len(y_shares), 'Not enough shares for secret reconstruction' 
-    reconstructed_secret = shamir.secret_reconstruction(x_id, y_shares, primitive_poly)
     seed_phrase = word_coding.decode_words(word_list, format(reconstructed_secret, 'b').zfill(dict_bits*num_words))
-    print(seed_phrase)
+    print(' '.join(seed_phrase))
     with open('secret_reconstructed.txt', 'w') as file:
         file.write(' '.join(seed_phrase))
 
