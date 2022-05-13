@@ -161,8 +161,8 @@ def create_shares(args):
         }
     with open('shares/reconstruction_data.json', 'w') as file:
         json.dump(reconstruction_data, file, indent=4)
-
     # For each share, output a JSON file including id and secret share (word-encoded).
+    print('The generated shares are: \n')
     for i in range (len(shares)):
         share_with_checksum = int(format(shares[i], 'b').zfill(num_entropy_bits) + format(i + 1, 'b').zfill(num_checksum_bits), 2)
         reconstructed_shared_secrets = word_coding.decode_words(word_list,format(share_with_checksum, "b").zfill(nb * nw))
@@ -170,7 +170,7 @@ def create_shares(args):
         share_data = {
                 'share' : reconstructed_shared_secrets
                 }
-        print(' '.join(reconstructed_shared_secrets))
+        print(' '.join(reconstructed_shared_secrets) + '\n-----')
 
         # Add public reconstruction data to each share if --verbose was used.
         if verbose:
