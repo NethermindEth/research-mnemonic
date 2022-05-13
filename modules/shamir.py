@@ -1,11 +1,7 @@
 """!Module implementing the functions that perform Shamir secret sharing on numerical inputs/outputs"""
-from modules.get_primitive_poly import get_primitive_poly
-from math import floor, log2
 from random import randint
-from turtle import shearfactor
 import galois
 import hmac
-import os
 
 def randomness_generator(randomness_length: int):
     """!Picks a random integer from [0-2**randomness_length], translates it as a binary of desired length."""

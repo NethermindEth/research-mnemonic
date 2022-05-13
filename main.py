@@ -127,23 +127,30 @@ def create_shares(args):
             raise RuntimeError("No secret.txt file provided in the script's folder, or file not found at the custom specified location.")
     # Case 2: if no file path was assigned above, then -s is the secret phrase! 
 
-    # Secret should have between 3 and 60 words, and all words in the secret should be in the dictionary.
+    # Secret should have between 12 and 60 words, and all words in the secret should be in the dictionary.
     secret = secret.strip().split(' ')
     nw = len(secret)
     assert nw in range(12,61), "Secret has " + str(nw) + " words, but it must have between 12 and 60 words"
     assert set(secret).issubset(set(word_list)), "Not every word in the secret is contained in the dictionary"
 
-    num_checksum_bits = nw * 11 % 32
-    num_entropy_bits = nw * 11 - num_checksum_bits
+    num_checksum_bits = nw * nb % 32
+    num_entropy_bits = nw * nb - num_checksum_bits
 
     assert n <= 2 ** num_checksum_bits, "For a secret seed with " + str(nw) + " words, a maximum of " + str(
-        2 ** num_checksum_bits) + " shares can be generated"
+        2 ** num_checksum_bits) + " shares can be generated"    
 
-    # Convert secret to numerical form with word_coding.py, so that shares can be generated with shamir.py
-    binary_secret = word_coding.encode_words(word_list, secret)[:-num_checksum_bits]
-    decimal_secret = int(binary_secret,2)
-    primitive_poly = get_primitive_poly(nb*nw - num_checksum_bits)
-    shares = shamir.share_generation(decimal_secret, n, t, primitive_poly)
+    # Convert seedphrase to binary form with word_coding.py. 
+    # Entropy of the seed is then converted to decimal, so that shares can be generated with shamir.py
+    binary_secret = word_coding.encode_words(word_list, secret)
+    entropy = int(binary_secret[:num_entropy_bits],2)
+
+    # Does the secret have a valid BIP-39 checksum?
+    checksum = binary_secret[num_entropy_bits:]
+    assert get_checksum(entropy, num_entropy_bits//8, num_checksum_bits) == checksum, "The inputted seed is not BIP-39 compliant. Check for copying mistakes!"
+
+    # Generate share data
+    primitive_poly = get_primitive_poly(num_entropy_bits)
+    shares = shamir.share_generation(entropy, n, t, primitive_poly)
 
     # Output public reconstruction data.
     reconstruction_data = {
@@ -249,16 +256,12 @@ def reconstruct(args):
         x_id.append(x)
         y_shares.append(y)
 
-    # Call the reconstruction routine and save to file
     assert threshold <= len(y_shares), 'Not enough shares for secret reconstruction'
 
-    # Our shares only encoded the entropy of the secret seed
+    # Our shares only encoded the entropy of the secret seed.
+    # Derive the correct checksum to decode a valid seed.
     reconstructed_secret_entropy = shamir.secret_reconstruction(x_id, y_shares, primitive_poly)
-
-    # We need to derive the checksum to decode a valid seed
-    entropyHashBytes = hashlib.sha256(reconstructed_secret_entropy.to_bytes(polynomial_degree // 8, 'big')).hexdigest()
-    digest_binary = format(int(entropyHashBytes.zfill(64), 16), 'b').zfill(256)
-    checksum = digest_binary[:num_checksum_bits]
+    checksum = get_checksum(reconstructed_secret_entropy, polynomial_degree//8, num_checksum_bits)
 
     # Combine entropy and checksum
     reconstructed_secret = int(format(reconstructed_secret_entropy, 'b').zfill(polynomial_degree) + checksum, 2)
@@ -279,6 +282,18 @@ def get_reconstruction_data(dict):
 		dict['primitive_poly'],
 		dict['dictionary'].split(' ')
 		)
+
+
+def get_checksum(entropy, num_entropy_bytes, num_checksum_bits):
+    """!Computes the checksum to be used for a given entropy, as per BIP-39 standards.
+    
+    Here, the entropy is inputted as an integer value (not as bits). This is why we need to add the
+    number of total bytes to convert the entropy to. 
+    """
+
+    entropyHashBytes = hashlib.sha256(entropy.to_bytes(num_entropy_bytes, 'big')).hexdigest()
+    digest_binary = format(int(entropyHashBytes.zfill(64), 16), 'b').zfill(256)
+    return digest_binary[:num_checksum_bits]
 
 
 def main():

@@ -1,6 +1,6 @@
 """!Test main.py, by checking the entire process of share-creating and reconstruction"""
 
-import unittest
+import pytest
 from main import create_shares, reconstruct
 
 def test_valid_seed():
@@ -13,10 +13,10 @@ def test_valid_seed():
 def test_invalid_seed():
     """!A seed which does not satisfy BIP-39 checksum standards is inputted and tested."""
 
-    seed = "abandon ability able about above absent absorb abstract absurd abuse access ability"
-    # This should throw an exception
-    with self.assertRaises(AssertionError) as error:
-        reconstruct_is_successful(10, 6, seed)
+    seed = "abandon ability able about above absent absorb abstract absurd abuse access accident"
+    with pytest.raises(AssertionError) as error:
+        reconstruct_is_successful(10, 6, seed) # This should throw an exception
+    assert error.value.args[0] == "The inputted seed is not BIP-39 compliant. Check for copying mistakes!"
 
 
 def reconstruct_is_successful(n, t, seed):
