@@ -205,3 +205,6 @@ docker run -v shares:/usr/src/app/shares nethermindeth/research-mnemonic:CURRENT
 	
   3. [SLIP-0039: Shamir's Secret-Sharing for Mnemonic Codes](https://github.com/satoshilabs/slips/blob/master/slip-0039.md)
 
+### License
+[MIT License](https://github.com/NethermindEth/research-mnemonic/blob/main/LICENSE)
+
