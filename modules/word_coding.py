@@ -34,24 +34,31 @@ def get_dictionary_bits(word_list):
 
 
 def encode_words(word_list, seed_phrase):
-    """!Turns a seed phrase into a binary number, using a given word list for the encoding."""
+    """!Turns a seed phrase into a binary string, using a given word list for the encoding.
+    
+    The seed phrase must be inputted as a space-separated string.
+    """
 
     # First, turn each seed word into a binary number.
     binary_numbers = []
     format_string = '0' + str(get_dictionary_bits(word_list)) + 'b'
-    for word in seed_phrase:
+    seed_phrase_as_list = seed_phrase.split(' ')
+    for word in seed_phrase_as_list:
         binary_numbers.append(format(word_list.index(word), format_string))
 
-    # Concatenate binary numbers and convert to hexadecimal.
+    # Concatenate binary numbers as a string.
     secret_number = "".join(binary_numbers)
     return secret_number
 
 
-def decode_words(word_list, secret_number):
-    """!Turns a secret binary number into a seed phrase, using a given word list for the decoding."""
+def decode_words(word_list, secret_binary):
+    """!Turns a secret binary number into a seed phrase, using a given word list for the decoding.
+    
+    The seed phrase is outputted as a space-separated string.
+    """
 
     slice_size = get_dictionary_bits(word_list)
-    slices = [str(secret_number)[i : i + slice_size] for i in range(
-        0, len(str(secret_number)), slice_size)]
+    slices = [str(secret_binary)[i : i + slice_size] for i in range(
+        0, len(str(secret_binary)), slice_size)]
     seed_phrase = [word_list[int(word_index, 2)] for word_index in slices]
-    return seed_phrase
+    return ' '.join(seed_phrase)

@@ -6,7 +6,7 @@ import hmac
 def randomness_generator(randomness_length: int):
     """!Picks a random integer from [0-2**randomness_length], translates it as a binary of desired length."""
     
-    randomness_int = randint(0, 2**randomness_length)
+    randomness_int = randint(0, 2**randomness_length-1)
     format_string = '0' + str(randomness_length) + 'b'
     randomness_bin = format(randomness_int, format_string)
     return randomness_bin
