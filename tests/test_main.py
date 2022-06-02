@@ -7,10 +7,9 @@ from modules.word_coding import decode_words, text_to_list
 
 def test_valid_seed():
     """!BIP-39 compliant seeds are tested."""
-    for _ in range(3):
-        for num_words in range(12, 61, 3):
-            seed = construct_BIP39_seed(num_words)
-            assert reconstruct_is_successful(10, 6, seed), 'Reconstruction was not successful'
+    for num_words in range(12, 61, 3):
+        seed = construct_BIP39_seed(num_words)
+        assert reconstruct_is_successful(10, 6, seed), 'Reconstruction was not successful'
 
 
 def test_invalid_seed():

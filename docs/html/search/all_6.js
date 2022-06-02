@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['secret_5freconstruction_0',['secret_reconstruction',['../namespaceshamir.html#a563499ba0bed3c0210657a0dbbebbd85',1,'shamir']]],
-  ['shamir_1',['shamir',['../namespaceshamir.html',1,'']]],
-  ['share_5fgeneration_2',['share_generation',['../namespaceshamir.html#a18056e460b7d27d1506095c673513ba1',1,'shamir']]]
+  ['randomness_5fgenerator_0',['randomness_generator',['../namespaceshamir.html#a448e4cc78af1a6eb7fadc258b011a2b0',1,'shamir']]],
+  ['readme_1',['Readme',['../md__r_e_a_d_m_e.html',1,'']]],
+  ['reconstruct_2',['reconstruct',['../namespacemain.html#a67b2fb92125c2f0b661c009a1442c76c',1,'main']]]
 ];

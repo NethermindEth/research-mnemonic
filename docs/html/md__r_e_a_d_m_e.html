@@ -31,6 +31,7 @@ MathJax.Hub.Config({
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="nethermind.png"/></td>
   <td id="projectalign">
    <div id="projectname">Mnemonic sharing<span id="projectnumber">&#160;0.1</span>
    </div>
@@ -93,22 +94,24 @@ $(document).ready(function(){initNavTree('md__r_e_a_d_m_e.html',''); initResizab
   <div class="headertitle"><div class="title">Readme </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1><a class="anchor" id="autotoc_md4"></a>
+<div class="textblock"><h1><a class="anchor" id="autotoc_md1"></a>
 Table of contents</h1>
 <ul>
 <li>Description</li>
 <li>Notation</li>
 <li>Shamir's secret sharing scheme (SSS)</li>
 <li>Generating shares and reconstruction of the secret</li>
+<li>Working with the project</li>
 <li>Basic usage</li>
+<li>Using with Docker build</li>
 <li>Format of a share</li>
 <li>Design rationale</li>
 <li>References</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md5"></a>
+<h1><a class="anchor" id="autotoc_md2"></a>
 Description</h1>
 <p >In this project we implement a modified version of Shamir’s secret sharing scheme (SSS) in order to share a secret phrase, called mnemonics, in a secure way. In the following we give the notation that we use, then we give the definition of Shamir's secret sharing scheme and our modified scheme. We describe how we generate shares and reconstruct the secret. Then we give a basic usage information and the format of a share file. Finally, we give a few comments on design rationale.</p>
-<h1><a class="anchor" id="autotoc_md6"></a>
+<h1><a class="anchor" id="autotoc_md3"></a>
 Notation</h1>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -136,21 +139,21 @@ Notation</h1>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><em>R</em>   </td><td class="markdownTableBodyNone">Number of bits of the randomness which is the remaining part of the digest <em>D</em>.   </td></tr>
 </table>
-<h1><a class="anchor" id="autotoc_md7"></a>
+<h1><a class="anchor" id="autotoc_md4"></a>
 Shamir secret sharing scheme</h1>
 <p >Let F be a finite field with q elements. A *(t, n)-threshold secret sharing scheme* shares a non-zero secret <em>s</em> among <em>n</em> users such that any <em>t</em> or more shares can reconstruct the secret but <em>t-1</em> or less cannot. Shamir's secret sharing scheme is an ideal and perfect *(t, n)-thresholds scheme* and can be defined in two phases as follows:</p>
-<h2><a class="anchor" id="autotoc_md8"></a>
+<h2><a class="anchor" id="autotoc_md5"></a>
 1. Share Generation Phase:</h2>
 <ul>
 <li>A dealer chooses a secret polynomial <em>f(x)</em> with degree <em>t-1</em>, such that its constant term is the secret to be shared <em>s</em>.</li>
 <li>The dealer sends the tuple *(x<sub>i</sub>, f(x<sub>i</sub>))* as the share to <em>i</em>-th user, where *x<sub>i</sub>*'s are all non-zero and distinct for <em>i = 1, … , n</em>.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md9"></a>
+<h2><a class="anchor" id="autotoc_md6"></a>
 2. Reconstruction Phase:</h2>
 <ul>
 <li>If any <em>t</em> or more users jointly perform a Lagrange interpolation with their shares, they obtain the secret polynomial <em>f(x)</em>, and <em>f(0)</em> yields the secret <em>s</em>.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md10"></a>
+<h1><a class="anchor" id="autotoc_md7"></a>
 Generating shares and reconstruction of the secret</h1>
 <p >In addition to the above definition, we also encode the digest of the secret as <em>f(q-1)</em> as stated in SLIP-0039: Shamir's Secret-Sharing for Mnemonic Codes. Let <em>s</em> be the secret to be shared and <em>D</em> be it's digest such that, <em>D =</em> HMAC-SHA256(<em>R || s</em>)[*:d*] || <em>R</em>, where <em>R</em> is the randomness with length <em>m-d</em> in bits, for *m = log<sub>2</sub> q* and some integer <em>d</em>.</p>
 <div class="image">
@@ -163,7 +166,7 @@ shamir</div></div>
 <div class="caption">
 digest</div></div>
    <p >Our scheme takes a secret mnemonic as string, converts it to binary string and performs padding if needed. Then it is converted to integer. After generating the integer shares, all the shares are converted into string and parsed as distinct n mnemonics. Below we describe Lagrange polynomial interpolation, share generation and secret reconstruction.</p>
-<h2><a class="anchor" id="autotoc_md11"></a>
+<h2><a class="anchor" id="autotoc_md8"></a>
 Polynomial interpolation</h2>
 <p >Lagrange interpolation formula tells us that constructing a degree <em>t-1</em> polynomial requires at least <em>t</em> points. Assume that we have <em>t</em> distinct points *(x<sub>1</sub>,y<sub>1</sub>), (x<sub>2</sub>, y<sub>2</sub>), … , (x<sub>t</sub>, y<sub>t</sub>)*. Then we can construct the unique degree <em>t-1</em> polynomial as follows:</p>
 <div class="image">
@@ -175,11 +178,11 @@ lagrange</div></div>
 <img src="lagrange_basis.jpg" alt=""/>
 <div class="caption">
 lagrange_basis</div></div>
-   <h2><a class="anchor" id="autotoc_md12"></a>
+   <h2><a class="anchor" id="autotoc_md9"></a>
 Share Generation</h2>
-<h3><a class="anchor" id="autotoc_md13"></a>
+<h3><a class="anchor" id="autotoc_md10"></a>
 INPUT: secret &lt;em&gt;s&lt;/em&gt;, total number of shares &lt;em&gt;n&lt;/em&gt;, threshold &lt;em&gt;t&lt;/em&gt;, order of Galois field &lt;em&gt;q&lt;/em&gt;, irreducible polynomial of GF(&lt;em&gt;q&lt;/em&gt;)</h3>
-<h3><a class="anchor" id="autotoc_md14"></a>
+<h3><a class="anchor" id="autotoc_md11"></a>
 OUTPUT: list of &lt;em&gt;n&lt;/em&gt; shares</h3>
 <ul>
 <li>Encode <em>s = f(0)</em> and the digest <em>D = f(q-1)</em>.</li>
@@ -188,28 +191,58 @@ OUTPUT: list of &lt;em&gt;n&lt;/em&gt; shares</h3>
 <li>Generate <em>n-t+2</em> more shares by evaluating <em>f(x)</em> at the points *x<sub>t-1</sub>, … , x<sub>n</sub>*.</li>
 <li>Output <em>n</em> shares *(x<sub>i</sub>, y<sub>i</sub>)* for <em>i = 1, … , n</em>.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md15"></a>
+<h2><a class="anchor" id="autotoc_md12"></a>
 Secret Reconstruction</h2>
-<h3><a class="anchor" id="autotoc_md16"></a>
+<h3><a class="anchor" id="autotoc_md13"></a>
 INPUT: list of share id &lt;em&gt;x&lt;/em&gt;, list of access shares &lt;em&gt;y&lt;/em&gt;, order of Galois field &lt;em&gt;q&lt;/em&gt;, irreducible polynomial of GF(&lt;em&gt;q&lt;/em&gt;), digest length &lt;em&gt;d&lt;/em&gt;.</h3>
-<h3><a class="anchor" id="autotoc_md17"></a>
+<h3><a class="anchor" id="autotoc_md14"></a>
 OUTPUT: secret &lt;em&gt;s'&lt;/em&gt; or abort.</h3>
 <ul>
-<li>Apply Lagrange interpolation fort he shares *(x<sub>j</sub> , y<sub>j</sub>) for j = i<sub>1</sub>, … , i<sub>t</sub>*, and recover the secret polynomial <em>f(x)</em>.</li>
+<li>Apply Lagrange interpolation for the shares *(x<sub>j</sub> , y<sub>j</sub>) for j = i<sub>1</sub>, … , i<sub>t</sub>*, and recover the secret polynomial <em>f(x)</em>.</li>
 <li>Compute the secret <em>s' = f(0)</em></li>
 <li>Compute the digest <em>D' = f(-1)</em></li>
 <li>If HMAC-SHA256(<em>D'</em>[<em>d:</em>] || <em>s'</em>)[*:d*] = <em>D'</em>[*:d*], then return <em>s'</em>. Otherwise abort.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md18"></a>
+<h1><a class="anchor" id="autotoc_md15"></a>
+Working with the project</h1>
+<ul>
+<li>Project uses Pipenv as a tool to manage packages and their versions properly.</li>
+<li>Make sure you have pipenv installed on your local machine or install it using</li>
+</ul>
+<div class="fragment"><div class="line">python -m pip install pipenv</div>
+</div><!-- fragment --><ul>
+<li>Install the required packages using</li>
+</ul>
+<div class="fragment"><div class="line">pipenv install</div>
+</div><!-- fragment --><ul>
+<li>Run the project using (Read Basic usage for detailed Information)</li>
+</ul>
+<div class="fragment"><div class="line">pipenv run python main.py</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md16"></a>
 Basic usage</h1>
 <ul>
 <li><p class="startli">One can share his secret by running below command in the terminal.</p>
-<div class="fragment"><div class="line">Python create_shares.py -n [number of shares] -t [threshold value] -s [path/secret.txt] -v [optional]</div>
+<div class="fragment"><div class="line">Python main.py create_shares -n [number of shares] -t [threshold value] -s [path/secret.txt] -v [optional]</div>
 </div><!-- fragment --></li>
 <li>If the secret file is not defined then the secret is requested to be typed on the terminal.</li>
 <li>The <b>reconstruct.py</b> takes <em>json</em> files automatically from the same location and outputs the secret <em>s</em> if the number of the shares is enough.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md19"></a>
+<h1><a class="anchor" id="autotoc_md17"></a>
+Using with Docker build</h1>
+<ul>
+<li>You can directly use this app using Docker cli without installing anything. Make sure you have docker cli available on your machine.</li>
+<li>Create a <code>shares</code> directory wherever you want to store the files this app will generate. This is necessary for the app to function correctly.</li>
+</ul>
+<div class="fragment"><div class="line">mkdir shares</div>
+</div><!-- fragment --><ul>
+<li>Run this command to generate shares (Make sure to replace CURRENT_VERSION with appropriate version numbers)</li>
+</ul>
+<div class="fragment"><div class="line">docker run -v shares:/usr/src/app/shares nethermindeth/research-mnemonic:CURRENT_VERSION main.py create_shares -n 4 -t 4</div>
+</div><!-- fragment --><ul>
+<li>Run this to reconstruct words from data in shares directory.</li>
+</ul>
+<div class="fragment"><div class="line">docker run -v shares:/usr/src/app/shares nethermindeth/research-mnemonic:CURRENT_VERSION main.py reconstruct</div>
+</div><!-- fragment --> <h1><a class="anchor" id="autotoc_md18"></a>
 Format of a share</h1>
 <ul>
 <li><p class="startli">Our shares are stored in <em>json</em> files which are created in the same location with <b>create_shares.py</b>. The shares include the following information:</p>
@@ -247,34 +280,37 @@ Format of a share</h1>
 </ul>
 </li>
 </ul>
-<h1><a class="anchor" id="autotoc_md20"></a>
+<h1><a class="anchor" id="autotoc_md19"></a>
 Design rationale</h1>
-<h2><a class="anchor" id="autotoc_md21"></a>
+<h2><a class="anchor" id="autotoc_md20"></a>
 Role of the digest</h2>
 <ul>
 <li>The digest is encoded as a point in our scheme. It is the evaluation of the polynomial <em>f(x)</em> at <em>q-1</em>, e.i. <em>f(q-1)</em>. Using digest provides us an additional check before returning the reconstructed secret with probability <em>1/d</em>.</li>
 <li>On the other hand it decreases the entropy from *2<sup>m</sup>* to *2<sup>m-d</sup>* (for further information please see security analysis).</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md22"></a>
+<h2><a class="anchor" id="autotoc_md21"></a>
 Number of words and Galois field</h2>
 <ul>
 <li>Number of words <em>nw</em> and the number of bits <em>nb</em> determine the size of our Galois field.</li>
 <li>We have the primitive polynomials of degree up to 660. Therefore, for a dictionary of size 2048, e.i. <em>nb = 11</em>, our scheme supports up to 60 word secrets.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md23"></a>
+<h2><a class="anchor" id="autotoc_md22"></a>
 Security</h2>
 <ul>
 <li>Although Shamir’s secret sharing scheme (SSS) is information theoretically secure, there is a known active adversary attack against it. Assume an adversary who interacts with <em>t-1</em> shareholders and perform share reconstruction with a faulty share. If she can do this again with another <em>t-1</em> shareholders (1 different shareholder suffices), she can construct the secret without knowing anything about the secret. In order to avoid such an attack we plan to take some security measures which force the active adversaries to behave passively. We are going to use a composition of authentication schemes and a ZK proofs for the reconstruction process.</li>
 <li>Another security issue for our modified scheme is the decreasing entropy because of the digest check that is used in the reconstruction phase. But ensuring <em>m-d &gt; 128</em> can defeat this low entropy weakness.</li>
 <li>Finally we have another issue for the security. Assume that an attacker has <em>k</em> shares such that <em>t &lt; k &lt; n</em>, and assume that <em>e</em> shares among <em>k</em> are faulty shares. In this case Lagrange interpolation does not work because of the faulty shares. But if <em>e &lt; t &lt; k/3</em> then the <a href="https://en.wikipedia.org/wiki/Berlekamp%E2%80%93Welch_algorithm"><em>Berlekamp-Welch</em></a> algorithm works and the adversary can reconstruct the secret without knowing the true shares.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md24"></a>
+<h2><a class="anchor" id="autotoc_md23"></a>
 References</h2>
 <ol type="1">
 <li><a href="https://web.mit.edu/6.857/OldStuff/Fall03/ref/Shamir-HowToShareASecret.pdf">Shamir, A.: How to share a secret. Communications of the Association for Computing Machinery 22(11), 612_613 (Nov 1979)</a></li>
 <li><a href="https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki">BIP-39: Mnemonic code for generating deterministic keys</a></li>
-<li><a href="https://github.com/satoshilabs/slips/blob/master/slip-0039.md">SLIP-0039: Shamir's Secret-Sharing for Mnemonic Codes</a> </li>
+<li><a href="https://github.com/satoshilabs/slips/blob/master/slip-0039.md">SLIP-0039: Shamir's Secret-Sharing for Mnemonic Codes</a></li>
 </ol>
+<h2><a class="anchor" id="autotoc_md24"></a>
+License</h2>
+<p ><a href="https://github.com/NethermindEth/research-mnemonic/blob/main/LICENSE">MIT License</a> </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->

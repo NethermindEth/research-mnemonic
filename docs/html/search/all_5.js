@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['readme_0',['Readme',['../md__r_e_a_d_m_e.html',1,'']]],
-  ['reconstruct_1',['reconstruct',['../namespacereconstruct.html',1,'']]]
+  ['main_0',['main',['../namespacemain.html',1,'main'],['../namespacemain.html#af613cea4cba4fb7de8e40896b3368945',1,'main.main()']]]
 ];

@@ -1,0 +1,31 @@
+digraph "create_shares"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="create_shares",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Take a secret phrase and apply Shamir Secret Sharing to encode it into n secret phrases."];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="word_coding.decode\l_words",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceword__coding.html#ab93622d861e8bd61dab0dc84a7c41296",tooltip="Turns a secret binary number into a seed phrase, using a given word list for the decoding."];
+  Node2 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="word_coding.get_dictionary_bits",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceword__coding.html#a61ad28767efb3623c54625c9e00276f7",tooltip="Gets the number of bits a given wordlist dictionary represents."];
+  Node1 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="word_coding.encode\l_words",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceword__coding.html#a90df4933f53f5874a926f5328b4335ce",tooltip="Turns a seed phrase into a binary string, using a given word list for the encoding."];
+  Node4 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="get_checksum",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacemain.html#a5f75dd7c245a03cdad3489d7fa146526",tooltip="Computes the checksum to be used for a given entropy, as per BIP-39 standards."];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="shamir.share_generation",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceshamir.html#a18056e460b7d27d1506095c673513ba1",tooltip="Turns an element of a Galois Field (in integer representation) into many, via Shamir secret sharing."];
+  Node6 -> Node7 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="shamir.create_digest",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceshamir.html#a24b895bca5c6f757e74294a3a67cff32",tooltip="Digest function according to SLIP39."];
+  Node6 -> Node8 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 [label="shamir.get_polynomial\l_degree",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceshamir.html#a263d4e85b75242cd1ed3d931c6dc6e9b",tooltip="Gets degree of a string-form polynomial on GF(2)."];
+  Node6 -> Node9 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node9 [label="shamir.lagrange_interpolation",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceshamir.html#a46b5edd435fe67eb9d2757b7a1d7b9e4",tooltip="Performs Lagrange interpolation on a Galois field GF(2^d), where d is the degree of primitive_poly."];
+  Node9 -> Node8 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 -> Node10 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node10 [label="shamir.randomness_generator",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceshamir.html#a448e4cc78af1a6eb7fadc258b011a2b0",tooltip="Picks a random integer from [0-2**randomness_length], translates it as a binary of desired length."];
+  Node1 -> Node11 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node11 [label="word_coding.text_to_list",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceword__coding.html#a3b7850263fe085574793bde520b74fea",tooltip="Transforms a one-word-per-line text file into a Python list."];
+}

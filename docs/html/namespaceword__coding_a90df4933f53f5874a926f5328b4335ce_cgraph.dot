@@ -1,0 +1,10 @@
+digraph "encode_words"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="encode_words",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Turns a seed phrase into a binary string, using a given word list for the encoding."];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="get_dictionary_bits",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceword__coding.html#a61ad28767efb3623c54625c9e00276f7",tooltip="Gets the number of bits a given wordlist dictionary represents."];
+}

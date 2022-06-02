@@ -31,6 +31,7 @@ MathJax.Hub.Config({
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="nethermind.png"/></td>
   <td id="projectalign">
    <div id="projectname">Mnemonic sharing<span id="projectnumber">&#160;0.1</span>
    </div>
@@ -108,14 +109,12 @@ def&#160;</td><td class="memItemRight" valign="bottom"><b>text_to_list</b> (text
 <tr class="memitem:a61ad28767efb3623c54625c9e00276f7"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceword__coding.html#a61ad28767efb3623c54625c9e00276f7">get_dictionary_bits</a> (word_list)</td></tr>
 <tr class="memdesc:a61ad28767efb3623c54625c9e00276f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the number of bits a given wordlist dictionary represents.  <a href="namespaceword__coding.html#a61ad28767efb3623c54625c9e00276f7">More...</a><br /></td></tr>
 <tr class="separator:a61ad28767efb3623c54625c9e00276f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a90df4933f53f5874a926f5328b4335ce"><td class="memItemLeft" align="right" valign="top"><a id="a90df4933f53f5874a926f5328b4335ce" name="a90df4933f53f5874a926f5328b4335ce"></a>
-def&#160;</td><td class="memItemRight" valign="bottom"><b>encode_words</b> (word_list, seed_phrase)</td></tr>
-<tr class="memdesc:a90df4933f53f5874a926f5328b4335ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turns a seed phrase into a binary number, using a given word list for the encoding. <br /></td></tr>
+<tr class="memitem:a90df4933f53f5874a926f5328b4335ce"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceword__coding.html#a90df4933f53f5874a926f5328b4335ce">encode_words</a> (word_list, seed_phrase)</td></tr>
+<tr class="memdesc:a90df4933f53f5874a926f5328b4335ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turns a seed phrase into a binary string, using a given word list for the encoding.  <a href="namespaceword__coding.html#a90df4933f53f5874a926f5328b4335ce">More...</a><br /></td></tr>
 <tr class="separator:a90df4933f53f5874a926f5328b4335ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a01a5805472b9cc0228944b902ff9ad65"><td class="memItemLeft" align="right" valign="top"><a id="a01a5805472b9cc0228944b902ff9ad65" name="a01a5805472b9cc0228944b902ff9ad65"></a>
-def&#160;</td><td class="memItemRight" valign="bottom"><b>decode_words</b> (word_list, secret_number)</td></tr>
-<tr class="memdesc:a01a5805472b9cc0228944b902ff9ad65"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turns a secret binary number into a seed phrase, using a given word list for the decoding. <br /></td></tr>
-<tr class="separator:a01a5805472b9cc0228944b902ff9ad65"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab93622d861e8bd61dab0dc84a7c41296"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceword__coding.html#ab93622d861e8bd61dab0dc84a7c41296">decode_words</a> (word_list, secret_binary)</td></tr>
+<tr class="memdesc:ab93622d861e8bd61dab0dc84a7c41296"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turns a secret binary number into a seed phrase, using a given word list for the decoding.  <a href="namespaceword__coding.html#ab93622d861e8bd61dab0dc84a7c41296">More...</a><br /></td></tr>
+<tr class="separator:ab93622d861e8bd61dab0dc84a7c41296"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Module for encoding/decoding a secret phrase into a binary number, using a dictionary. </p>
@@ -140,12 +139,69 @@ def&#160;</td><td class="memItemRight" valign="bottom"><b>decode_words</b> (word
 <pre class="fragment">The word list to be used as a dictionary for encoding/decoding purposes should always have 2^N 
 elements, since each mnemonic word will be encoded into an N-bit number. After checking for this
 condition, the number N=number_of_bits is returned as an integer.
-</pre> <div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="namespaceword__coding_a61ad28767efb3623c54625c9e00276f7_icgraph.png" border="0" usemap="#anamespaceword__coding_a61ad28767efb3623c54625c9e00276f7_icgraph" alt=""/></div>
+</pre> 
 </div>
+</div>
+<a id="a90df4933f53f5874a926f5328b4335ce" name="a90df4933f53f5874a926f5328b4335ce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a90df4933f53f5874a926f5328b4335ce">&#9670;&nbsp;</a></span>encode_words()</h2>
 
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def word_coding.encode_words </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>word_list</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>seed_phrase</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Turns a seed phrase into a binary string, using a given word list for the encoding. </p>
+<pre class="fragment">The seed phrase must be inputted as a space-separated string.
+</pre> 
+</div>
+</div>
+<a id="ab93622d861e8bd61dab0dc84a7c41296" name="ab93622d861e8bd61dab0dc84a7c41296"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab93622d861e8bd61dab0dc84a7c41296">&#9670;&nbsp;</a></span>decode_words()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def word_coding.decode_words </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>word_list</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>secret_binary</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Turns a secret binary number into a seed phrase, using a given word list for the decoding. </p>
+<pre class="fragment">The seed phrase is outputted as a space-separated string.
+</pre> 
 </div>
 </div>
 </div><!-- contents -->
