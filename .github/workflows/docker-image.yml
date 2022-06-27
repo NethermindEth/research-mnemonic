@@ -25,4 +25,4 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: nethermindeth/research-mnemonic:${{ github.ref_name }}
+          tags: nethermindeth/research-mnemonic:latest,nethermindeth/research-mnemonic:${{ github.ref_name }}
